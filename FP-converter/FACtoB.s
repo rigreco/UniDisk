@@ -1,8 +1,8 @@
 * @com.wudsn.ide.asm.hardware=APPLE2
 ************************************
-* 	FP1 TO FAC TO BASIC            *
+* 	FP1 TO FAC TO BASIC        *
 *          CALL 32768,X            *
-*	         PRINT X		             *
+*	   PRINT X		   *
 ************************************
 		org $8000
 		
