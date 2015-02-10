@@ -1,7 +1,7 @@
 * @com.wudsn.ide.asm.hardware=APPLE2
 ************************************
-* 	BASIC TO FAC TO FP1            *
-*          Y=NUMBER		             *
+* 	BASIC TO FAC TO FP1        *
+*          Y=NUMBER	           *
 *          CALL 2048,Y             *
 ************************************
 		org $800
