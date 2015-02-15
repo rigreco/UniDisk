@@ -66,7 +66,7 @@ START  		jsr FindPC
 *********************************************
 Error  		equ *
 *
-* There"s either no PC around, or there was no give message
+* There's either no PC around or there was no give message
 *
   		ldx #0
 err1  		equ *
