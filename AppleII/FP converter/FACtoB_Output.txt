@@ -1,0 +1,57 @@
+------+----------------------+-------------+----+---------+------+-----------------------+-------------------------------------------------------------------
+ Line | # File          Line | Line Type   | MX |  Reloc  | Size | Address   Object Code |  Source Code                                                      
+------+----------------------+-------------+----+---------+------+-----------------------+-------------------------------------------------------------------
+    1 |  1 FACtoB.asm      1 | Comment     | 11 |         |    0 | 00/8000               | * @com.wudsn.ide.asm.hardware=APPLE2
+    2 |  1 FACtoB.asm      2 | Comment     | 11 |         |    0 | 00/8000               | ************************************
+    3 |  1 FACtoB.asm      3 | Comment     | 11 |         |    0 | 00/8000               | * 	FP1 TO FAC TO BASIC        *
+    4 |  1 FACtoB.asm      4 | Comment     | 11 |         |    0 | 00/8000               | *          CALL 32768,X            *
+    5 |  1 FACtoB.asm      5 | Comment     | 11 |         |    0 | 00/8000               | *	   PRINT X		   *
+    6 |  1 FACtoB.asm      6 | Comment     | 11 |         |    0 | 00/8000               | ************************************
+    7 |  1 FACtoB.asm      7 | Directive   | 11 |         |    0 | 00/8000               |             org   $8000          
+    8 |  1 FACtoB.asm      8 | Empty       | 11 |         |    0 | 00/8000               |                                  
+    9 |  1 FACtoB.asm      9 | Equivalence | 11 |         |    0 | 00/8000               | CHKCOM      equ   $DEBE          
+   10 |  1 FACtoB.asm     10 | Equivalence | 11 |         |    0 | 00/8000               | PTRGET      equ   $DFE3          
+   11 |  1 FACtoB.asm     11 | Equivalence | 11 |         |    0 | 00/8000               | MOVMF       equ   $EB2B          
+   12 |  1 FACtoB.asm     12 | Equivalence | 11 |         |    0 | 00/8000               | MOVFM       equ   $EAF9          
+   13 |  1 FACtoB.asm     13 | Empty       | 11 |         |    0 | 00/8000               |                                  
+   14 |  1 FACtoB.asm     14 | Comment     | 11 |         |    0 | 00/8000               | ** Woz FP Accumulator 4 Byte + 1 Byte Extra + 1 Byte SIGN**
+   15 |  1 FACtoB.asm     15 | Equivalence | 11 |         |    0 | 00/8000               | FP1         equ   $FA            ;Translate F8 --> FA
+   16 |  1 FACtoB.asm     16 | Equivalence | 11 |         |    0 | 00/8000               | E           equ   $FE            ;Translate FC --> FE
+   17 |  1 FACtoB.asm     17 | Equivalence | 11 |         |    0 | 00/8000               | SIGN        equ   $EB            ;Translate F3 --> EB
+   18 |  1 FACtoB.asm     18 | Empty       | 11 |         |    0 | 00/8000               |                                  
+   19 |  1 FACtoB.asm     19 | Equivalence | 11 |         |    0 | 00/8000               | MEM         equ   $8080          
+   20 |  1 FACtoB.asm     20 | Comment     | 11 |         |    0 | 00/8000               | *
+   21 |  1 FACtoB.asm     21 | Comment     | 11 |         |    0 | 00/8000               | 		** FP1 to MEM to FAC conversion FAC 5 Bytes **
+   22 |  1 FACtoB.asm     22 | Comment     | 11 |         |    0 | 00/8000               | *
+   23 |  1 FACtoB.asm     23 | Code        | 11 |         |    2 | 00/8000 : A5 FA       | ENTRY       lda   {$FA}          ; X1 1 Byte --> 9D FAC
+   24 |  1 FACtoB.asm     24 | Code        | 11 |         |    1 | 00/8002 : 1A          |             inc   A              ; 2^(FP1+1)
+   25 |  1 FACtoB.asm     25 | Code        | 11 |         |    3 | 00/8003 : 8D 80 80    |             sta   {$8080}        
+   26 |  1 FACtoB.asm     26 | Empty       | 11 |         |    0 | 00/8006               |                                  
+   27 |  1 FACtoB.asm     27 | Code        | 11 |         |    2 | 00/8006 : A5 FB       |             lda   {$FA}+1        ; M1 Hi 2 Byte --> 9E FAC
+   28 |  1 FACtoB.asm     28 | Code        | 11 |         |    1 | 00/8008 : 0A          |             asl                  
+   29 |  1 FACtoB.asm     29 | Code        | 11 |         |    2 | 00/8009 : 49 80       |             eor   #$80           ; Not Hi Bit Mantissa (change Sign)
+   30 |  1 FACtoB.asm     30 | Code        | 11 |         |    3 | 00/800B : 8D 81 80    |             sta   {$8080}+1      
+   31 |  1 FACtoB.asm     31 | Empty       | 11 |         |    0 | 00/800E               |                                  
+   32 |  1 FACtoB.asm     32 | Code        | 11 |         |    2 | 00/800E : A5 FC       |             lda   {$FA}+2        ; M1 3 Byte --> 9F FAC
+   33 |  1 FACtoB.asm     33 | Code        | 11 |         |    3 | 00/8010 : 8D 82 80    |             sta   {$8080}+2      
+   34 |  1 FACtoB.asm     34 | Empty       | 11 |         |    0 | 00/8013               |                                  
+   35 |  1 FACtoB.asm     35 | Code        | 11 |         |    2 | 00/8013 : A5 FD       |             lda   {$FA}+3        ; M1 Lo 4 Byte --> A0 FAC
+   36 |  1 FACtoB.asm     36 | Code        | 11 |         |    3 | 00/8015 : 8D 83 80    |             sta   {$8080}+3      
+   37 |  1 FACtoB.asm     37 | Empty       | 11 |         |    0 | 00/8018               |                                  
+   38 |  1 FACtoB.asm     38 | Code        | 11 |         |    2 | 00/8018 : A5 FE       |             lda   {$FE}          ; Extra 00 5 Byte --> A1 FAC
+   39 |  1 FACtoB.asm     39 | Code        | 11 |         |    3 | 00/801A : 8D 84 80    |             sta   {$8080}+4      
+   40 |  1 FACtoB.asm     40 | Empty       | 11 |         |    0 | 00/801D               |                                  
+   41 |  1 FACtoB.asm     41 | Comment     | 11 |         |    0 | 00/801D               | *		lda $EB		; SIGN (F3 to EB) 6 Byte --> A2 FAC
+   42 |  1 FACtoB.asm     42 | Comment     | 11 |         |    0 | 00/801D               | *		sta MEM+5
+   43 |  1 FACtoB.asm     43 | Comment     | 11 |         |    0 | 00/801D               | 		***************************
+   44 |  1 FACtoB.asm     44 | Comment     | 11 |         |    0 | 00/801D               | * 
+   45 |  1 FACtoB.asm     45 | Code        | 11 |         |    2 | 00/801D : A0 80       |             ldy   #$80           ;Hi Byte MEM
+   46 |  1 FACtoB.asm     46 | Code        | 11 |         |    2 | 00/801F : A9 80       |             lda   #$80           ;Lo Byte MEM
+   47 |  1 FACtoB.asm     47 | Code        | 11 |         |    3 | 00/8021 : 20 F9 EA    |             jsr   {$EAF9}        ;MEM->FAC (9D to A2)
+   48 |  1 FACtoB.asm     48 | Comment     | 11 |         |    0 | 00/8024               | *
+   49 |  1 FACtoB.asm     49 | Code        | 11 |         |    3 | 00/8024 : 20 BE DE    |             jsr   {$DEBE}        
+   50 |  1 FACtoB.asm     50 | Code        | 11 |         |    3 | 00/8027 : 20 E3 DF    |             jsr   {$DFE3}        
+   51 |  1 FACtoB.asm     51 | Code        | 11 |         |    1 | 00/802A : AA          |             tax                  
+   52 |  1 FACtoB.asm     52 | Code        | 11 |         |    3 | 00/802B : 20 2B EB    |             jsr   {$EB2B}        ;FAC->VARIABLE
+   53 |  1 FACtoB.asm     53 | Code        | 11 |         |    1 | 00/802E : 60          | DONE        rts                  
+------+----------------------+-------------+----+---------+------+-----------------------+-------------------------------------------------------------------

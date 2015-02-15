@@ -1,0 +1,52 @@
+------+----------------------+-------------+----+---------+------+-----------------------+-------------------------------------------------------------------
+ Line | # File          Line | Line Type   | MX |  Reloc  | Size | Address   Object Code |  Source Code                                                      
+------+----------------------+-------------+----+---------+------+-----------------------+-------------------------------------------------------------------
+    1 |  1 BtoFAC.asm      1 | Comment     | 11 |         |    0 | 00/8000               | * @com.wudsn.ide.asm.hardware=APPLE2
+    2 |  1 BtoFAC.asm      2 | Comment     | 11 |         |    0 | 00/8000               | ************************************
+    3 |  1 BtoFAC.asm      3 | Comment     | 11 |         |    0 | 00/8000               | * 	BASIC TO FAC TO FP1        *
+    4 |  1 BtoFAC.asm      4 | Comment     | 11 |         |    0 | 00/8000               | *          Y=NUMBER		   *
+    5 |  1 BtoFAC.asm      5 | Comment     | 11 |         |    0 | 00/8000               | *          CALL 2048,Y             *
+    6 |  1 BtoFAC.asm      6 | Comment     | 11 |         |    0 | 00/8000               | ************************************
+    7 |  1 BtoFAC.asm      7 | Directive   | 11 |         |    0 | 00/8000               |             org   $800           
+    8 |  1 BtoFAC.asm      8 | Empty       | 11 |         |    0 | 00/0800               |                                  
+    9 |  1 BtoFAC.asm      9 | Equivalence | 11 |         |    0 | 00/0800               | CHKCOM      equ   $DEBE          
+   10 |  1 BtoFAC.asm     10 | Equivalence | 11 |         |    0 | 00/0800               | FRMNUM      equ   $DD67          
+   11 |  1 BtoFAC.asm     11 | Empty       | 11 |         |    0 | 00/0800               |                                  
+   12 |  1 BtoFAC.asm     12 | Comment     | 11 |         |    0 | 00/0800               | ** Woz FP Accumulator 4 Byte + 1 Byte Extra + 1 Byte SIGN**
+   13 |  1 BtoFAC.asm     13 | Equivalence | 11 |         |    0 | 00/0800               | FP1         equ   $FA            ;Translate F8 --> FA
+   14 |  1 BtoFAC.asm     14 | Equivalence | 11 |         |    0 | 00/0800               | E           equ   $FE            ;Translate FC --> FE
+   15 |  1 BtoFAC.asm     15 | Equivalence | 11 |         |    0 | 00/0800               | SIGN        equ   $EB            
+   16 |  1 BtoFAC.asm     16 | Empty       | 11 |         |    0 | 00/0800               |                                  
+   17 |  1 BtoFAC.asm     17 | Comment     | 11 |         |    0 | 00/0800               | ** Applesoft FP Accumulator 5 Byte + 1 Byte Sign **
+   18 |  1 BtoFAC.asm     18 | Equivalence | 11 |         |    0 | 00/0800               | FAC         equ   $9D            
+   19 |  1 BtoFAC.asm     19 | Empty       | 11 |         |    0 | 00/0800               |                                  
+   20 |  1 BtoFAC.asm     20 | Comment     | 11 |         |    0 | 00/0800               | 		***************************
+   21 |  1 BtoFAC.asm     21 | Empty       | 11 |         |    0 | 00/0800               |                                  
+   22 |  1 BtoFAC.asm     22 | Code        | 11 |         |    3 | 00/0800 : 20 BE DE    | ENTRY       jsr   {$DEBE}        
+   23 |  1 BtoFAC.asm     23 | Code        | 11 |         |    3 | 00/0803 : 20 67 DD    |             jsr   {$DD67}        ;VARIABLE->FAC
+   24 |  1 BtoFAC.asm     24 | Empty       | 11 |         |    0 | 00/0806               |                                  
+   25 |  1 BtoFAC.asm     25 | Comment     | 11 |         |    0 | 00/0806               | ** FP1 to FAC conversion (conversion not yet) **
+   26 |  1 BtoFAC.asm     26 | Empty       | 11 |         |    0 | 00/0806               |                                  
+   27 |  1 BtoFAC.asm     27 | Code        | 11 |         |    2 | 00/0806 : A5 9D       |             lda   {$9D}          
+   28 |  1 BtoFAC.asm     28 | Code        | 11 |         |    1 | 00/0808 : 3A          |             dec   A              
+   29 |  1 BtoFAC.asm     29 | Code        | 11 |         |    2 | 00/0809 : 85 FA       |             sta   {$FA}          
+   30 |  1 BtoFAC.asm     30 | Empty       | 11 |         |    0 | 00/080B               |                                  
+   31 |  1 BtoFAC.asm     31 | Code        | 11 |         |    2 | 00/080B : A5 9E       |             lda   {$9D}+1        
+   32 |  1 BtoFAC.asm     32 | Code        | 11 |         |    2 | 00/080D : 49 80       |             eor   #$80           
+   33 |  1 BtoFAC.asm     33 | Code        | 11 |         |    1 | 00/080F : 4A          |             lsr                  
+   34 |  1 BtoFAC.asm     34 | Code        | 11 |         |    2 | 00/0810 : 85 FB       |             sta   {$FA}+1        
+   35 |  1 BtoFAC.asm     35 | Empty       | 11 |         |    0 | 00/0812               |                                  
+   36 |  1 BtoFAC.asm     36 | Code        | 11 |         |    2 | 00/0812 : A5 9F       |             lda   {$9D}+2        
+   37 |  1 BtoFAC.asm     37 | Code        | 11 |         |    2 | 00/0814 : 85 FC       |             sta   {$FA}+2        
+   38 |  1 BtoFAC.asm     38 | Empty       | 11 |         |    0 | 00/0816               |                                  
+   39 |  1 BtoFAC.asm     39 | Code        | 11 |         |    2 | 00/0816 : A5 A0       |             lda   {$9D}+3        
+   40 |  1 BtoFAC.asm     40 | Code        | 11 |         |    2 | 00/0818 : 85 FD       |             sta   {$FA}+3        
+   41 |  1 BtoFAC.asm     41 | Empty       | 11 |         |    0 | 00/081A               |                                  
+   42 |  1 BtoFAC.asm     42 | Code        | 11 |         |    2 | 00/081A : A5 A0       |             lda   {$9D}+3        
+   43 |  1 BtoFAC.asm     43 | Code        | 11 |         |    2 | 00/081C : 85 FE       |             sta   {$FE}          
+   44 |  1 BtoFAC.asm     44 | Empty       | 11 |         |    0 | 00/081E               |                                  
+   45 |  1 BtoFAC.asm     45 | Code        | 11 |         |    2 | 00/081E : A5 A1       |             lda   {$9D}+4        
+   46 |  1 BtoFAC.asm     46 | Code        | 11 |         |    2 | 00/0820 : 85 EB       |             sta   {$EB}          
+   47 |  1 BtoFAC.asm     47 | Empty       | 11 |         |    0 | 00/0822               |                                  
+   48 |  1 BtoFAC.asm     48 | Code        | 11 |         |    1 | 00/0822 : 00          |             brk                  
+------+----------------------+-------------+----+---------+------+-----------------------+-------------------------------------------------------------------
