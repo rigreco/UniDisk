@@ -92,7 +92,7 @@ EXEC  		lda N1	  	;X1
 		sta $8239
 		lda N1+2	;M1 (2)
 		sta $823A
-		lda N1+2	;M1 (3)
+		lda N1+3	;M1 (3)
 		sta $823B
 				
 		** 4 Byte N2 to FP2 **
@@ -102,7 +102,7 @@ EXEC  		lda N1	  	;X1
 		sta $823D
 		lda N2+2	;M2 (2)
 		sta $823E
-		lda N2+2	;M2 (3)
+		lda N2+3	;M2 (3)
 		sta $823F
 			
 *** Download ***
@@ -147,7 +147,7 @@ READ  		jsr Dispatch
   				 		
 * 		Second time execute only to read the latest Byte of FP1*
 		lda UNIAcc_reg
-		sta N1+2		 
+		sta N1+3		 
 *
   		rts
 
