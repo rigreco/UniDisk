@@ -1,7 +1,7 @@
 *
 *    Unidisk 3.5 Driver <alfa>
 *
-*    The target of this project is to use the Unidisk 3.5 driveto perform
+*    The target of this project is to use the Unidisk 3.5 drive to perform
 *    specific numerical routines (integers and floating point numbers)
 *    calculation in order to use it as a Apple II co-processor unit.
 *
