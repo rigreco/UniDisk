@@ -87,23 +87,23 @@ Message  	asc 'NO PC OR NO DEVICE'
 ** Set the Input Value first in Dynamic data **
 		** 4 Byte N1 to FP1 **
 EXEC  		lda N1	  	;X1
-		sta $8111 	; Absolute addressing
+		sta $8238 	; Absolute addressing
 		lda N1+1	;M1 (1)
-		sta $8112
+		sta $8239
 		lda N1+2	;M1 (2)
-		sta 
+		sta $823A
 		lda N1+2	;M1 (3)
-		sta
+		sta $823B
 				
 		** 4 Byte N2 to FP2 **
 		lda N2		;X2
-		sta $80EB
+		sta $823C
 		lda N2+1	;M2 (1)
-		sta $80EC
+		sta $823D
 		lda N2+2	;M2 (2)
-		sta 
+		sta $823E
 		lda N2+2	;M2 (3)
-		sta
+		sta $823F
 			
 *** Download ***
   		jsr Dispatch
@@ -143,7 +143,7 @@ READ  		jsr Dispatch
  		jsr Dispatch
   		dfb StatusCmd
   		dw DParms
-  		bcs Error
+*  		bcs Error
   				 		
 * 		Second time execute only to read the latest Byte of FP1*
 		lda UNIAcc_reg
@@ -283,16 +283,16 @@ HighPC_reg  	dfb $05
 CNTL_LIST3  	equ *
 CountL_byte  	dfb $02
 CountH_byte  	dfb $00
-LByte_Addr  	dfb $05 ; Like ORG
+LByte_Addr  	dfb $00 ; ORG of Unidisk program
 HByte_Addr  	dfb $05
 *
 *** Download ***
 CNTL_LIST4  	equ *
-LenghtL_byte  	dfb $4A ;<----- Lenght of Unidisk program Lo Byte
-LenghtH_byte  	dfb $00 ;<----- Lenght of Unidisk program Hi Byte
+LenghtL_byte  	dfb $38 ;<----- Lenght of Unidisk program Lo  - Byte 312 byte
+LenghtH_byte  	dfb $01 ;<----- Lenght of Unidisk program Hi Byte
 *
 *** Start UNIDISK Program ***
-		org $0505
+		org $0500
 		
 SIGN      	EQU  $C0	;$EB  ;  $F3
 
