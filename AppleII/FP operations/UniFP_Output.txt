@@ -1,0 +1,167 @@
+------+---------------------+-------------+----+---------+------+-----------------------+-------------------------------------------------------------------
+ Line | # File         Line | Line Type   | MX |  Reloc  | Size | Address   Object Code |  Source Code                                                      
+------+---------------------+-------------+----+---------+------+-----------------------+-------------------------------------------------------------------
+    1 |  1 UniFP.asm      1 | Comment     | 11 |         |    0 | 00/8000               | * @com.wudsn.ide.asm.hardware=APPLE2
+    2 |  1 UniFP.asm      2 | Comment     | 11 |         |    0 | 00/8000               |       ***********************
+    3 |  1 UniFP.asm      3 | Comment     | 11 |         |    0 | 00/8000               |       *                     *
+    4 |  1 UniFP.asm      4 | Comment     | 11 |         |    0 | 00/8000               |       *  APPLE-II FLOATING  *
+    5 |  1 UniFP.asm      5 | Comment     | 11 |         |    0 | 00/8000               |       *   POINT ROUTINES    *
+    6 |  1 UniFP.asm      6 | Comment     | 11 |         |    0 | 00/8000               |       *                     *
+    7 |  1 UniFP.asm      7 | Comment     | 11 |         |    0 | 00/8000               |       *  COPYRIGHT 1977 BY  *
+    8 |  1 UniFP.asm      8 | Comment     | 11 |         |    0 | 00/8000               |       * APPLE COMPUTER INC. *
+    9 |  1 UniFP.asm      9 | Comment     | 11 |         |    0 | 00/8000               |       *                     *
+   10 |  1 UniFP.asm     10 | Comment     | 11 |         |    0 | 00/8000               |       * ALL RIGHTS RESERVED *
+   11 |  1 UniFP.asm     11 | Comment     | 11 |         |    0 | 00/8000               |       *                     *
+   12 |  1 UniFP.asm     12 | Comment     | 11 |         |    0 | 00/8000               |       *     S. WOZNIAK      *
+   13 |  1 UniFP.asm     13 | Comment     | 11 |         |    0 | 00/8000               |       *                     *
+   14 |  1 UniFP.asm     14 | Comment     | 11 |         |    0 | 00/8000               |       ***********************
+   15 |  1 UniFP.asm     15 | Comment     | 11 |         |    0 | 00/8000               | *     TITLE "FLOATING POINT ROUTINES for //c memory"
+   16 |  1 UniFP.asm     16 | Comment     | 11 |         |    0 | 00/8000               | *
+   17 |  1 UniFP.asm     17 | Equivalence | 11 |         |    0 | 00/8000               | SIGN        EQU   $EB            ;  $F3
+   18 |  1 UniFP.asm     18 | Empty       | 11 |         |    0 | 00/8000               |                                  
+   19 |  1 UniFP.asm     19 | Comment     | 11 |         |    0 | 00/8000               | 	  ** FP2 4 Bytes ** 
+   20 |  1 UniFP.asm     20 | Equivalence | 11 |         |    0 | 00/8000               | X2          EQU   $EC            ;  $F4
+   21 |  1 UniFP.asm     21 | Equivalence | 11 |         |    0 | 00/8000               | M2          EQU   $ED            ;  $F5 - $7
+   22 |  1 UniFP.asm     22 | Empty       | 11 |         |    0 | 00/8000               |                                  
+   23 |  1 UniFP.asm     23 | Comment     | 11 |         |    0 | 00/8000               | 	  ** FP1 4 Bytes + E extension **
+   24 |  1 UniFP.asm     24 | Equivalence | 11 |         |    0 | 00/8000               | X1          EQU   $FA            ;  $F8
+   25 |  1 UniFP.asm     25 | Equivalence | 11 |         |    0 | 00/8000               | M1          EQU   $FB            ;  $F9 - $FB
+   26 |  1 UniFP.asm     26 | Equivalence | 11 |         |    0 | 00/8000               | E           EQU   $FE            ;  $FC
+   27 |  1 UniFP.asm     27 | Empty       | 11 |         |    0 | 00/8000               |                                  
+   28 |  1 UniFP.asm     28 | Equivalence | 11 |         |    0 | 00/8000               | OVLOC       EQU   $3F5           
+   29 |  1 UniFP.asm     29 | Empty       | 11 |         |    0 | 00/8000               |                                  
+   30 |  1 UniFP.asm     30 | Directive   | 11 |         |    0 | 00/8000               |             ORG   $300           
+   31 |  1 UniFP.asm     31 | Empty       | 11 |         |    0 | 00/0300               |                                  
+   32 |  1 UniFP.asm     32 | Code        | 11 |         |    1 | 00/0300 : 18          | ADD         CLC                  ;CLEAR CARRY
+   33 |  1 UniFP.asm     33 | Code        | 11 |         |    2 | 00/0301 : A2 02       |             LDX   #$2            ;INDEX FOR 3-BYTE ADD.
+   34 |  1 UniFP.asm     34 | Code        | 11 |         |    2 | 00/0303 : B5 FB       | ADD1        LDA   {$FB},X        
+   35 |  1 UniFP.asm     35 | Code        | 11 |         |    2 | 00/0305 : 75 ED       |             ADC   {$ED},X        ;ADD A BYTE OF MANT2 TO MANT1
+   36 |  1 UniFP.asm     36 | Code        | 11 |         |    2 | 00/0307 : 95 FB       |             STA   {$FB},X        
+   37 |  1 UniFP.asm     37 | Code        | 11 |         |    1 | 00/0309 : CA          |             DEX                  ;INDEX TO NEXT MORE SIGNIF. BYTE.
+   38 |  1 UniFP.asm     38 | Code        | 11 |         |    2 | 00/030A : 10 F7       |             BPL   ADD1           ;LOOP UNTIL DONE.
+   39 |  1 UniFP.asm     39 | Code        | 11 |         |    1 | 00/030C : 60          |             RTS                  ;RETURN
+   40 |  1 UniFP.asm     40 | Code        | 11 |         |    2 | 00/030D : 06 EB       | MD1         ASL   {$EB}          ;CLEAR LSB OF SIGN.
+   41 |  1 UniFP.asm     41 | Code        | 11 |         |    3 | 00/030F : 20 12 03    |             JSR   ABSWAP         ;ABS VAL OF M1, THEN SWAP WITH M2
+   42 |  1 UniFP.asm     42 | Code        | 11 |         |    2 | 00/0312 : 24 FB       | ABSWAP      BIT   {$FB}          ;MANT1 NEGATIVE?
+   43 |  1 UniFP.asm     43 | Code        | 11 |         |    2 | 00/0314 : 10 05       |             BPL   ABSWAP1        ;NO, SWAP WITH MANT2 AND RETURN.
+   44 |  1 UniFP.asm     44 | Code        | 11 |         |    3 | 00/0316 : 20 7F 03    |             JSR   FCOMPL         ;YES, COMPLEMENT IT.
+   45 |  1 UniFP.asm     45 | Code        | 11 |         |    2 | 00/0319 : E6 EB       |             INC   {$EB}          ;INCR SIGN, COMPLEMENTING LSB.
+   46 |  1 UniFP.asm     46 | Code        | 11 |         |    1 | 00/031B : 38          | ABSWAP1     SEC                  ;SET CARRY FOR RETURN TO MUL/DIV.
+   47 |  1 UniFP.asm     47 | Code        | 11 |         |    2 | 00/031C : A2 04       | SWAP        LDX   #$4            ;INDEX FOR 4 BYTE SWAP.
+   48 |  1 UniFP.asm     48 | Code        | 11 |         |    2 | 00/031E : 94 FD       | SWAP1       STY   {$FE}-1,X      
+   49 |  1 UniFP.asm     49 | Code        | 11 |         |    2 | 00/0320 : B5 F9       |             LDA   {$FA}-1,X      ;SWAP A BYTE OF EXP/MANT1 WITH
+   50 |  1 UniFP.asm     50 | Code        | 11 |         |    2 | 00/0322 : B4 EB       |             LDY   {$EC}-1,X      ;EXP/MANT2 AND LEAVE A COPY OF
+   51 |  1 UniFP.asm     51 | Code        | 11 |         |    2 | 00/0324 : 94 F9       |             STY   {$FA}-1,X      ;MANT1 IN E (3 BYTES).  E+3 USED
+   52 |  1 UniFP.asm     52 | Code        | 11 |         |    2 | 00/0326 : 95 EB       |             STA   {$EC}-1,X      
+   53 |  1 UniFP.asm     53 | Code        | 11 |         |    1 | 00/0328 : CA          |             DEX                  ;ADVANCE INDEX TO NEXT BYTE
+   54 |  1 UniFP.asm     54 | Code        | 11 |         |    2 | 00/0329 : D0 F3       |             BNE   SWAP1          ;LOOP UNTIL DONE.
+   55 |  1 UniFP.asm     55 | Code        | 11 |         |    1 | 00/032B : 60          |             RTS                  ;RETURN
+   56 |  1 UniFP.asm     56 | Code        | 11 |         |    2 | 00/032C : A9 8E       | FLOAT       LDA   #$8E           ;INIT EXP1 TO 14, <--------------- int to fp
+   57 |  1 UniFP.asm     57 | Code        | 11 |         |    2 | 00/032E : 85 FA       |             STA   {$FA}          ;THEN NORMALIZE TO FLOAT.
+   58 |  1 UniFP.asm     58 | Code        | 11 |         |    2 | 00/0330 : A5 FB       | NORM1       LDA   {$FB}          ;HIGH-ORDER MANT1 BYTE.
+   59 |  1 UniFP.asm     59 | Code        | 11 |         |    2 | 00/0332 : C9 C0       |             CMP   #$C0           ;UPPER TWO BITS UNEQUAL?
+   60 |  1 UniFP.asm     60 | Code        | 11 |         |    2 | 00/0334 : 30 0C       |             BMI   RTS1           ;YES, RETURN WITH MANT1 NORMALIZED
+   61 |  1 UniFP.asm     61 | Code        | 11 |         |    2 | 00/0336 : C6 FA       |             DEC   {$FA}          ;DECREMENT EXP1.
+   62 |  1 UniFP.asm     62 | Code        | 11 |         |    2 | 00/0338 : 06 FD       |             ASL   {$FB}+2        
+   63 |  1 UniFP.asm     63 | Code        | 11 |         |    2 | 00/033A : 26 FC       |             ROL   {$FB}+1        ;SHIFT MANT1 (3 BYTES) LEFT.
+   64 |  1 UniFP.asm     64 | Code        | 11 |         |    2 | 00/033C : 26 FB       |             ROL   {$FB}          
+   65 |  1 UniFP.asm     65 | Code        | 11 |         |    2 | 00/033E : A5 FA       | NORM        LDA   {$FA}          ;EXP1 ZERO?
+   66 |  1 UniFP.asm     66 | Code        | 11 |         |    2 | 00/0340 : D0 EE       |             BNE   NORM1          ;NO, CONTINUE NORMALIZING.
+   67 |  1 UniFP.asm     67 | Code        | 11 |         |    1 | 00/0342 : 60          | RTS1        RTS                  ;RETURN.
+   68 |  1 UniFP.asm     68 | Code        | 11 |         |    3 | 00/0343 : 20 7F 03    | FSUB        JSR   FCOMPL         ;CMPL MANT1,CLEARS CARRY UNLESS 0 <---- sub
+   69 |  1 UniFP.asm     69 | Code        | 11 |         |    3 | 00/0346 : 20 56 03    | SWPALGN     JSR   ALGNSWP        ;RIGHT SHIFT MANT1 OR SWAP WITH
+   70 |  1 UniFP.asm     70 | Code        | 11 |         |    2 | 00/0349 : A5 EC       | FADD        LDA   {$EC}          ;<------------------------------------- add
+   71 |  1 UniFP.asm     71 | Code        | 11 |         |    2 | 00/034B : C5 FA       |             CMP   {$FA}          ;COMPARE EXP1 WITH EXP2.
+   72 |  1 UniFP.asm     72 | Code        | 11 |         |    2 | 00/034D : D0 F7       |             BNE   SWPALGN        ;IF #,SWAP ADDENDS OR ALIGN MANTS.
+   73 |  1 UniFP.asm     73 | Code        | 11 |         |    3 | 00/034F : 20 00 03    |             JSR   ADD            ;ADD ALIGNED MANTISSAS.
+   74 |  1 UniFP.asm     74 | Code        | 11 |         |    2 | 00/0352 : 50 EA       | ADDEND      BVC   NORM           ;NO OVERFLOW, NORMALIZE RESULT.
+   75 |  1 UniFP.asm     75 | Code        | 11 |         |    2 | 00/0354 : 70 05       |             BVS   RTLOG          ;OV: SHIFT M1 RIGHT, CARRY INTO SIGN
+   76 |  1 UniFP.asm     76 | Code        | 11 |         |    2 | 00/0356 : 90 C4       | ALGNSWP     BCC   SWAP           ;SWAP IF CARRY CLEAR,
+   77 |  1 UniFP.asm     77 | Comment     | 11 |         |    0 | 00/0358               |           *       ELSE SHIFT RIGHT ARITH.
+   78 |  1 UniFP.asm     78 | Code        | 11 |         |    2 | 00/0358 : A5 FB       | RTAR        LDA   {$FB}          ;SIGN OF MANT1 INTO CARRY FOR
+   79 |  1 UniFP.asm     79 | Code        | 11 |         |    1 | 00/035A : 0A          |             ASL                  ;RIGHT ARITH SHIFT.
+   80 |  1 UniFP.asm     80 | Code        | 11 |         |    2 | 00/035B : E6 FA       | RTLOG       INC   {$FA}          ;INCR X1 TO ADJUST FOR RIGHT SHIFT
+   81 |  1 UniFP.asm     81 | Code        | 11 |         |    2 | 00/035D : F0 75       |             BEQ   OVFL           ;EXP1 OUT OF RANGE.
+   82 |  1 UniFP.asm     82 | Code        | 11 |         |    2 | 00/035F : A2 FA       | RTLOG1      LDX   #$FA           ;INDEX FOR 6:BYTE RIGHT SHIFT.
+   83 |  1 UniFP.asm     83 | Code        | 11 |         |    2 | 00/0361 : 76 01       | ROR1        ROR   {$FE}+3,X      
+   84 |  1 UniFP.asm     84 | Code        | 11 |         |    1 | 00/0363 : E8          |             INX                  ;NEXT BYTE OF SHIFT.
+   85 |  1 UniFP.asm     85 | Code        | 11 |         |    2 | 00/0364 : D0 FB       |             BNE   ROR1           ;LOOP UNTIL DONE.
+   86 |  1 UniFP.asm     86 | Code        | 11 |         |    1 | 00/0366 : 60          |             RTS                  ;RETURN.
+   87 |  1 UniFP.asm     87 | Code        | 11 |         |    3 | 00/0367 : 20 0D 03    | FMUL        JSR   MD1            ;ABS VAL OF MANT1, MANT2 <-------------- mul
+   88 |  1 UniFP.asm     88 | Code        | 11 |         |    2 | 00/036A : 65 FA       |             ADC   {$FA}          ;ADD EXP1 TO EXP2 FOR PRODUCT EXP
+   89 |  1 UniFP.asm     89 | Code        | 11 |         |    3 | 00/036C : 20 BD 03    |             JSR   MD2            ;CHECK PROD. EXP AND PREP. FOR MUL
+   90 |  1 UniFP.asm     90 | Code        | 11 |         |    1 | 00/036F : 18          |             CLC                  ;CLEAR CARRY FOR FIRST BIT.
+   91 |  1 UniFP.asm     91 | Code        | 11 |         |    3 | 00/0370 : 20 5F 03    | MUL1        JSR   RTLOG1         ;M1 AND E RIGHT (PROD AND MPLIER)
+   92 |  1 UniFP.asm     92 | Code        | 11 |         |    2 | 00/0373 : 90 03       |             BCC   MUL2           ;IF CARRY CLEAR, SKIP PARTIAL PROD
+   93 |  1 UniFP.asm     93 | Code        | 11 |         |    3 | 00/0375 : 20 00 03    |             JSR   ADD            ;ADD MULTIPLICAND TO PRODUCT.
+   94 |  1 UniFP.asm     94 | Code        | 11 |         |    1 | 00/0378 : 88          | MUL2        DEY                  ;NEXT MUL ITERATION.
+   95 |  1 UniFP.asm     95 | Code        | 11 |         |    2 | 00/0379 : 10 F5       |             BPL   MUL1           ;LOOP UNTIL DONE.
+   96 |  1 UniFP.asm     96 | Code        | 11 |         |    2 | 00/037B : 46 EB       | MDEND       LSR   {$EB}          ;TEST SIGN LSB.
+   97 |  1 UniFP.asm     97 | Code        | 11 |         |    2 | 00/037D : 90 BF       | NORMX       BCC   NORM           ;IF EVEN,NORMALIZE PROD,ELSE COMP
+   98 |  1 UniFP.asm     98 | Code        | 11 |         |    1 | 00/037F : 38          | FCOMPL      SEC                  ;SET CARRY FOR SUBTRACT. <--------------- not
+   99 |  1 UniFP.asm     99 | Code        | 11 |         |    2 | 00/0380 : A2 03       |             LDX   #$3            ;INDEX FOR 3 BYTE SUBTRACT.
+  100 |  1 UniFP.asm    100 | Code        | 11 |         |    2 | 00/0382 : A9 00       | COMPL1      LDA   #$0            ;CLEAR A.
+  101 |  1 UniFP.asm    101 | Code        | 11 |         |    2 | 00/0384 : F5 FA       |             SBC   {$FA},X        ;SUBTRACT BYTE OF EXP1.
+  102 |  1 UniFP.asm    102 | Code        | 11 |         |    2 | 00/0386 : 95 FA       |             STA   {$FA},X        ;RESTORE IT.
+  103 |  1 UniFP.asm    103 | Code        | 11 |         |    1 | 00/0388 : CA          |             DEX                  ;NEXT MORE SIGNIFICANT BYTE.
+  104 |  1 UniFP.asm    104 | Code        | 11 |         |    2 | 00/0389 : D0 F7       |             BNE   COMPL1         ;LOOP UNTIL DONE.
+  105 |  1 UniFP.asm    105 | Code        | 11 |         |    2 | 00/038B : F0 C5       |             BEQ   ADDEND         ;NORMALIZE (OR SHIFT RT IF OVFL).
+  106 |  1 UniFP.asm    106 | Code        | 11 |         |    3 | 00/038D : 20 0D 03    | FDIV        JSR   MD1            ;TAKE ABS VAL OF MANT1, MANT2. <--------- div
+  107 |  1 UniFP.asm    107 | Code        | 11 |         |    2 | 00/0390 : E5 FA       |             SBC   {$FA}          ;SUBTRACT EXP1 FROM EXP2.
+  108 |  1 UniFP.asm    108 | Code        | 11 |         |    3 | 00/0392 : 20 BD 03    |             JSR   MD2            ;SAVE AS QUOTIENT EXP.
+  109 |  1 UniFP.asm    109 | Code        | 11 |         |    1 | 00/0395 : 38          | DIV1        SEC                  ;SET CARRY FOR SUBTRACT.
+  110 |  1 UniFP.asm    110 | Code        | 11 |         |    2 | 00/0396 : A2 02       |             LDX   #$2            ;INDEX FOR 3-BYTE SUBTRACTION.
+  111 |  1 UniFP.asm    111 | Code        | 11 |         |    2 | 00/0398 : B5 ED       | DIV2        LDA   {$ED},X        
+  112 |  1 UniFP.asm    112 | Code        | 11 |         |    2 | 00/039A : F5 FE       |             SBC   {$FE},X        ;SUBTRACT A BYTE OF E FROM MANT2.
+  113 |  1 UniFP.asm    113 | Code        | 11 |         |    1 | 00/039C : 48          |             PHA                  ;SAVE ON STACK.
+  114 |  1 UniFP.asm    114 | Code        | 11 |         |    1 | 00/039D : CA          |             DEX                  ;NEXT MORE SIGNIFICANT BYTE.
+  115 |  1 UniFP.asm    115 | Code        | 11 |         |    2 | 00/039E : 10 F8       |             BPL   DIV2           ;LOOP UNTIL DONE.
+  116 |  1 UniFP.asm    116 | Code        | 11 |         |    2 | 00/03A0 : A2 FD       |             LDX   #$FD           ;INDEX FOR 3-BYTE CONDITIONAL MOVE
+  117 |  1 UniFP.asm    117 | Code        | 11 |         |    1 | 00/03A2 : 68          | DIV3        PLA                  ;PULL BYTE OF DIFFERENCE OFF STACK
+  118 |  1 UniFP.asm    118 | Code        | 11 |         |    2 | 00/03A3 : 90 02       |             BCC   DIV4           ;IF M2<E THEN DON'T RESTORE M2.
+  119 |  1 UniFP.asm    119 | Code        | 11 |         |    2 | 00/03A5 : 95 F0       |             STA   {$ED}+3,X      
+  120 |  1 UniFP.asm    120 | Code        | 11 |         |    1 | 00/03A7 : E8          | DIV4        INX                  ;NEXT LESS SIGNIFICANT BYTE.
+  121 |  1 UniFP.asm    121 | Code        | 11 |         |    2 | 00/03A8 : D0 F8       |             BNE   DIV3           ;LOOP UNTIL DONE.
+  122 |  1 UniFP.asm    122 | Code        | 11 |         |    2 | 00/03AA : 26 FD       |             ROL   {$FB}+2        
+  123 |  1 UniFP.asm    123 | Code        | 11 |         |    2 | 00/03AC : 26 FC       |             ROL   {$FB}+1        ;ROLL QUOTIENT LEFT, CARRY INTO LSB
+  124 |  1 UniFP.asm    124 | Code        | 11 |         |    2 | 00/03AE : 26 FB       |             ROL   {$FB}          
+  125 |  1 UniFP.asm    125 | Code        | 11 |         |    2 | 00/03B0 : 06 EF       |             ASL   {$ED}+2        
+  126 |  1 UniFP.asm    126 | Code        | 11 |         |    2 | 00/03B2 : 26 EE       |             ROL   {$ED}+1        ;SHIFT DIVIDEND LEFT
+  127 |  1 UniFP.asm    127 | Code        | 11 |         |    2 | 00/03B4 : 26 ED       |             ROL   {$ED}          
+  128 |  1 UniFP.asm    128 | Code        | 11 |         |    2 | 00/03B6 : B0 1C       |             BCS   OVFL           ;OVFL IS DUE TO UNNORMED DIVISOR
+  129 |  1 UniFP.asm    129 | Code        | 11 |         |    1 | 00/03B8 : 88          |             DEY                  ;NEXT DIVIDE ITERATION.
+  130 |  1 UniFP.asm    130 | Code        | 11 |         |    2 | 00/03B9 : D0 DA       |             BNE   DIV1           ;LOOP UNTIL DONE 23 ITERATIONS.
+  131 |  1 UniFP.asm    131 | Code        | 11 |         |    2 | 00/03BB : F0 BE       |             BEQ   MDEND          ;NORM. QUOTIENT AND CORRECT SIGN.
+  132 |  1 UniFP.asm    132 | Code        | 11 |         |    2 | 00/03BD : 86 FD       | MD2         STX   {$FB}+2        
+  133 |  1 UniFP.asm    133 | Code        | 11 |         |    2 | 00/03BF : 86 FC       |             STX   {$FB}+1        ;CLEAR MANT1 (3 BYTES) FOR MUL/DIV.
+  134 |  1 UniFP.asm    134 | Code        | 11 |         |    2 | 00/03C1 : 86 FB       |             STX   {$FB}          
+  135 |  1 UniFP.asm    135 | Code        | 11 |         |    2 | 00/03C3 : B0 0D       |             BCS   OVCHK          ;IF CALC. SET CARRY,CHECK FOR OVFL
+  136 |  1 UniFP.asm    136 | Code        | 11 |         |    2 | 00/03C5 : 30 04       |             BMI   MD3            ;IF NEG THEN NO UNDERFLOW.
+  137 |  1 UniFP.asm    137 | Code        | 11 |         |    1 | 00/03C7 : 68          |             PLA                  ;POP ONE RETURN LEVEL.
+  138 |  1 UniFP.asm    138 | Code        | 11 |         |    1 | 00/03C8 : 68          |             PLA                  
+  139 |  1 UniFP.asm    139 | Code        | 11 |         |    2 | 00/03C9 : 90 B2       |             BCC   NORMX          ;CLEAR X1 AND RETURN.
+  140 |  1 UniFP.asm    140 | Code        | 11 |         |    2 | 00/03CB : 49 80       | MD3         EOR   #$80           ;COMPLEMENT SIGN BIT OF EXPONENT.
+  141 |  1 UniFP.asm    141 | Code        | 11 |         |    2 | 00/03CD : 85 FA       |             STA   {$FA}          ;STORE IT.
+  142 |  1 UniFP.asm    142 | Code        | 11 |         |    2 | 00/03CF : A0 17       |             LDY   #$17           ;COUNT 24 MUL/23 DIV ITERATIONS.
+  143 |  1 UniFP.asm    143 | Code        | 11 |         |    1 | 00/03D1 : 60          |             RTS                  ;RETURN.
+  144 |  1 UniFP.asm    144 | Code        | 11 |         |    2 | 00/03D2 : 10 F7       | OVCHK       BPL   MD3            ;IF POSITIVE EXP THEN NO OVFL.
+  145 |  1 UniFP.asm    145 | Code        | 11 |         |    3 | 00/03D4 : 4C F5 03    | OVFL        JMP   {$3F5}         
+  146 |  1 UniFP.asm    146 | Comment     | 11 |         |    0 | 00/03D7               | *	  ORG  $F63D
+  147 |  1 UniFP.asm    147 | Code        | 11 |         |    3 | 00/03D7 : 20 58 03    | FIX1        JSR   RTAR           
+  148 |  1 UniFP.asm    148 | Code        | 11 |         |    2 | 00/03DA : A5 FA       | FIX         LDA   {$FA}          ; <------------------------------ fp to int
+  149 |  1 UniFP.asm    149 | Code        | 11 |         |    2 | 00/03DC : 10 13       |             BPL   UNDFL          
+  150 |  1 UniFP.asm    150 | Code        | 11 |         |    2 | 00/03DE : C9 8E       |             CMP   #$8E           
+  151 |  1 UniFP.asm    151 | Code        | 11 |         |    2 | 00/03E0 : D0 F5       |             BNE   FIX1           
+  152 |  1 UniFP.asm    152 | Code        | 11 |         |    2 | 00/03E2 : 24 FB       |             BIT   {$FB}          
+  153 |  1 UniFP.asm    153 | Code        | 11 |         |    2 | 00/03E4 : 10 0A       |             BPL   FIXRTS         
+  154 |  1 UniFP.asm    154 | Code        | 11 |         |    2 | 00/03E6 : A5 FD       |             LDA   {$FB}+2        
+  155 |  1 UniFP.asm    155 | Code        | 11 |         |    2 | 00/03E8 : F0 06       |             BEQ   FIXRTS         
+  156 |  1 UniFP.asm    156 | Code        | 11 |         |    2 | 00/03EA : E6 FC       |             INC   {$FB}+1        
+  157 |  1 UniFP.asm    157 | Code        | 11 |         |    2 | 00/03EC : D0 02       |             BNE   FIXRTS         
+  158 |  1 UniFP.asm    158 | Code        | 11 |         |    2 | 00/03EE : E6 FB       |             INC   {$FB}          
+  159 |  1 UniFP.asm    159 | Code        | 11 |         |    1 | 00/03F0 : 60          | FIXRTS      RTS                  
+  160 |  1 UniFP.asm    160 | Code        | 11 |         |    2 | 00/03F1 : A9 00       | UNDFL       LDA   #$0            
+  161 |  1 UniFP.asm    161 | Code        | 11 |         |    2 | 00/03F3 : 85 FB       |             STA   {$FB}          
+  162 |  1 UniFP.asm    162 | Code        | 11 |         |    2 | 00/03F5 : 85 FC       |             STA   {$FB}+1        
+  163 |  1 UniFP.asm    163 | Code        | 11 |         |    1 | 00/03F7 : 60          |             RTS                  
+------+---------------------+-------------+----+---------+------+-----------------------+-------------------------------------------------------------------
