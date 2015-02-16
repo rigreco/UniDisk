@@ -102,7 +102,7 @@
    95 |  1 Unidrive4.asm     92 | Code        | 11 |         |    3 | 00/803E : 8D 39 82    |               sta   $8239          
    96 |  1 Unidrive4.asm     93 | Code        | 11 |         |    2 | 00/8041 : A5 FC       |               lda   {$FA}+2        ;M1 (2)
    97 |  1 Unidrive4.asm     94 | Code        | 11 |         |    3 | 00/8043 : 8D 3A 82    |               sta   $823A          
-   98 |  1 Unidrive4.asm     95 | Code        | 11 |         |    2 | 00/8046 : A5 FC       |               lda   {$FA}+2        ;M1 (3)
+   98 |  1 Unidrive4.asm     95 | Code        | 11 |         |    2 | 00/8046 : A5 FD       |               lda   {$FA}+3        ;M1 (3)
    99 |  1 Unidrive4.asm     96 | Code        | 11 |         |    3 | 00/8048 : 8D 3B 82    |               sta   $823B          
   100 |  1 Unidrive4.asm     97 | Empty       | 11 |         |    0 | 00/804B               |                                    
   101 |  1 Unidrive4.asm     98 | Comment     | 11 |         |    0 | 00/804B               | 		** 4 Byte N2 to FP2 **
@@ -112,7 +112,7 @@
   105 |  1 Unidrive4.asm    102 | Code        | 11 |         |    3 | 00/8052 : 8D 3D 82    |               sta   $823D          
   106 |  1 Unidrive4.asm    103 | Code        | 11 |         |    2 | 00/8055 : A5 EE       |               lda   {$EC}+2        ;M2 (2)
   107 |  1 Unidrive4.asm    104 | Code        | 11 |         |    3 | 00/8057 : 8D 3E 82    |               sta   $823E          
-  108 |  1 Unidrive4.asm    105 | Code        | 11 |         |    2 | 00/805A : A5 EE       |               lda   {$EC}+2        ;M2 (3)
+  108 |  1 Unidrive4.asm    105 | Code        | 11 |         |    2 | 00/805A : A5 EF       |               lda   {$EC}+3        ;M2 (3)
   109 |  1 Unidrive4.asm    106 | Code        | 11 |         |    3 | 00/805C : 8D 3F 82    |               sta   $823F          
   110 |  1 Unidrive4.asm    107 | Empty       | 11 |         |    0 | 00/805F               |                                    
   111 |  1 Unidrive4.asm    108 | Comment     | 11 |         |    0 | 00/805F               | *** Download ***
@@ -157,7 +157,7 @@
   150 |  1 Unidrive4.asm    147 | Empty       | 11 |         |    0 | 00/8098               |                                    
   151 |  1 Unidrive4.asm    148 | Comment     | 11 |         |    0 | 00/8098               | * 		Second time execute only to read the latest Byte of FP1*
   152 |  1 Unidrive4.asm    149 | Code        | 11 |         |    3 | 00/8098 : AD DE 80    |               lda   UNIAcc_reg     
-  153 |  1 Unidrive4.asm    150 | Code        | 11 |         |    2 | 00/809B : 85 FC       |               sta   {$FA}+2        
+  153 |  1 Unidrive4.asm    150 | Code        | 11 |         |    2 | 00/809B : 85 FD       |               sta   {$FA}+3        
   154 |  1 Unidrive4.asm    151 | Comment     | 11 |         |    0 | 00/809D               | *
   155 |  1 Unidrive4.asm    152 | Code        | 11 |         |    1 | 00/809D : 60          |               rts                  
   156 |  1 Unidrive4.asm    153 | Empty       | 11 |         |    0 | 00/809E               |                                    
@@ -296,11 +296,11 @@
   289 |  1 Unidrive4.asm    272 | Equivalence | 11 |         |    0 | 00/80F9               | CNTL_LIST2    equ   ozunid_17      
   290 |  1 Unidrive4.asm    273 | Data        | 11 |         |    1 | 00/80F9 : 06          | Clow_byte     dfb   $06            
   291 |  1 Unidrive4.asm    274 | Data        | 11 |         |    1 | 00/80FA : 00          | Chigh_byte    dfb   $00            
-  292 |  1 Unidrive4.asm    275 | Data        | 11 |         |    1 | 00/80FB : 00          | AccValue      dfb   $00            ; Input Value
-  293 |  1 Unidrive4.asm    276 | Data        | 11 |         |    1 | 00/80FC : 00          | X_reg         dfb   $00            ; Input Value (N1)
-  294 |  1 Unidrive4.asm    277 | Data        | 11 |         |    1 | 00/80FD : 00          | Y_reg         dfb   $00            ; Input Value (N2)
-  295 |  1 Unidrive4.asm    278 | Data        | 11 |         |    1 | 00/80FE : 00          | ProStatus     dfb   $00            ; Input Value
-  296 |  1 Unidrive4.asm    279 | Data        | 11 |         |    1 | 00/80FF : 05          | LowPC_reg     dfb   $05            ; Like ORG
+  292 |  1 Unidrive4.asm    275 | Data        | 11 |         |    1 | 00/80FB : 00          | AccValue      dfb   $00            ; Init Value Unidisk Accumulator Register
+  293 |  1 Unidrive4.asm    276 | Data        | 11 |         |    1 | 00/80FC : 00          | X_reg         dfb   $00            ; Init Value Unidisk X Register
+  294 |  1 Unidrive4.asm    277 | Data        | 11 |         |    1 | 00/80FD : 00          | Y_reg         dfb   $00            ; Init Value Unidisk Y Register
+  295 |  1 Unidrive4.asm    278 | Data        | 11 |         |    1 | 00/80FE : 00          | ProStatus     dfb   $00            ; Init Value Unidisk Status Register
+  296 |  1 Unidrive4.asm    279 | Data        | 11 |         |    1 | 00/80FF : 00          | LowPC_reg     dfb   $00            ; Init Value Unidisk Program Counter $0500
   297 |  1 Unidrive4.asm    280 | Data        | 11 |         |    1 | 00/8100 : 05          | HighPC_reg    dfb   $05            
   298 |  1 Unidrive4.asm    281 | Comment     | 11 |         |    0 | 00/8101               | *
   299 |  1 Unidrive4.asm    282 | Comment     | 11 |         |    0 | 00/8101               | *** Set Address ***
@@ -308,7 +308,7 @@
   301 |  1 Unidrive4.asm    283 | Equivalence | 11 |         |    0 | 00/8101               | CNTL_LIST3    equ   ozunid_18      
   302 |  1 Unidrive4.asm    284 | Data        | 11 |         |    1 | 00/8101 : 02          | CountL_byte   dfb   $02            
   303 |  1 Unidrive4.asm    285 | Data        | 11 |         |    1 | 00/8102 : 00          | CountH_byte   dfb   $00            
-  304 |  1 Unidrive4.asm    286 | Data        | 11 |         |    1 | 00/8103 : 00          | LByte_Addr    dfb   $00            ; ORG of Unidisk program
+  304 |  1 Unidrive4.asm    286 | Data        | 11 |         |    1 | 00/8103 : 00          | LByte_Addr    dfb   $00            ; ORG of Unidisk program, set begin program address $0500
   305 |  1 Unidrive4.asm    287 | Data        | 11 |         |    1 | 00/8104 : 05          | HByte_Addr    dfb   $05            
   306 |  1 Unidrive4.asm    288 | Comment     | 11 |         |    0 | 00/8105               | *
   307 |  1 Unidrive4.asm    289 | Comment     | 11 |         |    0 | 00/8105               | *** Download ***
@@ -317,230 +317,233 @@
   310 |  1 Unidrive4.asm    291 | Data        | 11 |         |    1 | 00/8105 : 38          | LenghtL_byte  dfb   $38            ;<----- Lenght of Unidisk program Lo  - Byte 312 byte
   311 |  1 Unidrive4.asm    292 | Data        | 11 |         |    1 | 00/8106 : 01          | LenghtH_byte  dfb   $01            ;<----- Lenght of Unidisk program Hi Byte
   312 |  1 Unidrive4.asm    293 | Comment     | 11 |         |    0 | 00/8107               | *
-  313 |  1 Unidrive4.asm    294 | Comment     | 11 |         |    0 | 00/8107               | *** Start UNIDISK Program ***
-  314 |  1 Unidrive4.asm    295 | Directive   | 11 |         |    0 | 00/8107               |               org   $0500          
-  315 |  1 Unidrive4.asm    296 | Empty       | 11 |         |    0 | 00/0500               |                                    
-  316 |  1 Unidrive4.asm    297 | Equivalence | 11 |         |    0 | 00/0500               | SIGN          EQU   $C0            ;$EB  ;  $F3
-  317 |  1 Unidrive4.asm    298 | Empty       | 11 |         |    0 | 00/0500               |                                    
-  318 |  1 Unidrive4.asm    299 | Comment     | 11 |         |    0 | 00/0500               | 	  	** FP2 4 Bytes ** 
-  319 |  1 Unidrive4.asm    300 | Equivalence | 11 |         |    0 | 00/0500               | X2            EQU   $C1            ;$EC  ;  $F4
-  320 |  1 Unidrive4.asm    301 | Equivalence | 11 |         |    0 | 00/0500               | M2            EQU   $C2            ;$ED  ;  $F5 - $F7
-  321 |  1 Unidrive4.asm    302 | Empty       | 11 |         |    0 | 00/0500               |                                    
-  322 |  1 Unidrive4.asm    303 | Comment     | 11 |         |    0 | 00/0500               | 	  	** FP1 4 Bytes + E extension **
-  323 |  1 Unidrive4.asm    304 | Equivalence | 11 |         |    0 | 00/0500               | X1            EQU   $C5            ;$FA  ;  $F8
-  324 |  1 Unidrive4.asm    305 | Equivalence | 11 |         |    0 | 00/0500               | M1            EQU   $C6            ;$FB  ;  $F9 - $FB
-  325 |  1 Unidrive4.asm    306 | Equivalence | 11 |         |    0 | 00/0500               | E             EQU   $C9            ;$FE  ;  $FC
-  326 |  1 Unidrive4.asm    307 | Empty       | 11 |         |    0 | 00/0500               |                                    
-  327 |  1 Unidrive4.asm    308 | Equivalence | 11 |         |    0 | 00/0500               | OVLOC         EQU   $C10           ;$3F5	;Overflow routine is not implemented at now)
-  328 |  1 Unidrive4.asm    309 | Comment     | 11 |         |    0 | 00/0500               | *
-  329 |  1 Unidrive4.asm    310 | Comment     | 11 |         |    0 | 00/0500               | ** Main program **
-  330 |  1 Unidrive4.asm    311 | Comment     | 11 |         |    0 | 00/0500               | *
-  331 |  1 Unidrive4.asm    312 | Comment     | 11 |         |    0 | 00/0500               | * CHK if is the second execution *
-  332 |  1 Unidrive4.asm    313 | Empty       | 11 |         |    0 | 00/0500               |                                    
-  333 |  1 Unidrive4.asm    314 | Code        | 11 |         |    2 | 00/0500 : C9 02       |               cmp   #02            
-  334 |  1 Unidrive4.asm    315 | Code        | 11 |         |    2 | 00/0502 : F0 32       |               beq   SECOND         
-  335 |  1 Unidrive4.asm    316 | Empty       | 11 |         |    0 | 00/0504               |                                    
-  336 |  1 Unidrive4.asm    317 | Comment     | 11 |         |    0 | 00/0504               | ** Input data to Zero Page **
-  337 |  1 Unidrive4.asm    318 | Empty       | 11 |         |    0 | 00/0504               |                                    
-  338 |  1 Unidrive4.asm    319 | Comment     | 11 |         |    0 | 00/0504               | 		** FP1 **
-  339 |  1 Unidrive4.asm    320 | Code        | 11 |         |    3 | 00/0504 : AD 31 06    |               lda   FP1            
-  340 |  1 Unidrive4.asm    321 | Code        | 11 |         |    2 | 00/0507 : 85 C5       |               sta   {$C5}          
-  341 |  1 Unidrive4.asm    322 | Empty       | 11 |         |    0 | 00/0509               |                                    
-  342 |  1 Unidrive4.asm    323 | Code        | 11 |         |    3 | 00/0509 : AD 32 06    |               lda   FP1+1          
-  343 |  1 Unidrive4.asm    324 | Code        | 11 |         |    2 | 00/050C : 85 C6       |               sta   {$C6}          
-  344 |  1 Unidrive4.asm    325 | Code        | 11 |         |    3 | 00/050E : AD 33 06    |               lda   FP1+2          
-  345 |  1 Unidrive4.asm    326 | Code        | 11 |         |    2 | 00/0511 : 85 C7       |               sta   {$C6}+1        
-  346 |  1 Unidrive4.asm    327 | Code        | 11 |         |    3 | 00/0513 : AD 34 06    |               lda   FP1+3          
-  347 |  1 Unidrive4.asm    328 | Code        | 11 |         |    2 | 00/0516 : 85 C8       |               sta   {$C6}+2        
-  348 |  1 Unidrive4.asm    329 | Empty       | 11 |         |    0 | 00/0518               |                                    
-  349 |  1 Unidrive4.asm    330 | Comment     | 11 |         |    0 | 00/0518               | 		** FP2 **
-  350 |  1 Unidrive4.asm    331 | Code        | 11 |         |    3 | 00/0518 : AD 35 06    |               lda   FP2            
-  351 |  1 Unidrive4.asm    332 | Code        | 11 |         |    2 | 00/051B : 85 C1       |               sta   {$C1}          
-  352 |  1 Unidrive4.asm    333 | Empty       | 11 |         |    0 | 00/051D               |                                    
-  353 |  1 Unidrive4.asm    334 | Code        | 11 |         |    3 | 00/051D : AD 36 06    |               lda   FP2+1          
-  354 |  1 Unidrive4.asm    335 | Code        | 11 |         |    2 | 00/0520 : 85 C2       |               sta   {$C2}          
-  355 |  1 Unidrive4.asm    336 | Code        | 11 |         |    3 | 00/0522 : AD 37 06    |               lda   FP2+2          
-  356 |  1 Unidrive4.asm    337 | Code        | 11 |         |    2 | 00/0525 : 85 C3       |               sta   {$C2}+1        
-  357 |  1 Unidrive4.asm    338 | Code        | 11 |         |    3 | 00/0527 : AD 38 06    |               lda   FP2+3          
-  358 |  1 Unidrive4.asm    339 | Code        | 11 |         |    2 | 00/052A : 85 C4       |               sta   {$C2}+2        
-  359 |  1 Unidrive4.asm    340 | Empty       | 11 |         |    0 | 00/052C               |                                    
-  360 |  1 Unidrive4.asm    341 | Comment     | 11 |         |    0 | 00/052C               | *** Target Function ***
-  361 |  1 Unidrive4.asm    342 | Comment     | 11 |         |    0 | 00/052C               | *	Y=N1+N2
-  362 |  1 Unidrive4.asm    343 | Empty       | 11 |         |    0 | 00/052C               |                                    
-  363 |  1 Unidrive4.asm    344 | Comment     | 11 |         |    0 | 00/052C               | ** Simple ADD **
-  364 |  1 Unidrive4.asm    345 | Code        | 11 |         |    3 | 00/052C : 20 82 05    |               jsr   FADD           
-  365 |  1 Unidrive4.asm    346 | Empty       | 11 |         |    0 | 00/052F               |                                    
-  366 |  1 Unidrive4.asm    347 | Comment     | 11 |         |    0 | 00/052F               | *** Output Data result FP1 to Unidisk registers First Time first 3 Byte***
-  367 |  1 Unidrive4.asm    348 | Code        | 11 |         |    2 | 00/052F : A5 C5       |               lda   {$C5}          
-  368 |  1 Unidrive4.asm    349 | Code        | 11 |         |    2 | 00/0531 : A6 C6       |               ldx   {$C6}          
-  369 |  1 Unidrive4.asm    350 | Code        | 11 |         |    2 | 00/0533 : A4 C7       |               ldy   {$C6}+1        
-  370 |  1 Unidrive4.asm    351 | Empty       | 11 |         |    0 | 00/0535               |                                    
-  371 |  1 Unidrive4.asm    352 | Code        | 11 |         |    1 | 00/0535 : 60          |               rts                  
-  372 |  1 Unidrive4.asm    353 | Comment     | 11 |         |    0 | 00/0536               | *** Output Data result FP1 to Unidisk registers Second Time latest 1 Byte***		
-  373 |  1 Unidrive4.asm    354 | Code        | 11 |         |    2 | 00/0536 : A5 C8       | SECOND        lda   {$C6}+2        
-  374 |  1 Unidrive4.asm    355 | Empty       | 11 |         |    0 | 00/0538               |                                    
-  375 |  1 Unidrive4.asm    356 | Code        | 11 |         |    1 | 00/0538 : 60          |               rts                  
-  376 |  1 Unidrive4.asm    357 | Empty       | 11 |         |    0 | 00/0539               |                                    
-  377 |  1 Unidrive4.asm    358 | Comment     | 11 |         |    0 | 00/0539               | ** FP Routine **
-  378 |  1 Unidrive4.asm    359 | Comment     | 11 |         |    0 | 00/0539               | *
-  379 |  1 Unidrive4.asm    360 | Comment     | 11 |         |    0 | 00/0539               |       ***********************
-  380 |  1 Unidrive4.asm    361 | Comment     | 11 |         |    0 | 00/0539               |       *                     *
-  381 |  1 Unidrive4.asm    362 | Comment     | 11 |         |    0 | 00/0539               |       *  APPLE-II FLOATING  *
-  382 |  1 Unidrive4.asm    363 | Comment     | 11 |         |    0 | 00/0539               |       *   POINT ROUTINES    *
+  313 |  1 Unidrive4.asm    294 | Comment     | 11 |         |    0 | 00/8107               | **************** Start UNIDISK Program ****************
+  314 |  1 Unidrive4.asm    295 | Comment     | 11 |         |    0 | 00/8107               | *
+  315 |  1 Unidrive4.asm    296 | Directive   | 11 |         |    0 | 00/8107               |               org   $0500          ; Start Unidisk program address
+  316 |  1 Unidrive4.asm    297 | Empty       | 11 |         |    0 | 00/0500               |                                    
+  317 |  1 Unidrive4.asm    298 | Equivalence | 11 |         |    0 | 00/0500               | SIGN          EQU   $C0            ;$EB  ;  $F3
+  318 |  1 Unidrive4.asm    299 | Empty       | 11 |         |    0 | 00/0500               |                                    
+  319 |  1 Unidrive4.asm    300 | Comment     | 11 |         |    0 | 00/0500               | 	  	** FP2 4 Bytes ** 
+  320 |  1 Unidrive4.asm    301 | Equivalence | 11 |         |    0 | 00/0500               | X2            EQU   $C1            ;$EC  ;  $F4
+  321 |  1 Unidrive4.asm    302 | Equivalence | 11 |         |    0 | 00/0500               | M2            EQU   $C2            ;$ED  ;  $F5 - $F7
+  322 |  1 Unidrive4.asm    303 | Empty       | 11 |         |    0 | 00/0500               |                                    
+  323 |  1 Unidrive4.asm    304 | Comment     | 11 |         |    0 | 00/0500               | 	  	** FP1 4 Bytes + E extension **
+  324 |  1 Unidrive4.asm    305 | Equivalence | 11 |         |    0 | 00/0500               | X1            EQU   $C5            ;$FA  ;  $F8
+  325 |  1 Unidrive4.asm    306 | Equivalence | 11 |         |    0 | 00/0500               | M1            EQU   $C6            ;$FB  ;  $F9 - $FB
+  326 |  1 Unidrive4.asm    307 | Equivalence | 11 |         |    0 | 00/0500               | E             EQU   $C9            ;$FE  ;  $FC
+  327 |  1 Unidrive4.asm    308 | Empty       | 11 |         |    0 | 00/0500               |                                    
+  328 |  1 Unidrive4.asm    309 | Equivalence | 11 |         |    0 | 00/0500               | OVLOC         EQU   $C10           ;$3F5	;Overflow routine is not implemented at now)
+  329 |  1 Unidrive4.asm    310 | Comment     | 11 |         |    0 | 00/0500               | *
+  330 |  1 Unidrive4.asm    311 | Comment     | 11 |         |    0 | 00/0500               | ** Main program **
+  331 |  1 Unidrive4.asm    312 | Comment     | 11 |         |    0 | 00/0500               | *
+  332 |  1 Unidrive4.asm    313 | Comment     | 11 |         |    0 | 00/0500               | * CHK if is the second execution *
+  333 |  1 Unidrive4.asm    314 | Empty       | 11 |         |    0 | 00/0500               |                                    
+  334 |  1 Unidrive4.asm    315 | Code        | 11 |         |    2 | 00/0500 : C9 02       |               cmp   #02            
+  335 |  1 Unidrive4.asm    316 | Code        | 11 |         |    2 | 00/0502 : F0 32       |               beq   SECOND         ;Only to read the rest part of result
+  336 |  1 Unidrive4.asm    317 | Empty       | 11 |         |    0 | 00/0504               |                                    
+  337 |  1 Unidrive4.asm    318 | Comment     | 11 |         |    0 | 00/0504               | ** Input data to Zero Page **
+  338 |  1 Unidrive4.asm    319 | Empty       | 11 |         |    0 | 00/0504               |                                    
+  339 |  1 Unidrive4.asm    320 | Comment     | 11 |         |    0 | 00/0504               | 		** FP1 **
+  340 |  1 Unidrive4.asm    321 | Code        | 11 |         |    3 | 00/0504 : AD 31 06    |               lda   FP1            
+  341 |  1 Unidrive4.asm    322 | Code        | 11 |         |    2 | 00/0507 : 85 C5       |               sta   {$C5}          
+  342 |  1 Unidrive4.asm    323 | Empty       | 11 |         |    0 | 00/0509               |                                    
+  343 |  1 Unidrive4.asm    324 | Code        | 11 |         |    3 | 00/0509 : AD 32 06    |               lda   FP1+1          
+  344 |  1 Unidrive4.asm    325 | Code        | 11 |         |    2 | 00/050C : 85 C6       |               sta   {$C6}          
+  345 |  1 Unidrive4.asm    326 | Code        | 11 |         |    3 | 00/050E : AD 33 06    |               lda   FP1+2          
+  346 |  1 Unidrive4.asm    327 | Code        | 11 |         |    2 | 00/0511 : 85 C7       |               sta   {$C6}+1        
+  347 |  1 Unidrive4.asm    328 | Code        | 11 |         |    3 | 00/0513 : AD 34 06    |               lda   FP1+3          
+  348 |  1 Unidrive4.asm    329 | Code        | 11 |         |    2 | 00/0516 : 85 C8       |               sta   {$C6}+2        
+  349 |  1 Unidrive4.asm    330 | Empty       | 11 |         |    0 | 00/0518               |                                    
+  350 |  1 Unidrive4.asm    331 | Comment     | 11 |         |    0 | 00/0518               | 		** FP2 **
+  351 |  1 Unidrive4.asm    332 | Code        | 11 |         |    3 | 00/0518 : AD 35 06    |               lda   FP2            
+  352 |  1 Unidrive4.asm    333 | Code        | 11 |         |    2 | 00/051B : 85 C1       |               sta   {$C1}          
+  353 |  1 Unidrive4.asm    334 | Empty       | 11 |         |    0 | 00/051D               |                                    
+  354 |  1 Unidrive4.asm    335 | Code        | 11 |         |    3 | 00/051D : AD 36 06    |               lda   FP2+1          
+  355 |  1 Unidrive4.asm    336 | Code        | 11 |         |    2 | 00/0520 : 85 C2       |               sta   {$C2}          
+  356 |  1 Unidrive4.asm    337 | Code        | 11 |         |    3 | 00/0522 : AD 37 06    |               lda   FP2+2          
+  357 |  1 Unidrive4.asm    338 | Code        | 11 |         |    2 | 00/0525 : 85 C3       |               sta   {$C2}+1        
+  358 |  1 Unidrive4.asm    339 | Code        | 11 |         |    3 | 00/0527 : AD 38 06    |               lda   FP2+3          
+  359 |  1 Unidrive4.asm    340 | Code        | 11 |         |    2 | 00/052A : 85 C4       |               sta   {$C2}+2        
+  360 |  1 Unidrive4.asm    341 | Empty       | 11 |         |    0 | 00/052C               |                                    
+  361 |  1 Unidrive4.asm    342 | Comment     | 11 |         |    0 | 00/052C               | ************************** Target Function ***********************
+  362 |  1 Unidrive4.asm    343 | Comment     | 11 |         |    0 | 00/052C               | *				Y=N1+N2	   			 *
+  363 |  1 Unidrive4.asm    344 | Comment     | 11 |         |    0 | 00/052C               | ******************************************************************
+  364 |  1 Unidrive4.asm    345 | Comment     | 11 |         |    0 | 00/052C               | *
+  365 |  1 Unidrive4.asm    346 | Comment     | 11 |         |    0 | 00/052C               | ** Simple ADD **
+  366 |  1 Unidrive4.asm    347 | Code        | 11 |         |    3 | 00/052C : 20 82 05    |               jsr   FADD           ; Call FP routine
+  367 |  1 Unidrive4.asm    348 | Empty       | 11 |         |    0 | 00/052F               |                                    
+  368 |  1 Unidrive4.asm    349 | Comment     | 11 |         |    0 | 00/052F               | *** Output Data result FP1 to Unidisk registers First Time first 3 Byte out ***
+  369 |  1 Unidrive4.asm    350 | Code        | 11 |         |    2 | 00/052F : A5 C5       |               lda   {$C5}          
+  370 |  1 Unidrive4.asm    351 | Code        | 11 |         |    2 | 00/0531 : A6 C6       |               ldx   {$C6}          
+  371 |  1 Unidrive4.asm    352 | Code        | 11 |         |    2 | 00/0533 : A4 C7       |               ldy   {$C6}+1        
+  372 |  1 Unidrive4.asm    353 | Empty       | 11 |         |    0 | 00/0535               |                                    
+  373 |  1 Unidrive4.asm    354 | Code        | 11 |         |    1 | 00/0535 : 60          |               rts                  
+  374 |  1 Unidrive4.asm    355 | Comment     | 11 |         |    0 | 00/0536               | *** Output Data result FP1 to Unidisk registers Second Time latest 1 Byte out ***		
+  375 |  1 Unidrive4.asm    356 | Code        | 11 |         |    2 | 00/0536 : A5 C8       | SECOND        lda   {$C6}+2        
+  376 |  1 Unidrive4.asm    357 | Empty       | 11 |         |    0 | 00/0538               |                                    
+  377 |  1 Unidrive4.asm    358 | Code        | 11 |         |    1 | 00/0538 : 60          |               rts                  
+  378 |  1 Unidrive4.asm    359 | Comment     | 11 |         |    0 | 00/0539               | ***************************************************
+  379 |  1 Unidrive4.asm    360 | Comment     | 11 |         |    0 | 00/0539               | *
+  380 |  1 Unidrive4.asm    361 | Comment     | 11 |         |    0 | 00/0539               | ***************** FP Routine *****************
+  381 |  1 Unidrive4.asm    362 | Comment     | 11 |         |    0 | 00/0539               | *
+  382 |  1 Unidrive4.asm    363 | Comment     | 11 |         |    0 | 00/0539               |       ***********************
   383 |  1 Unidrive4.asm    364 | Comment     | 11 |         |    0 | 00/0539               |       *                     *
-  384 |  1 Unidrive4.asm    365 | Comment     | 11 |         |    0 | 00/0539               |       *  COPYRIGHT 1977 BY  *
-  385 |  1 Unidrive4.asm    366 | Comment     | 11 |         |    0 | 00/0539               |       * APPLE COMPUTER INC. *
+  384 |  1 Unidrive4.asm    365 | Comment     | 11 |         |    0 | 00/0539               |       *  APPLE-II FLOATING  *
+  385 |  1 Unidrive4.asm    366 | Comment     | 11 |         |    0 | 00/0539               |       *   POINT ROUTINES    *
   386 |  1 Unidrive4.asm    367 | Comment     | 11 |         |    0 | 00/0539               |       *                     *
-  387 |  1 Unidrive4.asm    368 | Comment     | 11 |         |    0 | 00/0539               |       * ALL RIGHTS RESERVED *
-  388 |  1 Unidrive4.asm    369 | Comment     | 11 |         |    0 | 00/0539               |       *                     *
-  389 |  1 Unidrive4.asm    370 | Comment     | 11 |         |    0 | 00/0539               |       *     S. WOZNIAK      *
-  390 |  1 Unidrive4.asm    371 | Comment     | 11 |         |    0 | 00/0539               |       *                     *
-  391 |  1 Unidrive4.asm    372 | Comment     | 11 |         |    0 | 00/0539               |       ***********************
-  392 |  1 Unidrive4.asm    373 | Comment     | 11 |         |    0 | 00/0539               | *     TITLE "FLOATING POINT ROUTINES for Unidisk memory"
-  393 |  1 Unidrive4.asm    374 | Comment     | 11 |         |    0 | 00/0539               | *
-  394 |  1 Unidrive4.asm    375 | Empty       | 11 |         |    0 | 00/0539               |                                    
-  395 |  1 Unidrive4.asm    376 | Comment     | 11 |         |    0 | 00/0539               | *          ORG  $300
-  396 |  1 Unidrive4.asm    377 | Empty       | 11 |         |    0 | 00/0539               |                                    
-  397 |  1 Unidrive4.asm    378 | Code        | 11 |         |    1 | 00/0539 : 18          | ADD           CLC                  ;CLEAR CARRY
-  398 |  1 Unidrive4.asm    379 | Code        | 11 |         |    2 | 00/053A : A2 02       |               LDX   #$2            ;INDEX FOR 3-BYTE ADD.
-  399 |  1 Unidrive4.asm    380 | Code        | 11 |         |    2 | 00/053C : B5 C6       | ADD1          LDA   {$C6},X        
-  400 |  1 Unidrive4.asm    381 | Code        | 11 |         |    2 | 00/053E : 75 C2       |               ADC   {$C2},X        ;ADD A BYTE OF MANT2 TO MANT1
-  401 |  1 Unidrive4.asm    382 | Code        | 11 |         |    2 | 00/0540 : 95 C6       |               STA   {$C6},X        
-  402 |  1 Unidrive4.asm    383 | Code        | 11 |         |    1 | 00/0542 : CA          |               DEX                  ;INDEX TO NEXT MORE SIGNIF. BYTE.
-  403 |  1 Unidrive4.asm    384 | Code        | 11 |         |    2 | 00/0543 : 10 F7       |               BPL   ADD1           ;LOOP UNTIL DONE.
-  404 |  1 Unidrive4.asm    385 | Code        | 11 |         |    1 | 00/0545 : 60          |               RTS                  ;RETURN
-  405 |  1 Unidrive4.asm    386 | Code        | 11 |         |    2 | 00/0546 : 06 C0       | MD1           ASL   {$C0}          ;CLEAR LSB OF SIGN.
-  406 |  1 Unidrive4.asm    387 | Code        | 11 |         |    3 | 00/0548 : 20 4B 05    |               JSR   ABSWAP         ;ABS VAL OF M1, THEN SWAP WITH M2
-  407 |  1 Unidrive4.asm    388 | Code        | 11 |         |    2 | 00/054B : 24 C6       | ABSWAP        BIT   {$C6}          ;MANT1 NEGATIVE?
-  408 |  1 Unidrive4.asm    389 | Code        | 11 |         |    2 | 00/054D : 10 05       |               BPL   ABSWAP1        ;NO, SWAP WITH MANT2 AND RETURN.
-  409 |  1 Unidrive4.asm    390 | Code        | 11 |         |    3 | 00/054F : 20 B8 05    |               JSR   FCOMPL         ;YES, COMPLEMENT IT.
-  410 |  1 Unidrive4.asm    391 | Code        | 11 |         |    2 | 00/0552 : E6 C0       |               INC   {$C0}          ;INCR SIGN, COMPLEMENTING LSB.
-  411 |  1 Unidrive4.asm    392 | Code        | 11 |         |    1 | 00/0554 : 38          | ABSWAP1       SEC                  ;SET CARRY FOR RETURN TO MUL/DIV.
-  412 |  1 Unidrive4.asm    393 | Code        | 11 |         |    2 | 00/0555 : A2 04       | SWAP          LDX   #$4            ;INDEX FOR 4 BYTE SWAP.
-  413 |  1 Unidrive4.asm    394 | Code        | 11 |         |    2 | 00/0557 : 94 C8       | SWAP1         STY   {$C9}-1,X      
-  414 |  1 Unidrive4.asm    395 | Code        | 11 |         |    2 | 00/0559 : B5 C4       |               LDA   {$C5}-1,X      ;SWAP A BYTE OF EXP/MANT1 WITH
-  415 |  1 Unidrive4.asm    396 | Code        | 11 |         |    2 | 00/055B : B4 C0       |               LDY   {$C1}-1,X      ;EXP/MANT2 AND LEAVE A COPY OF
-  416 |  1 Unidrive4.asm    397 | Code        | 11 |         |    2 | 00/055D : 94 C4       |               STY   {$C5}-1,X      ;MANT1 IN E (3 BYTES).  E+3 USED
-  417 |  1 Unidrive4.asm    398 | Code        | 11 |         |    2 | 00/055F : 95 C0       |               STA   {$C1}-1,X      
-  418 |  1 Unidrive4.asm    399 | Code        | 11 |         |    1 | 00/0561 : CA          |               DEX                  ;ADVANCE INDEX TO NEXT BYTE
-  419 |  1 Unidrive4.asm    400 | Code        | 11 |         |    2 | 00/0562 : D0 F3       |               BNE   SWAP1          ;LOOP UNTIL DONE.
-  420 |  1 Unidrive4.asm    401 | Code        | 11 |         |    1 | 00/0564 : 60          |               RTS                  ;RETURN
-  421 |  1 Unidrive4.asm    402 | Code        | 11 |         |    2 | 00/0565 : A9 8E       | FLOAT         LDA   #$8E           ;INIT EXP1 TO 14, <--------------- int to fp
-  422 |  1 Unidrive4.asm    403 | Code        | 11 |         |    2 | 00/0567 : 85 C5       |               STA   {$C5}          ;THEN NORMALIZE TO FLOAT.
-  423 |  1 Unidrive4.asm    404 | Code        | 11 |         |    2 | 00/0569 : A5 C6       | NORM1         LDA   {$C6}          ;HIGH-ORDER MANT1 BYTE.
-  424 |  1 Unidrive4.asm    405 | Code        | 11 |         |    2 | 00/056B : C9 C0       |               CMP   #$C0           ;UPPER TWO BITS UNEQUAL?
-  425 |  1 Unidrive4.asm    406 | Code        | 11 |         |    2 | 00/056D : 30 0C       |               BMI   RTS1           ;YES, RETURN WITH MANT1 NORMALIZED
-  426 |  1 Unidrive4.asm    407 | Code        | 11 |         |    2 | 00/056F : C6 C5       |               DEC   {$C5}          ;DECREMENT EXP1.
-  427 |  1 Unidrive4.asm    408 | Code        | 11 |         |    2 | 00/0571 : 06 C8       |               ASL   {$C6}+2        
-  428 |  1 Unidrive4.asm    409 | Code        | 11 |         |    2 | 00/0573 : 26 C7       |               ROL   {$C6}+1        ;SHIFT MANT1 (3 BYTES) LEFT.
-  429 |  1 Unidrive4.asm    410 | Code        | 11 |         |    2 | 00/0575 : 26 C6       |               ROL   {$C6}          
-  430 |  1 Unidrive4.asm    411 | Code        | 11 |         |    2 | 00/0577 : A5 C5       | NORM          LDA   {$C5}          ;EXP1 ZERO?
-  431 |  1 Unidrive4.asm    412 | Code        | 11 |         |    2 | 00/0579 : D0 EE       |               BNE   NORM1          ;NO, CONTINUE NORMALIZING.
-  432 |  1 Unidrive4.asm    413 | Code        | 11 |         |    1 | 00/057B : 60          | RTS1          RTS                  ;RETURN.
-  433 |  1 Unidrive4.asm    414 | Code        | 11 |         |    3 | 00/057C : 20 B8 05    | FSUB          JSR   FCOMPL         ;CMPL MANT1,CLEARS CARRY UNLESS 0 <---- sub
-  434 |  1 Unidrive4.asm    415 | Code        | 11 |         |    3 | 00/057F : 20 8F 05    | SWPALGN       JSR   ALGNSWP        ;RIGHT SHIFT MANT1 OR SWAP WITH
-  435 |  1 Unidrive4.asm    416 | Code        | 11 |         |    2 | 00/0582 : A5 C1       | FADD          LDA   {$C1}          ;<------------------------------------- add
-  436 |  1 Unidrive4.asm    417 | Code        | 11 |         |    2 | 00/0584 : C5 C5       |               CMP   {$C5}          ;COMPARE EXP1 WITH EXP2.
-  437 |  1 Unidrive4.asm    418 | Code        | 11 |         |    2 | 00/0586 : D0 F7       |               BNE   SWPALGN        ;IF #,SWAP ADDENDS OR ALIGN MANTS.
-  438 |  1 Unidrive4.asm    419 | Code        | 11 |         |    3 | 00/0588 : 20 39 05    |               JSR   ADD            ;ADD ALIGNED MANTISSAS.
-  439 |  1 Unidrive4.asm    420 | Code        | 11 |         |    2 | 00/058B : 50 EA       | ADDEND        BVC   NORM           ;NO OVERFLOW, NORMALIZE RESULT.
-  440 |  1 Unidrive4.asm    421 | Code        | 11 |         |    2 | 00/058D : 70 05       |               BVS   RTLOG          ;OV: SHIFT M1 RIGHT, CARRY INTO SIGN
-  441 |  1 Unidrive4.asm    422 | Code        | 11 |         |    2 | 00/058F : 90 C4       | ALGNSWP       BCC   SWAP           ;SWAP IF CARRY CLEAR,
-  442 |  1 Unidrive4.asm    423 | Comment     | 11 |         |    0 | 00/0591               |           *       ELSE SHIFT RIGHT ARITH.
-  443 |  1 Unidrive4.asm    424 | Code        | 11 |         |    2 | 00/0591 : A5 C6       | RTAR          LDA   {$C6}          ;SIGN OF MANT1 INTO CARRY FOR
-  444 |  1 Unidrive4.asm    425 | Code        | 11 |         |    1 | 00/0593 : 0A          |               ASL                  ;RIGHT ARITH SHIFT.
-  445 |  1 Unidrive4.asm    426 | Code        | 11 |         |    2 | 00/0594 : E6 C5       | RTLOG         INC   {$C5}          ;INCR X1 TO ADJUST FOR RIGHT SHIFT
-  446 |  1 Unidrive4.asm    427 | Code        | 11 |         |    2 | 00/0596 : F0 75       |               BEQ   OVFL           ;EXP1 OUT OF RANGE.
-  447 |  1 Unidrive4.asm    428 | Code        | 11 |         |    2 | 00/0598 : A2 FA       | RTLOG1        LDX   #$FA           ;INDEX FOR 6:BYTE RIGHT SHIFT.
-  448 |  1 Unidrive4.asm    429 | Code        | 11 |         |    2 | 00/059A : 76 CC       | ROR1          ROR   {$C9}+3,X      
-  449 |  1 Unidrive4.asm    430 | Code        | 11 |         |    1 | 00/059C : E8          |               INX                  ;NEXT BYTE OF SHIFT.
-  450 |  1 Unidrive4.asm    431 | Code        | 11 |         |    2 | 00/059D : D0 FB       |               BNE   ROR1           ;LOOP UNTIL DONE.
-  451 |  1 Unidrive4.asm    432 | Code        | 11 |         |    1 | 00/059F : 60          |               RTS                  ;RETURN.
-  452 |  1 Unidrive4.asm    433 | Code        | 11 |         |    3 | 00/05A0 : 20 46 05    | FMUL          JSR   MD1            ;ABS VAL OF MANT1, MANT2 <-------------- mul
-  453 |  1 Unidrive4.asm    434 | Code        | 11 |         |    2 | 00/05A3 : 65 C5       |               ADC   {$C5}          ;ADD EXP1 TO EXP2 FOR PRODUCT EXP
-  454 |  1 Unidrive4.asm    435 | Code        | 11 |         |    3 | 00/05A5 : 20 F6 05    |               JSR   MD2            ;CHECK PROD. EXP AND PREP. FOR MUL
-  455 |  1 Unidrive4.asm    436 | Code        | 11 |         |    1 | 00/05A8 : 18          |               CLC                  ;CLEAR CARRY FOR FIRST BIT.
-  456 |  1 Unidrive4.asm    437 | Code        | 11 |         |    3 | 00/05A9 : 20 98 05    | MUL1          JSR   RTLOG1         ;M1 AND E RIGHT (PROD AND MPLIER)
-  457 |  1 Unidrive4.asm    438 | Code        | 11 |         |    2 | 00/05AC : 90 03       |               BCC   MUL2           ;IF CARRY CLEAR, SKIP PARTIAL PROD
-  458 |  1 Unidrive4.asm    439 | Code        | 11 |         |    3 | 00/05AE : 20 39 05    |               JSR   ADD            ;ADD MULTIPLICAND TO PRODUCT.
-  459 |  1 Unidrive4.asm    440 | Code        | 11 |         |    1 | 00/05B1 : 88          | MUL2          DEY                  ;NEXT MUL ITERATION.
-  460 |  1 Unidrive4.asm    441 | Code        | 11 |         |    2 | 00/05B2 : 10 F5       |               BPL   MUL1           ;LOOP UNTIL DONE.
-  461 |  1 Unidrive4.asm    442 | Code        | 11 |         |    2 | 00/05B4 : 46 C0       | MDEND         LSR   {$C0}          ;TEST SIGN LSB.
-  462 |  1 Unidrive4.asm    443 | Code        | 11 |         |    2 | 00/05B6 : 90 BF       | NORMX         BCC   NORM           ;IF EVEN,NORMALIZE PROD,ELSE COMP
-  463 |  1 Unidrive4.asm    444 | Code        | 11 |         |    1 | 00/05B8 : 38          | FCOMPL        SEC                  ;SET CARRY FOR SUBTRACT. <--------------- not
-  464 |  1 Unidrive4.asm    445 | Code        | 11 |         |    2 | 00/05B9 : A2 03       |               LDX   #$3            ;INDEX FOR 3 BYTE SUBTRACT.
-  465 |  1 Unidrive4.asm    446 | Code        | 11 |         |    2 | 00/05BB : A9 00       | COMPL1        LDA   #$0            ;CLEAR A.
-  466 |  1 Unidrive4.asm    447 | Code        | 11 |         |    2 | 00/05BD : F5 C5       |               SBC   {$C5},X        ;SUBTRACT BYTE OF EXP1.
-  467 |  1 Unidrive4.asm    448 | Code        | 11 |         |    2 | 00/05BF : 95 C5       |               STA   {$C5},X        ;RESTORE IT.
-  468 |  1 Unidrive4.asm    449 | Code        | 11 |         |    1 | 00/05C1 : CA          |               DEX                  ;NEXT MORE SIGNIFICANT BYTE.
-  469 |  1 Unidrive4.asm    450 | Code        | 11 |         |    2 | 00/05C2 : D0 F7       |               BNE   COMPL1         ;LOOP UNTIL DONE.
-  470 |  1 Unidrive4.asm    451 | Code        | 11 |         |    2 | 00/05C4 : F0 C5       |               BEQ   ADDEND         ;NORMALIZE (OR SHIFT RT IF OVFL).
-  471 |  1 Unidrive4.asm    452 | Code        | 11 |         |    3 | 00/05C6 : 20 46 05    | FDIV          JSR   MD1            ;TAKE ABS VAL OF MANT1, MANT2. <--------- div
-  472 |  1 Unidrive4.asm    453 | Code        | 11 |         |    2 | 00/05C9 : E5 C5       |               SBC   {$C5}          ;SUBTRACT EXP1 FROM EXP2.
-  473 |  1 Unidrive4.asm    454 | Code        | 11 |         |    3 | 00/05CB : 20 F6 05    |               JSR   MD2            ;SAVE AS QUOTIENT EXP.
-  474 |  1 Unidrive4.asm    455 | Code        | 11 |         |    1 | 00/05CE : 38          | DIV1          SEC                  ;SET CARRY FOR SUBTRACT.
-  475 |  1 Unidrive4.asm    456 | Code        | 11 |         |    2 | 00/05CF : A2 02       |               LDX   #$2            ;INDEX FOR 3-BYTE SUBTRACTION.
-  476 |  1 Unidrive4.asm    457 | Code        | 11 |         |    2 | 00/05D1 : B5 C2       | DIV2          LDA   {$C2},X        
-  477 |  1 Unidrive4.asm    458 | Code        | 11 |         |    2 | 00/05D3 : F5 C9       |               SBC   {$C9},X        ;SUBTRACT A BYTE OF E FROM MANT2.
-  478 |  1 Unidrive4.asm    459 | Code        | 11 |         |    1 | 00/05D5 : 48          |               PHA                  ;SAVE ON STACK.
-  479 |  1 Unidrive4.asm    460 | Code        | 11 |         |    1 | 00/05D6 : CA          |               DEX                  ;NEXT MORE SIGNIFICANT BYTE.
-  480 |  1 Unidrive4.asm    461 | Code        | 11 |         |    2 | 00/05D7 : 10 F8       |               BPL   DIV2           ;LOOP UNTIL DONE.
-  481 |  1 Unidrive4.asm    462 | Code        | 11 |         |    2 | 00/05D9 : A2 FD       |               LDX   #$FD           ;INDEX FOR 3-BYTE CONDITIONAL MOVE
-  482 |  1 Unidrive4.asm    463 | Code        | 11 |         |    1 | 00/05DB : 68          | DIV3          PLA                  ;PULL BYTE OF DIFFERENCE OFF STACK
-  483 |  1 Unidrive4.asm    464 | Code        | 11 |         |    2 | 00/05DC : 90 02       |               BCC   DIV4           ;IF M2<E THEN DON'T RESTORE M2.
-  484 |  1 Unidrive4.asm    465 | Code        | 11 |         |    2 | 00/05DE : 95 C5       |               STA   {$C2}+3,X      
-  485 |  1 Unidrive4.asm    466 | Code        | 11 |         |    1 | 00/05E0 : E8          | DIV4          INX                  ;NEXT LESS SIGNIFICANT BYTE.
-  486 |  1 Unidrive4.asm    467 | Code        | 11 |         |    2 | 00/05E1 : D0 F8       |               BNE   DIV3           ;LOOP UNTIL DONE.
-  487 |  1 Unidrive4.asm    468 | Code        | 11 |         |    2 | 00/05E3 : 26 C8       |               ROL   {$C6}+2        
-  488 |  1 Unidrive4.asm    469 | Code        | 11 |         |    2 | 00/05E5 : 26 C7       |               ROL   {$C6}+1        ;ROLL QUOTIENT LEFT, CARRY INTO LSB
-  489 |  1 Unidrive4.asm    470 | Code        | 11 |         |    2 | 00/05E7 : 26 C6       |               ROL   {$C6}          
-  490 |  1 Unidrive4.asm    471 | Code        | 11 |         |    2 | 00/05E9 : 06 C4       |               ASL   {$C2}+2        
-  491 |  1 Unidrive4.asm    472 | Code        | 11 |         |    2 | 00/05EB : 26 C3       |               ROL   {$C2}+1        ;SHIFT DIVIDEND LEFT
-  492 |  1 Unidrive4.asm    473 | Code        | 11 |         |    2 | 00/05ED : 26 C2       |               ROL   {$C2}          
-  493 |  1 Unidrive4.asm    474 | Code        | 11 |         |    2 | 00/05EF : B0 1C       |               BCS   OVFL           ;OVFL IS DUE TO UNNORMED DIVISOR
-  494 |  1 Unidrive4.asm    475 | Code        | 11 |         |    1 | 00/05F1 : 88          |               DEY                  ;NEXT DIVIDE ITERATION.
-  495 |  1 Unidrive4.asm    476 | Code        | 11 |         |    2 | 00/05F2 : D0 DA       |               BNE   DIV1           ;LOOP UNTIL DONE 23 ITERATIONS.
-  496 |  1 Unidrive4.asm    477 | Code        | 11 |         |    2 | 00/05F4 : F0 BE       |               BEQ   MDEND          ;NORM. QUOTIENT AND CORRECT SIGN.
-  497 |  1 Unidrive4.asm    478 | Code        | 11 |         |    2 | 00/05F6 : 86 C8       | MD2           STX   {$C6}+2        
-  498 |  1 Unidrive4.asm    479 | Code        | 11 |         |    2 | 00/05F8 : 86 C7       |               STX   {$C6}+1        ;CLEAR MANT1 (3 BYTES) FOR MUL/DIV.
-  499 |  1 Unidrive4.asm    480 | Code        | 11 |         |    2 | 00/05FA : 86 C6       |               STX   {$C6}          
-  500 |  1 Unidrive4.asm    481 | Code        | 11 |         |    2 | 00/05FC : B0 0D       |               BCS   OVCHK          ;IF CALC. SET CARRY,CHECK FOR OVFL
-  501 |  1 Unidrive4.asm    482 | Code        | 11 |         |    2 | 00/05FE : 30 04       |               BMI   MD3            ;IF NEG THEN NO UNDERFLOW.
-  502 |  1 Unidrive4.asm    483 | Code        | 11 |         |    1 | 00/0600 : 68          |               PLA                  ;POP ONE RETURN LEVEL.
-  503 |  1 Unidrive4.asm    484 | Code        | 11 |         |    1 | 00/0601 : 68          |               PLA                  
-  504 |  1 Unidrive4.asm    485 | Code        | 11 |         |    2 | 00/0602 : 90 B2       |               BCC   NORMX          ;CLEAR X1 AND RETURN.
-  505 |  1 Unidrive4.asm    486 | Code        | 11 |         |    2 | 00/0604 : 49 80       | MD3           EOR   #$80           ;COMPLEMENT SIGN BIT OF EXPONENT.
-  506 |  1 Unidrive4.asm    487 | Code        | 11 |         |    2 | 00/0606 : 85 C5       |               STA   {$C5}          ;STORE IT.
-  507 |  1 Unidrive4.asm    488 | Code        | 11 |         |    2 | 00/0608 : A0 17       |               LDY   #$17           ;COUNT 24 MUL/23 DIV ITERATIONS.
-  508 |  1 Unidrive4.asm    489 | Code        | 11 |         |    1 | 00/060A : 60          |               RTS                  ;RETURN.
-  509 |  1 Unidrive4.asm    490 | Code        | 11 |         |    2 | 00/060B : 10 F7       | OVCHK         BPL   MD3            ;IF POSITIVE EXP THEN NO OVFL.
-  510 |  1 Unidrive4.asm    491 | Code        | 11 |         |    3 | 00/060D : 4C 10 0C    | OVFL          JMP   {$C10}         
-  511 |  1 Unidrive4.asm    492 | Comment     | 11 |         |    0 | 00/0610               | *	  ORG  $F63D
-  512 |  1 Unidrive4.asm    493 | Code        | 11 |         |    3 | 00/0610 : 20 91 05    | FIX1          JSR   RTAR           
-  513 |  1 Unidrive4.asm    494 | Code        | 11 |         |    2 | 00/0613 : A5 C5       | FIX           LDA   {$C5}          ; <------------------------------ fp to int
-  514 |  1 Unidrive4.asm    495 | Code        | 11 |         |    2 | 00/0615 : 10 13       |               BPL   UNDFL          
-  515 |  1 Unidrive4.asm    496 | Code        | 11 |         |    2 | 00/0617 : C9 8E       |               CMP   #$8E           
-  516 |  1 Unidrive4.asm    497 | Code        | 11 |         |    2 | 00/0619 : D0 F5       |               BNE   FIX1           
-  517 |  1 Unidrive4.asm    498 | Code        | 11 |         |    2 | 00/061B : 24 C6       |               BIT   {$C6}          
-  518 |  1 Unidrive4.asm    499 | Code        | 11 |         |    2 | 00/061D : 10 0A       |               BPL   FIXRTS         
-  519 |  1 Unidrive4.asm    500 | Code        | 11 |         |    2 | 00/061F : A5 C8       |               LDA   {$C6}+2        
-  520 |  1 Unidrive4.asm    501 | Code        | 11 |         |    2 | 00/0621 : F0 06       |               BEQ   FIXRTS         
-  521 |  1 Unidrive4.asm    502 | Code        | 11 |         |    2 | 00/0623 : E6 C7       |               INC   {$C6}+1        
-  522 |  1 Unidrive4.asm    503 | Code        | 11 |         |    2 | 00/0625 : D0 02       |               BNE   FIXRTS         
-  523 |  1 Unidrive4.asm    504 | Code        | 11 |         |    2 | 00/0627 : E6 C6       |               INC   {$C6}          
-  524 |  1 Unidrive4.asm    505 | Code        | 11 |         |    1 | 00/0629 : 60          | FIXRTS        RTS                  
-  525 |  1 Unidrive4.asm    506 | Code        | 11 |         |    2 | 00/062A : A9 00       | UNDFL         LDA   #$0            
-  526 |  1 Unidrive4.asm    507 | Code        | 11 |         |    2 | 00/062C : 85 C6       |               STA   {$C6}          
-  527 |  1 Unidrive4.asm    508 | Code        | 11 |         |    2 | 00/062E : 85 C7       |               STA   {$C6}+1        
-  528 |  1 Unidrive4.asm    509 | Code        | 11 |         |    1 | 00/0630 : 60          |               RTS                  
-  529 |  1 Unidrive4.asm    510 | Comment     | 11 |         |    0 | 00/0631               | ** Input Dynamic Data append in the end of Unidisk routine **  		
-  530 |  1 Unidrive4.asm    511 | Data        | 11 |         |    1 | 00/0631 : 00          | FP1           dfb   $00            
-  531 |  1 Unidrive4.asm    512 | Data        | 11 |         |    1 | 00/0632 : 00          |               dfb   $00            
-  532 |  1 Unidrive4.asm    513 | Data        | 11 |         |    1 | 00/0633 : 00          |               dfb   $00            
-  533 |  1 Unidrive4.asm    514 | Data        | 11 |         |    1 | 00/0634 : 00          |               dfb   $00            
-  534 |  1 Unidrive4.asm    515 | Comment     | 11 |         |    0 | 00/0635               | *		
-  535 |  1 Unidrive4.asm    516 | Data        | 11 |         |    1 | 00/0635 : 00          | FP2           dfb   $00            
-  536 |  1 Unidrive4.asm    517 | Data        | 11 |         |    1 | 00/0636 : 00          |               dfb   $00            
-  537 |  1 Unidrive4.asm    518 | Data        | 11 |         |    1 | 00/0637 : 00          |               dfb   $00            
-  538 |  1 Unidrive4.asm    519 | Data        | 11 |         |    1 | 00/0638 : 00          |               dfb   $00            
+  387 |  1 Unidrive4.asm    368 | Comment     | 11 |         |    0 | 00/0539               |       *  COPYRIGHT 1977 BY  *
+  388 |  1 Unidrive4.asm    369 | Comment     | 11 |         |    0 | 00/0539               |       * APPLE COMPUTER INC. *
+  389 |  1 Unidrive4.asm    370 | Comment     | 11 |         |    0 | 00/0539               |       *                     *
+  390 |  1 Unidrive4.asm    371 | Comment     | 11 |         |    0 | 00/0539               |       * ALL RIGHTS RESERVED *
+  391 |  1 Unidrive4.asm    372 | Comment     | 11 |         |    0 | 00/0539               |       *                     *
+  392 |  1 Unidrive4.asm    373 | Comment     | 11 |         |    0 | 00/0539               |       *     S. WOZNIAK      *
+  393 |  1 Unidrive4.asm    374 | Comment     | 11 |         |    0 | 00/0539               |       *                     *
+  394 |  1 Unidrive4.asm    375 | Comment     | 11 |         |    0 | 00/0539               |       ***********************
+  395 |  1 Unidrive4.asm    376 | Comment     | 11 |         |    0 | 00/0539               | *     TITLE "FLOATING POINT ROUTINES for Unidisk memory"
+  396 |  1 Unidrive4.asm    377 | Comment     | 11 |         |    0 | 00/0539               | *
+  397 |  1 Unidrive4.asm    378 | Empty       | 11 |         |    0 | 00/0539               |                                    
+  398 |  1 Unidrive4.asm    379 | Comment     | 11 |         |    0 | 00/0539               | *          ORG  $300
+  399 |  1 Unidrive4.asm    380 | Empty       | 11 |         |    0 | 00/0539               |                                    
+  400 |  1 Unidrive4.asm    381 | Code        | 11 |         |    1 | 00/0539 : 18          | ADD           CLC                  ;CLEAR CARRY
+  401 |  1 Unidrive4.asm    382 | Code        | 11 |         |    2 | 00/053A : A2 02       |               LDX   #$2            ;INDEX FOR 3-BYTE ADD.
+  402 |  1 Unidrive4.asm    383 | Code        | 11 |         |    2 | 00/053C : B5 C6       | ADD1          LDA   {$C6},X        
+  403 |  1 Unidrive4.asm    384 | Code        | 11 |         |    2 | 00/053E : 75 C2       |               ADC   {$C2},X        ;ADD A BYTE OF MANT2 TO MANT1
+  404 |  1 Unidrive4.asm    385 | Code        | 11 |         |    2 | 00/0540 : 95 C6       |               STA   {$C6},X        
+  405 |  1 Unidrive4.asm    386 | Code        | 11 |         |    1 | 00/0542 : CA          |               DEX                  ;INDEX TO NEXT MORE SIGNIF. BYTE.
+  406 |  1 Unidrive4.asm    387 | Code        | 11 |         |    2 | 00/0543 : 10 F7       |               BPL   ADD1           ;LOOP UNTIL DONE.
+  407 |  1 Unidrive4.asm    388 | Code        | 11 |         |    1 | 00/0545 : 60          |               RTS                  ;RETURN
+  408 |  1 Unidrive4.asm    389 | Code        | 11 |         |    2 | 00/0546 : 06 C0       | MD1           ASL   {$C0}          ;CLEAR LSB OF SIGN.
+  409 |  1 Unidrive4.asm    390 | Code        | 11 |         |    3 | 00/0548 : 20 4B 05    |               JSR   ABSWAP         ;ABS VAL OF M1, THEN SWAP WITH M2
+  410 |  1 Unidrive4.asm    391 | Code        | 11 |         |    2 | 00/054B : 24 C6       | ABSWAP        BIT   {$C6}          ;MANT1 NEGATIVE?
+  411 |  1 Unidrive4.asm    392 | Code        | 11 |         |    2 | 00/054D : 10 05       |               BPL   ABSWAP1        ;NO, SWAP WITH MANT2 AND RETURN.
+  412 |  1 Unidrive4.asm    393 | Code        | 11 |         |    3 | 00/054F : 20 B8 05    |               JSR   FCOMPL         ;YES, COMPLEMENT IT.
+  413 |  1 Unidrive4.asm    394 | Code        | 11 |         |    2 | 00/0552 : E6 C0       |               INC   {$C0}          ;INCR SIGN, COMPLEMENTING LSB.
+  414 |  1 Unidrive4.asm    395 | Code        | 11 |         |    1 | 00/0554 : 38          | ABSWAP1       SEC                  ;SET CARRY FOR RETURN TO MUL/DIV.
+  415 |  1 Unidrive4.asm    396 | Code        | 11 |         |    2 | 00/0555 : A2 04       | SWAP          LDX   #$4            ;INDEX FOR 4 BYTE SWAP.
+  416 |  1 Unidrive4.asm    397 | Code        | 11 |         |    2 | 00/0557 : 94 C8       | SWAP1         STY   {$C9}-1,X      
+  417 |  1 Unidrive4.asm    398 | Code        | 11 |         |    2 | 00/0559 : B5 C4       |               LDA   {$C5}-1,X      ;SWAP A BYTE OF EXP/MANT1 WITH
+  418 |  1 Unidrive4.asm    399 | Code        | 11 |         |    2 | 00/055B : B4 C0       |               LDY   {$C1}-1,X      ;EXP/MANT2 AND LEAVE A COPY OF
+  419 |  1 Unidrive4.asm    400 | Code        | 11 |         |    2 | 00/055D : 94 C4       |               STY   {$C5}-1,X      ;MANT1 IN E (3 BYTES).  E+3 USED
+  420 |  1 Unidrive4.asm    401 | Code        | 11 |         |    2 | 00/055F : 95 C0       |               STA   {$C1}-1,X      
+  421 |  1 Unidrive4.asm    402 | Code        | 11 |         |    1 | 00/0561 : CA          |               DEX                  ;ADVANCE INDEX TO NEXT BYTE
+  422 |  1 Unidrive4.asm    403 | Code        | 11 |         |    2 | 00/0562 : D0 F3       |               BNE   SWAP1          ;LOOP UNTIL DONE.
+  423 |  1 Unidrive4.asm    404 | Code        | 11 |         |    1 | 00/0564 : 60          |               RTS                  ;RETURN
+  424 |  1 Unidrive4.asm    405 | Code        | 11 |         |    2 | 00/0565 : A9 8E       | FLOAT         LDA   #$8E           ;INIT EXP1 TO 14, <--------------- int to fp
+  425 |  1 Unidrive4.asm    406 | Code        | 11 |         |    2 | 00/0567 : 85 C5       |               STA   {$C5}          ;THEN NORMALIZE TO FLOAT.
+  426 |  1 Unidrive4.asm    407 | Code        | 11 |         |    2 | 00/0569 : A5 C6       | NORM1         LDA   {$C6}          ;HIGH-ORDER MANT1 BYTE.
+  427 |  1 Unidrive4.asm    408 | Code        | 11 |         |    2 | 00/056B : C9 C0       |               CMP   #$C0           ;UPPER TWO BITS UNEQUAL?
+  428 |  1 Unidrive4.asm    409 | Code        | 11 |         |    2 | 00/056D : 30 0C       |               BMI   RTS1           ;YES, RETURN WITH MANT1 NORMALIZED
+  429 |  1 Unidrive4.asm    410 | Code        | 11 |         |    2 | 00/056F : C6 C5       |               DEC   {$C5}          ;DECREMENT EXP1.
+  430 |  1 Unidrive4.asm    411 | Code        | 11 |         |    2 | 00/0571 : 06 C8       |               ASL   {$C6}+2        
+  431 |  1 Unidrive4.asm    412 | Code        | 11 |         |    2 | 00/0573 : 26 C7       |               ROL   {$C6}+1        ;SHIFT MANT1 (3 BYTES) LEFT.
+  432 |  1 Unidrive4.asm    413 | Code        | 11 |         |    2 | 00/0575 : 26 C6       |               ROL   {$C6}          
+  433 |  1 Unidrive4.asm    414 | Code        | 11 |         |    2 | 00/0577 : A5 C5       | NORM          LDA   {$C5}          ;EXP1 ZERO?
+  434 |  1 Unidrive4.asm    415 | Code        | 11 |         |    2 | 00/0579 : D0 EE       |               BNE   NORM1          ;NO, CONTINUE NORMALIZING.
+  435 |  1 Unidrive4.asm    416 | Code        | 11 |         |    1 | 00/057B : 60          | RTS1          RTS                  ;RETURN.
+  436 |  1 Unidrive4.asm    417 | Code        | 11 |         |    3 | 00/057C : 20 B8 05    | FSUB          JSR   FCOMPL         ;CMPL MANT1,CLEARS CARRY UNLESS 0 <---- sub
+  437 |  1 Unidrive4.asm    418 | Code        | 11 |         |    3 | 00/057F : 20 8F 05    | SWPALGN       JSR   ALGNSWP        ;RIGHT SHIFT MANT1 OR SWAP WITH
+  438 |  1 Unidrive4.asm    419 | Code        | 11 |         |    2 | 00/0582 : A5 C1       | FADD          LDA   {$C1}          ;<------------------------------------- add
+  439 |  1 Unidrive4.asm    420 | Code        | 11 |         |    2 | 00/0584 : C5 C5       |               CMP   {$C5}          ;COMPARE EXP1 WITH EXP2.
+  440 |  1 Unidrive4.asm    421 | Code        | 11 |         |    2 | 00/0586 : D0 F7       |               BNE   SWPALGN        ;IF #,SWAP ADDENDS OR ALIGN MANTS.
+  441 |  1 Unidrive4.asm    422 | Code        | 11 |         |    3 | 00/0588 : 20 39 05    |               JSR   ADD            ;ADD ALIGNED MANTISSAS.
+  442 |  1 Unidrive4.asm    423 | Code        | 11 |         |    2 | 00/058B : 50 EA       | ADDEND        BVC   NORM           ;NO OVERFLOW, NORMALIZE RESULT.
+  443 |  1 Unidrive4.asm    424 | Code        | 11 |         |    2 | 00/058D : 70 05       |               BVS   RTLOG          ;OV: SHIFT M1 RIGHT, CARRY INTO SIGN
+  444 |  1 Unidrive4.asm    425 | Code        | 11 |         |    2 | 00/058F : 90 C4       | ALGNSWP       BCC   SWAP           ;SWAP IF CARRY CLEAR,
+  445 |  1 Unidrive4.asm    426 | Comment     | 11 |         |    0 | 00/0591               |           *       ELSE SHIFT RIGHT ARITH.
+  446 |  1 Unidrive4.asm    427 | Code        | 11 |         |    2 | 00/0591 : A5 C6       | RTAR          LDA   {$C6}          ;SIGN OF MANT1 INTO CARRY FOR
+  447 |  1 Unidrive4.asm    428 | Code        | 11 |         |    1 | 00/0593 : 0A          |               ASL                  ;RIGHT ARITH SHIFT.
+  448 |  1 Unidrive4.asm    429 | Code        | 11 |         |    2 | 00/0594 : E6 C5       | RTLOG         INC   {$C5}          ;INCR X1 TO ADJUST FOR RIGHT SHIFT
+  449 |  1 Unidrive4.asm    430 | Code        | 11 |         |    2 | 00/0596 : F0 75       |               BEQ   OVFL           ;EXP1 OUT OF RANGE.
+  450 |  1 Unidrive4.asm    431 | Code        | 11 |         |    2 | 00/0598 : A2 FA       | RTLOG1        LDX   #$FA           ;INDEX FOR 6:BYTE RIGHT SHIFT.
+  451 |  1 Unidrive4.asm    432 | Code        | 11 |         |    2 | 00/059A : 76 CC       | ROR1          ROR   {$C9}+3,X      
+  452 |  1 Unidrive4.asm    433 | Code        | 11 |         |    1 | 00/059C : E8          |               INX                  ;NEXT BYTE OF SHIFT.
+  453 |  1 Unidrive4.asm    434 | Code        | 11 |         |    2 | 00/059D : D0 FB       |               BNE   ROR1           ;LOOP UNTIL DONE.
+  454 |  1 Unidrive4.asm    435 | Code        | 11 |         |    1 | 00/059F : 60          |               RTS                  ;RETURN.
+  455 |  1 Unidrive4.asm    436 | Code        | 11 |         |    3 | 00/05A0 : 20 46 05    | FMUL          JSR   MD1            ;ABS VAL OF MANT1, MANT2 <-------------- mul
+  456 |  1 Unidrive4.asm    437 | Code        | 11 |         |    2 | 00/05A3 : 65 C5       |               ADC   {$C5}          ;ADD EXP1 TO EXP2 FOR PRODUCT EXP
+  457 |  1 Unidrive4.asm    438 | Code        | 11 |         |    3 | 00/05A5 : 20 F6 05    |               JSR   MD2            ;CHECK PROD. EXP AND PREP. FOR MUL
+  458 |  1 Unidrive4.asm    439 | Code        | 11 |         |    1 | 00/05A8 : 18          |               CLC                  ;CLEAR CARRY FOR FIRST BIT.
+  459 |  1 Unidrive4.asm    440 | Code        | 11 |         |    3 | 00/05A9 : 20 98 05    | MUL1          JSR   RTLOG1         ;M1 AND E RIGHT (PROD AND MPLIER)
+  460 |  1 Unidrive4.asm    441 | Code        | 11 |         |    2 | 00/05AC : 90 03       |               BCC   MUL2           ;IF CARRY CLEAR, SKIP PARTIAL PROD
+  461 |  1 Unidrive4.asm    442 | Code        | 11 |         |    3 | 00/05AE : 20 39 05    |               JSR   ADD            ;ADD MULTIPLICAND TO PRODUCT.
+  462 |  1 Unidrive4.asm    443 | Code        | 11 |         |    1 | 00/05B1 : 88          | MUL2          DEY                  ;NEXT MUL ITERATION.
+  463 |  1 Unidrive4.asm    444 | Code        | 11 |         |    2 | 00/05B2 : 10 F5       |               BPL   MUL1           ;LOOP UNTIL DONE.
+  464 |  1 Unidrive4.asm    445 | Code        | 11 |         |    2 | 00/05B4 : 46 C0       | MDEND         LSR   {$C0}          ;TEST SIGN LSB.
+  465 |  1 Unidrive4.asm    446 | Code        | 11 |         |    2 | 00/05B6 : 90 BF       | NORMX         BCC   NORM           ;IF EVEN,NORMALIZE PROD,ELSE COMP
+  466 |  1 Unidrive4.asm    447 | Code        | 11 |         |    1 | 00/05B8 : 38          | FCOMPL        SEC                  ;SET CARRY FOR SUBTRACT. <--------------- not
+  467 |  1 Unidrive4.asm    448 | Code        | 11 |         |    2 | 00/05B9 : A2 03       |               LDX   #$3            ;INDEX FOR 3 BYTE SUBTRACT.
+  468 |  1 Unidrive4.asm    449 | Code        | 11 |         |    2 | 00/05BB : A9 00       | COMPL1        LDA   #$0            ;CLEAR A.
+  469 |  1 Unidrive4.asm    450 | Code        | 11 |         |    2 | 00/05BD : F5 C5       |               SBC   {$C5},X        ;SUBTRACT BYTE OF EXP1.
+  470 |  1 Unidrive4.asm    451 | Code        | 11 |         |    2 | 00/05BF : 95 C5       |               STA   {$C5},X        ;RESTORE IT.
+  471 |  1 Unidrive4.asm    452 | Code        | 11 |         |    1 | 00/05C1 : CA          |               DEX                  ;NEXT MORE SIGNIFICANT BYTE.
+  472 |  1 Unidrive4.asm    453 | Code        | 11 |         |    2 | 00/05C2 : D0 F7       |               BNE   COMPL1         ;LOOP UNTIL DONE.
+  473 |  1 Unidrive4.asm    454 | Code        | 11 |         |    2 | 00/05C4 : F0 C5       |               BEQ   ADDEND         ;NORMALIZE (OR SHIFT RT IF OVFL).
+  474 |  1 Unidrive4.asm    455 | Code        | 11 |         |    3 | 00/05C6 : 20 46 05    | FDIV          JSR   MD1            ;TAKE ABS VAL OF MANT1, MANT2. <--------- div
+  475 |  1 Unidrive4.asm    456 | Code        | 11 |         |    2 | 00/05C9 : E5 C5       |               SBC   {$C5}          ;SUBTRACT EXP1 FROM EXP2.
+  476 |  1 Unidrive4.asm    457 | Code        | 11 |         |    3 | 00/05CB : 20 F6 05    |               JSR   MD2            ;SAVE AS QUOTIENT EXP.
+  477 |  1 Unidrive4.asm    458 | Code        | 11 |         |    1 | 00/05CE : 38          | DIV1          SEC                  ;SET CARRY FOR SUBTRACT.
+  478 |  1 Unidrive4.asm    459 | Code        | 11 |         |    2 | 00/05CF : A2 02       |               LDX   #$2            ;INDEX FOR 3-BYTE SUBTRACTION.
+  479 |  1 Unidrive4.asm    460 | Code        | 11 |         |    2 | 00/05D1 : B5 C2       | DIV2          LDA   {$C2},X        
+  480 |  1 Unidrive4.asm    461 | Code        | 11 |         |    2 | 00/05D3 : F5 C9       |               SBC   {$C9},X        ;SUBTRACT A BYTE OF E FROM MANT2.
+  481 |  1 Unidrive4.asm    462 | Code        | 11 |         |    1 | 00/05D5 : 48          |               PHA                  ;SAVE ON STACK.
+  482 |  1 Unidrive4.asm    463 | Code        | 11 |         |    1 | 00/05D6 : CA          |               DEX                  ;NEXT MORE SIGNIFICANT BYTE.
+  483 |  1 Unidrive4.asm    464 | Code        | 11 |         |    2 | 00/05D7 : 10 F8       |               BPL   DIV2           ;LOOP UNTIL DONE.
+  484 |  1 Unidrive4.asm    465 | Code        | 11 |         |    2 | 00/05D9 : A2 FD       |               LDX   #$FD           ;INDEX FOR 3-BYTE CONDITIONAL MOVE
+  485 |  1 Unidrive4.asm    466 | Code        | 11 |         |    1 | 00/05DB : 68          | DIV3          PLA                  ;PULL BYTE OF DIFFERENCE OFF STACK
+  486 |  1 Unidrive4.asm    467 | Code        | 11 |         |    2 | 00/05DC : 90 02       |               BCC   DIV4           ;IF M2<E THEN DON'T RESTORE M2.
+  487 |  1 Unidrive4.asm    468 | Code        | 11 |         |    2 | 00/05DE : 95 C5       |               STA   {$C2}+3,X      
+  488 |  1 Unidrive4.asm    469 | Code        | 11 |         |    1 | 00/05E0 : E8          | DIV4          INX                  ;NEXT LESS SIGNIFICANT BYTE.
+  489 |  1 Unidrive4.asm    470 | Code        | 11 |         |    2 | 00/05E1 : D0 F8       |               BNE   DIV3           ;LOOP UNTIL DONE.
+  490 |  1 Unidrive4.asm    471 | Code        | 11 |         |    2 | 00/05E3 : 26 C8       |               ROL   {$C6}+2        
+  491 |  1 Unidrive4.asm    472 | Code        | 11 |         |    2 | 00/05E5 : 26 C7       |               ROL   {$C6}+1        ;ROLL QUOTIENT LEFT, CARRY INTO LSB
+  492 |  1 Unidrive4.asm    473 | Code        | 11 |         |    2 | 00/05E7 : 26 C6       |               ROL   {$C6}          
+  493 |  1 Unidrive4.asm    474 | Code        | 11 |         |    2 | 00/05E9 : 06 C4       |               ASL   {$C2}+2        
+  494 |  1 Unidrive4.asm    475 | Code        | 11 |         |    2 | 00/05EB : 26 C3       |               ROL   {$C2}+1        ;SHIFT DIVIDEND LEFT
+  495 |  1 Unidrive4.asm    476 | Code        | 11 |         |    2 | 00/05ED : 26 C2       |               ROL   {$C2}          
+  496 |  1 Unidrive4.asm    477 | Code        | 11 |         |    2 | 00/05EF : B0 1C       |               BCS   OVFL           ;OVFL IS DUE TO UNNORMED DIVISOR
+  497 |  1 Unidrive4.asm    478 | Code        | 11 |         |    1 | 00/05F1 : 88          |               DEY                  ;NEXT DIVIDE ITERATION.
+  498 |  1 Unidrive4.asm    479 | Code        | 11 |         |    2 | 00/05F2 : D0 DA       |               BNE   DIV1           ;LOOP UNTIL DONE 23 ITERATIONS.
+  499 |  1 Unidrive4.asm    480 | Code        | 11 |         |    2 | 00/05F4 : F0 BE       |               BEQ   MDEND          ;NORM. QUOTIENT AND CORRECT SIGN.
+  500 |  1 Unidrive4.asm    481 | Code        | 11 |         |    2 | 00/05F6 : 86 C8       | MD2           STX   {$C6}+2        
+  501 |  1 Unidrive4.asm    482 | Code        | 11 |         |    2 | 00/05F8 : 86 C7       |               STX   {$C6}+1        ;CLEAR MANT1 (3 BYTES) FOR MUL/DIV.
+  502 |  1 Unidrive4.asm    483 | Code        | 11 |         |    2 | 00/05FA : 86 C6       |               STX   {$C6}          
+  503 |  1 Unidrive4.asm    484 | Code        | 11 |         |    2 | 00/05FC : B0 0D       |               BCS   OVCHK          ;IF CALC. SET CARRY,CHECK FOR OVFL
+  504 |  1 Unidrive4.asm    485 | Code        | 11 |         |    2 | 00/05FE : 30 04       |               BMI   MD3            ;IF NEG THEN NO UNDERFLOW.
+  505 |  1 Unidrive4.asm    486 | Code        | 11 |         |    1 | 00/0600 : 68          |               PLA                  ;POP ONE RETURN LEVEL.
+  506 |  1 Unidrive4.asm    487 | Code        | 11 |         |    1 | 00/0601 : 68          |               PLA                  
+  507 |  1 Unidrive4.asm    488 | Code        | 11 |         |    2 | 00/0602 : 90 B2       |               BCC   NORMX          ;CLEAR X1 AND RETURN.
+  508 |  1 Unidrive4.asm    489 | Code        | 11 |         |    2 | 00/0604 : 49 80       | MD3           EOR   #$80           ;COMPLEMENT SIGN BIT OF EXPONENT.
+  509 |  1 Unidrive4.asm    490 | Code        | 11 |         |    2 | 00/0606 : 85 C5       |               STA   {$C5}          ;STORE IT.
+  510 |  1 Unidrive4.asm    491 | Code        | 11 |         |    2 | 00/0608 : A0 17       |               LDY   #$17           ;COUNT 24 MUL/23 DIV ITERATIONS.
+  511 |  1 Unidrive4.asm    492 | Code        | 11 |         |    1 | 00/060A : 60          |               RTS                  ;RETURN.
+  512 |  1 Unidrive4.asm    493 | Code        | 11 |         |    2 | 00/060B : 10 F7       | OVCHK         BPL   MD3            ;IF POSITIVE EXP THEN NO OVFL.
+  513 |  1 Unidrive4.asm    494 | Code        | 11 |         |    3 | 00/060D : 4C 10 0C    | OVFL          JMP   {$C10}         
+  514 |  1 Unidrive4.asm    495 | Comment     | 11 |         |    0 | 00/0610               | *	  ORG  $F63D
+  515 |  1 Unidrive4.asm    496 | Code        | 11 |         |    3 | 00/0610 : 20 91 05    | FIX1          JSR   RTAR           
+  516 |  1 Unidrive4.asm    497 | Code        | 11 |         |    2 | 00/0613 : A5 C5       | FIX           LDA   {$C5}          ; <------------------------------ fp to int
+  517 |  1 Unidrive4.asm    498 | Code        | 11 |         |    2 | 00/0615 : 10 13       |               BPL   UNDFL          
+  518 |  1 Unidrive4.asm    499 | Code        | 11 |         |    2 | 00/0617 : C9 8E       |               CMP   #$8E           
+  519 |  1 Unidrive4.asm    500 | Code        | 11 |         |    2 | 00/0619 : D0 F5       |               BNE   FIX1           
+  520 |  1 Unidrive4.asm    501 | Code        | 11 |         |    2 | 00/061B : 24 C6       |               BIT   {$C6}          
+  521 |  1 Unidrive4.asm    502 | Code        | 11 |         |    2 | 00/061D : 10 0A       |               BPL   FIXRTS         
+  522 |  1 Unidrive4.asm    503 | Code        | 11 |         |    2 | 00/061F : A5 C8       |               LDA   {$C6}+2        
+  523 |  1 Unidrive4.asm    504 | Code        | 11 |         |    2 | 00/0621 : F0 06       |               BEQ   FIXRTS         
+  524 |  1 Unidrive4.asm    505 | Code        | 11 |         |    2 | 00/0623 : E6 C7       |               INC   {$C6}+1        
+  525 |  1 Unidrive4.asm    506 | Code        | 11 |         |    2 | 00/0625 : D0 02       |               BNE   FIXRTS         
+  526 |  1 Unidrive4.asm    507 | Code        | 11 |         |    2 | 00/0627 : E6 C6       |               INC   {$C6}          
+  527 |  1 Unidrive4.asm    508 | Code        | 11 |         |    1 | 00/0629 : 60          | FIXRTS        RTS                  
+  528 |  1 Unidrive4.asm    509 | Code        | 11 |         |    2 | 00/062A : A9 00       | UNDFL         LDA   #$0            
+  529 |  1 Unidrive4.asm    510 | Code        | 11 |         |    2 | 00/062C : 85 C6       |               STA   {$C6}          
+  530 |  1 Unidrive4.asm    511 | Code        | 11 |         |    2 | 00/062E : 85 C7       |               STA   {$C6}+1        
+  531 |  1 Unidrive4.asm    512 | Code        | 11 |         |    1 | 00/0630 : 60          |               RTS                  
+  532 |  1 Unidrive4.asm    513 | Comment     | 11 |         |    0 | 00/0631               | ** Input Dynamic Data append in the end of Unidisk routine **  		
+  533 |  1 Unidrive4.asm    514 | Data        | 11 |         |    1 | 00/0631 : 00          | FP1           dfb   $00            
+  534 |  1 Unidrive4.asm    515 | Data        | 11 |         |    1 | 00/0632 : 00          |               dfb   $00            
+  535 |  1 Unidrive4.asm    516 | Data        | 11 |         |    1 | 00/0633 : 00          |               dfb   $00            
+  536 |  1 Unidrive4.asm    517 | Data        | 11 |         |    1 | 00/0634 : 00          |               dfb   $00            
+  537 |  1 Unidrive4.asm    518 | Comment     | 11 |         |    0 | 00/0635               | *		
+  538 |  1 Unidrive4.asm    519 | Data        | 11 |         |    1 | 00/0635 : 00          | FP2           dfb   $00            
+  539 |  1 Unidrive4.asm    520 | Data        | 11 |         |    1 | 00/0636 : 00          |               dfb   $00            
+  540 |  1 Unidrive4.asm    521 | Data        | 11 |         |    1 | 00/0637 : 00          |               dfb   $00            
+  541 |  1 Unidrive4.asm    522 | Data        | 11 |         |    1 | 00/0638 : 00          |               dfb   $00            
 ------+-------------------------+-------------+----+---------+------+-----------------------+-------------------------------------------------------------------

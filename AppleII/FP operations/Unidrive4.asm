@@ -272,18 +272,18 @@ CNTL_LIST1  	equ *
 CNTL_LIST2  	equ *
 Clow_byte  	dfb $06
 Chigh_byte  	dfb $00
-AccValue  	dfb $00 ; Input Value
-X_reg  		dfb $00 ; Input Value (N1)
-Y_reg  		dfb $00 ; Input Value (N2)
-ProStatus  	dfb $00 ; Input Value
-LowPC_reg  	dfb $05 ; Like ORG
+AccValue  	dfb $00 ; Init Value Unidisk Accumulator Register
+X_reg  		dfb $00 ; Init Value Unidisk X Register
+Y_reg  		dfb $00 ; Init Value Unidisk Y Register
+ProStatus  	dfb $00 ; Init Value Unidisk Status Register
+LowPC_reg  	dfb $00 ; Init Value Unidisk Program Counter $0500
 HighPC_reg  	dfb $05
 *
 *** Set Address ***
 CNTL_LIST3  	equ *
 CountL_byte  	dfb $02
 CountH_byte  	dfb $00
-LByte_Addr  	dfb $00 ; ORG of Unidisk program
+LByte_Addr  	dfb $00 ; ORG of Unidisk program, set begin program address $0500
 HByte_Addr  	dfb $05
 *
 *** Download ***
@@ -291,8 +291,9 @@ CNTL_LIST4  	equ *
 LenghtL_byte  	dfb $38 ;<----- Lenght of Unidisk program Lo  - Byte 312 byte
 LenghtH_byte  	dfb $01 ;<----- Lenght of Unidisk program Hi Byte
 *
-*** Start UNIDISK Program ***
-		org $0500
+**************** Start UNIDISK Program ****************
+*
+		org $0500 ; Start Unidisk program address
 		
 SIGN      	EQU  $C0	;$EB  ;  $F3
 
@@ -312,7 +313,7 @@ OVLOC     	EQU  $C10	;$3F5	;Overflow routine is not implemented at now)
 * CHK if is the second execution *
 
 		cmp #02
-		beq SECOND
+		beq SECOND ;Only to read the rest part of result
 			
 ** Input data to Zero Page **
 		
@@ -338,24 +339,26 @@ OVLOC     	EQU  $C10	;$3F5	;Overflow routine is not implemented at now)
 		lda FP2+3
 		sta M2+2
 
-*** Target Function ***
-*	Y=N1+N2
-
+************************** Target Function ***********************
+*				Y=N1+N2	   			 *
+******************************************************************
+*
 ** Simple ADD **
-		jsr FADD
+		jsr FADD ; Call FP routine
 		
-*** Output Data result FP1 to Unidisk registers First Time first 3 Byte***
+*** Output Data result FP1 to Unidisk registers First Time first 3 Byte out ***
 		lda X1
 		ldx M1
 		ldy M1+1
 		
 		rts
-*** Output Data result FP1 to Unidisk registers Second Time latest 1 Byte***		
+*** Output Data result FP1 to Unidisk registers Second Time latest 1 Byte out ***		
 SECOND		lda M1+2
 
 		rts		
-
-** FP Routine **
+***************************************************
+*
+***************** FP Routine *****************
 *
       ***********************
       *                     *
