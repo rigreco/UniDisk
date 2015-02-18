@@ -1,0 +1,343 @@
+------+------------------------+-------------+----+---------+------+-----------------------+-------------------------------------------------------------------
+ Line | # File            Line | Line Type   | MX |  Reloc  | Size | Address   Object Code |  Source Code                                                      
+------+------------------------+-------------+----+---------+------+-----------------------+-------------------------------------------------------------------
+    1 |  1 Unidrive.asm      1 | Comment     | 11 |         |    0 | 00/8000               | * @com.wudsn.ide.asm.hardware=APPLE2
+    2 |  1 Unidrive.asm      2 | Comment     | 11 |         |    0 | 00/8000               | * Protocol Converter Call
+    3 |  1 Unidrive.asm      3 | Directive   | 11 |         |    0 | 00/8000               |               XC                   
+    4 |  1 Unidrive.asm      4 | Equivalence | 11 |         |    0 | 00/8000               | ZPTempL       equ   $0006          ;Temporary zero page storage
+    5 |  1 Unidrive.asm      5 | Equivalence | 11 |         |    0 | 00/8000               | ZPTempH       equ   $0007          
+    6 |  1 Unidrive.asm      6 | Equivalence | 11 |         |    0 | 00/8000               | N1            equ   $0A            
+    7 |  1 Unidrive.asm      7 | Equivalence | 11 |         |    0 | 00/8000               | N2            equ   $0B            
+    8 |  1 Unidrive.asm      8 | Equivalence | 11 |         |    0 | 00/8000               | RSLT          equ   $0C            
+    9 |  1 Unidrive.asm      9 | Comment     | 11 |         |    0 | 00/8000               | *** Monitor routines ***
+   10 |  1 Unidrive.asm     10 | Equivalence | 11 |         |    0 | 00/8000               | COut          equ   $FDED          ;Console output ASCII
+   11 |  1 Unidrive.asm     11 | Equivalence | 11 |         |    0 | 00/8000               | COUT1         equ   $FDF0          ;Output to screen
+   12 |  1 Unidrive.asm     12 | Equivalence | 11 |         |    0 | 00/8000               | CROut         equ   $FD8E          ;Carriage return
+   13 |  1 Unidrive.asm     13 | Equivalence | 11 |         |    0 | 00/8000               | PRbyte        equ   $FDDA          ;Print byte in hex
+   14 |  1 Unidrive.asm     14 | Equivalence | 11 |         |    0 | 00/8000               | PRBL2         equ   $F94A          ;Print many spaces
+   15 |  1 Unidrive.asm     15 | Equivalence | 11 |         |    0 | 00/8000               | KEYIN         equ   $FD1B          ;Waits for keypress
+   16 |  1 Unidrive.asm     16 | Comment     | 11 |         |    0 | 00/8000               | ** Command Code **
+   17 |  1 Unidrive.asm     17 | Equivalence | 11 |         |    0 | 00/8000               | StatusCmd     equ   0              
+   18 |  1 Unidrive.asm     18 | Comment     | 11 |         |    0 | 00/8000               | ** Status Code **
+   19 |  1 Unidrive.asm     19 | Equivalence | 11 |         |    0 | 00/8000               | StatusDIB     equ   3              
+   20 |  1 Unidrive.asm     20 | Equivalence | 11 |         |    0 | 00/8000               | StatusUNI     equ   5              
+   21 |  1 Unidrive.asm     21 | Comment     | 11 |         |    0 | 00/8000               | *
+   22 |  1 Unidrive.asm     22 | Equivalence | 11 |         |    0 | 00/8000               | ControlCmd    equ   4              
+   23 |  1 Unidrive.asm     23 | Comment     | 11 |         |    0 | 00/8000               | ** Control Codes **
+   24 |  1 Unidrive.asm     24 | Equivalence | 11 |         |    0 | 00/8000               | Eject         equ   4              
+   25 |  1 Unidrive.asm     25 | Equivalence | 11 |         |    0 | 00/8000               | Run           equ   5              
+   26 |  1 Unidrive.asm     26 | Equivalence | 11 |         |    0 | 00/8000               | SetDWLoad     equ   6              
+   27 |  1 Unidrive.asm     27 | Equivalence | 11 |         |    0 | 00/8000               | DWLoad        equ   7              
+   28 |  1 Unidrive.asm     28 | Comment     | 11 |         |    0 | 00/8000               | *
+   29 |  1 Unidrive.asm     29 | Directive   | 11 |         |    0 | 00/8000               |               org   $8000          
+   30 |  1 Unidrive.asm     30 | Comment     | 11 |         |    0 | 00/8000               | *****************************************************
+   31 |  1 Unidrive.asm     31 | Comment     | 11 |         |    0 | 00/8000               | * Presentation message **************
+   32 |  1 Unidrive.asm     32 | Comment     | 11 |         |    0 | 00/8000               | *
+   33 |  1 Unidrive.asm     33 | Comment     | 11 |         |    0 | 00/8000               | *  		ldx #0
+   34 |  1 Unidrive.asm     34 | Comment     | 11 |         |    0 | 00/8000               | * LOOP  		equ *
+   35 |  1 Unidrive.asm     35 | Comment     | 11 |         |    0 | 00/8000               | *  		lda DATA,x
+   36 |  1 Unidrive.asm     36 | Comment     | 11 |         |    0 | 00/8000               | *  		beq ME2
+   37 |  1 Unidrive.asm     37 | Comment     | 11 |         |    0 | 00/8000               | *  		jsr COut
+   38 |  1 Unidrive.asm     38 | Comment     | 11 |         |    0 | 00/8000               | *  		inx
+   39 |  1 Unidrive.asm     39 | Comment     | 11 |         |    0 | 00/8000               | *  		bne LOOP
+   40 |  1 Unidrive.asm     40 | Comment     | 11 |         |    0 | 00/8000               | *
+   41 |  1 Unidrive.asm     41 | Comment     | 11 |         |    0 | 00/8000               | * DATA	  	asc 'UNIDISK 3.5 UTILITY BY R. GRECO'
+   42 |  1 Unidrive.asm     42 | Comment     | 11 |         |    0 | 00/8000               | *		dfb $8D,0 ; Inverse mode on
+   43 |  1 Unidrive.asm     43 | Comment     | 11 |         |    0 | 00/8000               | *
+   44 |  1 Unidrive.asm     44 | Comment     | 11 |         |    0 | 00/8000               | * ME2  		jsr CROut
+   45 |  1 Unidrive.asm     45 | Comment     | 11 |         |    0 | 00/8000               | *		jsr CROut
+   46 |  1 Unidrive.asm     46 | Comment     | 11 |         |    0 | 00/8000               | *
+   47 |  1 Unidrive.asm     47 | Comment     | 11 |         |    0 | 00/8000               | *		ldx #0
+   48 |  1 Unidrive.asm     48 | Comment     | 11 |         |    0 | 00/8000               | * LOOP2  		equ *
+   49 |  1 Unidrive.asm     49 | Comment     | 11 |         |    0 | 00/8000               | *  		lda DATA2,x
+   50 |  1 Unidrive.asm     50 | Comment     | 11 |         |    0 | 00/8000               | *  		beq START
+   51 |  1 Unidrive.asm     51 | Comment     | 11 |         |    0 | 00/8000               | *  		ora #$80
+   52 |  1 Unidrive.asm     52 | Comment     | 11 |         |    0 | 00/8000               | *  		jsr COut
+   53 |  1 Unidrive.asm     53 | Comment     | 11 |         |    0 | 00/8000               | *  		inx
+   54 |  1 Unidrive.asm     54 | Comment     | 11 |         |    0 | 00/8000               | *  		bne LOOP2
+   55 |  1 Unidrive.asm     55 | Comment     | 11 |         |    0 | 00/8000               | *
+   56 |  1 Unidrive.asm     56 | Comment     | 11 |         |    0 | 00/8000               | * DATA2	  	asc 'A    X  Y    P'
+   57 |  1 Unidrive.asm     57 | Comment     | 11 |         |    0 | 00/8000               | *		dfb $8D,0 ; Inverse mode on
+   58 |  1 Unidrive.asm     58 | Comment     | 11 |         |    0 | 00/8000               | *****************************************************
+   59 |  1 Unidrive.asm     59 | Comment     | 11 |         |    0 | 00/8000               | *
+   60 |  1 Unidrive.asm     60 | Comment     | 11 |         |    0 | 00/8000               | * Find a Protocol Converter in one of the slots.
+   61 |  1 Unidrive.asm     61 | Code        | 11 |         |    3 | 00/8000 : 20 63 80    | START         jsr   {ozunid_4}     
+   62 |  1 Unidrive.asm     62 | Code        | 11 |         |    2 | 00/8003 : B0 19       |               bcs   {ozunid_1}     
+   63 |  1 Unidrive.asm     63 | Empty       | 11 |         |    0 | 00/8005               |                                    
+   64 |  1 Unidrive.asm     64 | Code        | 11 |         |    3 | 00/8005 : 20 8E FD    |               jsr   {$FD8E}        
+   65 |  1 Unidrive.asm     65 | Comment     | 11 |         |    0 | 00/8008               | ** Wait keypress to continue **
+   66 |  1 Unidrive.asm     66 | Comment     | 11 |         |    0 | 00/8008               | *
+   67 |  1 Unidrive.asm     67 | Comment     | 11 |         |    0 | 00/8008               | *		jsr KEYIN
+   68 |  1 Unidrive.asm     68 | Comment     | 11 |         |    0 | 00/8008               | *		
+   69 |  1 Unidrive.asm     69 | Comment     | 11 |         |    0 | 00/8008               | *** Eject ***
+   70 |  1 Unidrive.asm     70 | Code        | 11 |         |    3 | 00/8008 : 20 98 80    |               jsr   {ozunid_9}     
+   71 |  1 Unidrive.asm     71 | Data        | 11 |         |    1 | 00/800B : 04          |               dfb   {4}            
+   72 |  1 Unidrive.asm     72 | Data        | 11 |         |    2 | 00/800C : D5 80       |               dw    {ozunid_17}    
+   73 |  1 Unidrive.asm     73 | Comment     | 11 |         |    0 | 00/800E               | *** Set Address ***
+   74 |  1 Unidrive.asm     74 | Code        | 11 |         |    3 | 00/800E : 20 98 80    |               jsr   {ozunid_9}     
+   75 |  1 Unidrive.asm     75 | Data        | 11 |         |    1 | 00/8011 : 04          |               dfb   {4}            
+   76 |  1 Unidrive.asm     76 | Data        | 11 |         |    2 | 00/8012 : C6 80       |               dw    {ozunid_14}    
+   77 |  1 Unidrive.asm     77 | Comment     | 11 |         |    0 | 00/8014               | *** Download ***
+   78 |  1 Unidrive.asm     78 | Code        | 11 |         |    3 | 00/8014 : 20 98 80    |               jsr   {ozunid_9}     
+   79 |  1 Unidrive.asm     79 | Data        | 11 |         |    1 | 00/8017 : 04          |               dfb   {4}            
+   80 |  1 Unidrive.asm     80 | Data        | 11 |         |    2 | 00/8018 : CB 80       |               dw    {ozunid_15}    
+   81 |  1 Unidrive.asm     81 | Comment     | 11 |         |    0 | 00/801A               | *  		
+   82 |  1 Unidrive.asm     82 | Code        | 11 |         |    3 | 00/801A : 20 40 80    |               jsr   EXEC           ; Jump the Error routine
+   83 |  1 Unidrive.asm     83 | Code        | 11 |         |    1 | 00/801D : 60          |               rts                  
+   84 |  1 Unidrive.asm     84 | Comment     | 11 |         |    0 | 00/801E               | *********************************************
+   85 |  1 Unidrive.asm     85 | Empty       | 11 |         |    0 | 00/801E               | ozunid_1                           
+   86 |  1 Unidrive.asm     85 | Equivalence | 11 |         |    0 | 00/801E               | Error         equ   ozunid_1       
+   87 |  1 Unidrive.asm     86 | Comment     | 11 |         |    0 | 00/801E               | *
+   88 |  1 Unidrive.asm     87 | Comment     | 11 |         |    0 | 00/801E               | * There's either no PC around, or there was no give message
+   89 |  1 Unidrive.asm     88 | Comment     | 11 |         |    0 | 00/801E               | *
+   90 |  1 Unidrive.asm     89 | Code        | 11 |         |    2 | 00/801E : A2 00       |               ldx   #0             
+   91 |  1 Unidrive.asm     90 | Empty       | 11 |         |    0 | 00/8020               | ozunid_2                           
+   92 |  1 Unidrive.asm     90 | Equivalence | 11 |         |    0 | 00/8020               | err1          equ   ozunid_2       
+   93 |  1 Unidrive.asm     91 | Code        | 11 |         |    3 | 00/8020 : BD 2C 80    |               lda   Message,x      
+   94 |  1 Unidrive.asm     92 | Code        | 11 |         |    2 | 00/8023 : F0 06       |               beq   {ozunid_3}     
+   95 |  1 Unidrive.asm     93 | Code        | 11 |         |    3 | 00/8025 : 20 ED FD    |               jsr   {$FDED}        
+   96 |  1 Unidrive.asm     94 | Code        | 11 |         |    1 | 00/8028 : E8          |               inx                  
+   97 |  1 Unidrive.asm     95 | Code        | 11 |         |    2 | 00/8029 : D0 F5       |               bne   {ozunid_2}     
+   98 |  1 Unidrive.asm     96 | Comment     | 11 |         |    0 | 00/802B               | *
+   99 |  1 Unidrive.asm     97 | Empty       | 11 |         |    0 | 00/802B               | ozunid_3                           
+  100 |  1 Unidrive.asm     97 | Equivalence | 11 |         |    0 | 00/802B               | errout        equ   ozunid_3       
+  101 |  1 Unidrive.asm     98 | Code        | 11 |         |    1 | 00/802B : 60          |               rts                  
+  102 |  1 Unidrive.asm     99 | Comment     | 11 |         |    0 | 00/802C               | *
+  103 |  1 Unidrive.asm    100 | Data        | 11 |         |   18 | 00/802C : 4E 4F 20 50 | Message       asc   'NO PC OR NO DEVICE'
+      |                        |             |    |         |      |           43 20 4F 52 |
+      |                        |             |    |         |      |           20 4E 4F 20 |
+      |                        |             |    |         |      |           44 45 56 49 |
+      |                        |             |    |         |      |           43 45       |
+  104 |  1 Unidrive.asm    101 | Data        | 11 |         |    2 | 00/803E : 8D 00       |               dfb   $8D,0          
+  105 |  1 Unidrive.asm    102 | Comment     | 11 |         |    0 | 00/8040               | *********************************************   		
+  106 |  1 Unidrive.asm    103 | Comment     | 11 |         |    0 | 00/8040               | *
+  107 |  1 Unidrive.asm    104 | Comment     | 11 |         |    0 | 00/8040               | ** Set the Input Value first **
+  108 |  1 Unidrive.asm    105 | Code        | 11 |         |    2 | 00/8040 : A9 00       | EXEC          lda   #$00           
+  109 |  1 Unidrive.asm    106 | Code        | 11 |         |    3 | 00/8042 : 8D DE 80    |               sta   AccValue       
+  110 |  1 Unidrive.asm    107 | Code        | 11 |         |    2 | 00/8045 : A5 0A       |               lda   {$0A}          
+  111 |  1 Unidrive.asm    108 | Code        | 11 |         |    3 | 00/8047 : 8D DF 80    |               sta   X_reg          
+  112 |  1 Unidrive.asm    109 | Code        | 11 |         |    2 | 00/804A : A5 0B       |               lda   {$0B}          
+  113 |  1 Unidrive.asm    110 | Code        | 11 |         |    3 | 00/804C : 8D E0 80    |               sta   Y_reg          
+  114 |  1 Unidrive.asm    111 | Comment     | 11 |         |    0 | 00/804F               | ** Execute **			
+  115 |  1 Unidrive.asm    112 | Code        | 11 |         |    3 | 00/804F : 20 98 80    |               jsr   {ozunid_9}     
+  116 |  1 Unidrive.asm    113 | Data        | 11 |         |    1 | 00/8052 : 04          |               dfb   {4}            
+  117 |  1 Unidrive.asm    114 | Data        | 11 |         |    2 | 00/8053 : D0 80       |               dw    {ozunid_16}    
+  118 |  1 Unidrive.asm    115 | Code        | 11 |         |    3 | 00/8055 : 20 98 80    | READ          jsr   {ozunid_9}     
+  119 |  1 Unidrive.asm    116 | Data        | 11 |         |    1 | 00/8058 : 00          |               dfb   {0}            
+  120 |  1 Unidrive.asm    117 | Data        | 11 |         |    2 | 00/8059 : 9B 80       |               dw    {ozunid_10}    
+  121 |  1 Unidrive.asm    118 | Code        | 11 |         |    2 | 00/805B : B0 C1       |               bcs   {ozunid_1}     
+  122 |  1 Unidrive.asm    119 | Comment     | 11 |         |    0 | 00/805D               | *
+  123 |  1 Unidrive.asm    120 | Comment     | 11 |         |    0 | 00/805D               | **** Screen Output ****
+  124 |  1 Unidrive.asm    121 | Comment     | 11 |         |    0 | 00/805D               | *		
+  125 |  1 Unidrive.asm    122 | Comment     | 11 |         |    0 | 00/805D               | *** Accumulator ***
+  126 |  1 Unidrive.asm    123 | Code        | 11 |         |    3 | 00/805D : AD C1 80    |               lda   UNIAcc_reg     
+  127 |  1 Unidrive.asm    124 | Code        | 11 |         |    2 | 00/8060 : 85 0C       |               sta   {$0C}          ; Store the result
+  128 |  1 Unidrive.asm    125 | Comment     | 11 |         |    0 | 00/8062               | *  		jsr PRbyte
+  129 |  1 Unidrive.asm    126 | Comment     | 11 |         |    0 | 00/8062               | *  		ldx #03 ; Set 3 space
+  130 |  1 Unidrive.asm    127 | Comment     | 11 |         |    0 | 00/8062               | *  		jsr PRBL2
+  131 |  1 Unidrive.asm    128 | Comment     | 11 |         |    0 | 00/8062               | *** X Register ***
+  132 |  1 Unidrive.asm    129 | Comment     | 11 |         |    0 | 00/8062               | *		lda UNIX_reg
+  133 |  1 Unidrive.asm    130 | Comment     | 11 |         |    0 | 00/8062               | *  		jsr PRbyte
+  134 |  1 Unidrive.asm    131 | Comment     | 11 |         |    0 | 00/8062               | *  		ldx #01 ; Set one space
+  135 |  1 Unidrive.asm    132 | Comment     | 11 |         |    0 | 00/8062               | *  		jsr PRBL2
+  136 |  1 Unidrive.asm    133 | Comment     | 11 |         |    0 | 00/8062               | *** Y Register ***
+  137 |  1 Unidrive.asm    134 | Comment     | 11 |         |    0 | 00/8062               | *  		lda UNIY_reg
+  138 |  1 Unidrive.asm    135 | Comment     | 11 |         |    0 | 00/8062               | *  		jsr PRbyte
+  139 |  1 Unidrive.asm    136 | Comment     | 11 |         |    0 | 00/8062               | *  		ldx #03 ; Set one space
+  140 |  1 Unidrive.asm    137 | Comment     | 11 |         |    0 | 00/8062               | *		jsr PRBL2
+  141 |  1 Unidrive.asm    138 | Comment     | 11 |         |    0 | 00/8062               | *** Process Status ***
+  142 |  1 Unidrive.asm    139 | Comment     | 11 |         |    0 | 00/8062               | *  		lda UNIP_val
+  143 |  1 Unidrive.asm    140 | Comment     | 11 |         |    0 | 00/8062               | *  		jsr PRbyte
+  144 |  1 Unidrive.asm    141 | Comment     | 11 |         |    0 | 00/8062               | *  		ldx #05 ; Set five space
+  145 |  1 Unidrive.asm    142 | Comment     | 11 |         |    0 | 00/8062               | *  		jsr PRBL2
+  146 |  1 Unidrive.asm    143 | Comment     | 11 |         |    0 | 00/8062               | *
+  147 |  1 Unidrive.asm    144 | Code        | 11 |         |    1 | 00/8062 : 60          |               rts                  
+  148 |  1 Unidrive.asm    145 | Empty       | 11 |         |    0 | 00/8063               |                                    
+  149 |  1 Unidrive.asm    146 | Comment     | 11 |         |    0 | 00/8063               | ******************************************************
+  150 |  1 Unidrive.asm    147 | Empty       | 11 |         |    0 | 00/8063               | ozunid_4                           
+  151 |  1 Unidrive.asm    147 | Equivalence | 11 |         |    0 | 00/8063               | FindPC        equ   ozunid_4       
+  152 |  1 Unidrive.asm    148 | Comment     | 11 |         |    0 | 00/8063               | *
+  153 |  1 Unidrive.asm    149 | Comment     | 11 |         |    0 | 00/8063               | * Search slot 7 to slot 1 looking for signature bytes
+  154 |  1 Unidrive.asm    150 | Comment     | 11 |         |    0 | 00/8063               | *
+  155 |  1 Unidrive.asm    151 | Code        | 11 |         |    2 | 00/8063 : A2 07       |               ldx   #7             ;Do for seven slots
+  156 |  1 Unidrive.asm    152 | Code        | 11 |         |    2 | 00/8065 : A9 C7       |               lda   #$C7           
+  157 |  1 Unidrive.asm    153 | Code        | 11 |         |    2 | 00/8067 : 85 07       |               sta   {$0007}        
+  158 |  1 Unidrive.asm    154 | Code        | 11 |         |    2 | 00/8069 : A9 00       |               lda   #$00           
+  159 |  1 Unidrive.asm    155 | Code        | 11 |         |    2 | 00/806B : 85 06       |               sta   {$0006}        
+  160 |  1 Unidrive.asm    156 | Comment     | 11 |         |    0 | 00/806D               | *
+  161 |  1 Unidrive.asm    157 | Empty       | 11 |         |    0 | 00/806D               | ozunid_5                           
+  162 |  1 Unidrive.asm    157 | Equivalence | 11 |         |    0 | 00/806D               | newslot       equ   ozunid_5       
+  163 |  1 Unidrive.asm    158 | Code        | 11 |         |    2 | 00/806D : A0 07       |               ldy   #7             
+  164 |  1 Unidrive.asm    159 | Comment     | 11 |         |    0 | 00/806F               | *
+  165 |  1 Unidrive.asm    160 | Empty       | 11 |         |    0 | 00/806F               | ozunid_6                           
+  166 |  1 Unidrive.asm    160 | Equivalence | 11 |         |    0 | 00/806F               | again         equ   ozunid_6       
+  167 |  1 Unidrive.asm    161 | Code        | 11 |         |    2 | 00/806F : B1 06       |               lda   ({$0006}),y    
+  168 |  1 Unidrive.asm    162 | Code        | 11 |         |    3 | 00/8071 : D9 90 80    |               cmp   sigtab,y       ;One for byte signature
+  169 |  1 Unidrive.asm    163 | Code        | 11 |         |    2 | 00/8074 : F0 07       |               beq   {ozunid_7}     ;Found one signature byte
+  170 |  1 Unidrive.asm    164 | Code        | 11 |         |    2 | 00/8076 : C6 07       |               dec   {$0007}        
+  171 |  1 Unidrive.asm    165 | Code        | 11 |         |    1 | 00/8078 : CA          |               dex                  
+  172 |  1 Unidrive.asm    166 | Code        | 11 |         |    2 | 00/8079 : D0 F2       |               bne   {ozunid_5}     
+  173 |  1 Unidrive.asm    167 | Comment     | 11 |         |    0 | 00/807B               | *
+  174 |  1 Unidrive.asm    168 | Comment     | 11 |         |    0 | 00/807B               | * if we get here, no PC find
+  175 |  1 Unidrive.asm    169 | Code        | 11 |         |    1 | 00/807B : 38          |               sec                  
+  176 |  1 Unidrive.asm    170 | Code        | 11 |         |    1 | 00/807C : 60          |               rts                  
+  177 |  1 Unidrive.asm    171 | Comment     | 11 |         |    0 | 00/807D               | *
+  178 |  1 Unidrive.asm    172 | Comment     | 11 |         |    0 | 00/807D               | * if we get here, no byte find on PC
+  179 |  1 Unidrive.asm    173 | Empty       | 11 |         |    0 | 00/807D               | ozunid_7                           
+  180 |  1 Unidrive.asm    173 | Equivalence | 11 |         |    0 | 00/807D               | maybe         equ   ozunid_7       
+  181 |  1 Unidrive.asm    174 | Code        | 11 |         |    1 | 00/807D : 88          |               dey                  
+  182 |  1 Unidrive.asm    175 | Code        | 11 |         |    1 | 00/807E : 88          |               dey                  ;if N=1 then all sig bytes OK
+  183 |  1 Unidrive.asm    176 | Code        | 11 |         |    2 | 00/807F : 10 EE       |               bpl   {ozunid_6}     
+  184 |  1 Unidrive.asm    177 | Comment     | 11 |         |    0 | 00/8081               | * Found PC interface. Set up call address.
+  185 |  1 Unidrive.asm    178 | Comment     | 11 |         |    0 | 00/8081               | * we already have high byte ($CN), we need low byte
+  186 |  1 Unidrive.asm    179 | Comment     | 11 |         |    0 | 00/8081               | *
+  187 |  1 Unidrive.asm    180 | Empty       | 11 |         |    0 | 00/8081               | ozunid_8                           
+  188 |  1 Unidrive.asm    180 | Equivalence | 11 |         |    0 | 00/8081               | foundPC       equ   ozunid_8       
+  189 |  1 Unidrive.asm    181 | Code        | 11 |         |    2 | 00/8081 : A9 FF       |               lda   #$FF           
+  190 |  1 Unidrive.asm    182 | Code        | 11 |         |    2 | 00/8083 : 85 06       |               sta   {$0006}        
+  191 |  1 Unidrive.asm    183 | Code        | 11 |         |    2 | 00/8085 : A0 00       |               ldy   #0             ;For indirect load
+  192 |  1 Unidrive.asm    184 | Code        | 11 |         |    2 | 00/8087 : B1 06       |               lda   ({$0006}),y    ;Get the byte
+  193 |  1 Unidrive.asm    185 | Comment     | 11 |         |    0 | 00/8089               | *
+  194 |  1 Unidrive.asm    186 | Comment     | 11 |         |    0 | 00/8089               | * Now the Acc has the low oreder ProDOS entry point.
+  195 |  1 Unidrive.asm    187 | Comment     | 11 |         |    0 | 00/8089               | * The PC entry is three locations past this ...
+  196 |  1 Unidrive.asm    188 | Comment     | 11 |         |    0 | 00/8089               | *
+  197 |  1 Unidrive.asm    189 | Code        | 11 |         |    1 | 00/8089 : 18          |               clc                  
+  198 |  1 Unidrive.asm    190 | Code        | 11 |         |    2 | 00/808A : 69 03       |               adc   #3             
+  199 |  1 Unidrive.asm    191 | Code        | 11 |         |    2 | 00/808C : 85 06       |               sta   {$0006}        
+  200 |  1 Unidrive.asm    192 | Comment     | 11 |         |    0 | 00/808E               | *
+  201 |  1 Unidrive.asm    193 | Comment     | 11 |         |    0 | 00/808E               | * Now ZPTempL has PC entry point.
+  202 |  1 Unidrive.asm    194 | Comment     | 11 |         |    0 | 00/808E               | * Return with carry clear.
+  203 |  1 Unidrive.asm    195 | Comment     | 11 |         |    0 | 00/808E               | *
+  204 |  1 Unidrive.asm    196 | Code        | 11 |         |    1 | 00/808E : 18          |               clc                  
+  205 |  1 Unidrive.asm    197 | Code        | 11 |         |    1 | 00/808F : 60          |               rts                  
+  206 |  1 Unidrive.asm    198 | Comment     | 11 |         |    0 | 00/8090               | ***********************************************************
+  207 |  1 Unidrive.asm    199 | Comment     | 11 |         |    0 | 00/8090               | *
+  208 |  1 Unidrive.asm    200 | Comment     | 11 |         |    0 | 00/8090               | * There are the PC signature bytes in their relative order.
+  209 |  1 Unidrive.asm    201 | Comment     | 11 |         |    0 | 00/8090               | * The $FF bytes are filler bytes and are not compared.
+  210 |  1 Unidrive.asm    202 | Comment     | 11 |         |    0 | 00/8090               | *
+  211 |  1 Unidrive.asm    203 | Data        | 11 |         |    4 | 00/8090 : FF 20 FF 00 | sigtab        dfb   $FF,$20,$FF,$00
+  212 |  1 Unidrive.asm    204 | Data        | 11 |         |    4 | 00/8094 : FF 03 FF 00 |               dfb   $FF,$03,$FF,$00
+  213 |  1 Unidrive.asm    205 | Comment     | 11 |         |    0 | 00/8098               | *
+  214 |  1 Unidrive.asm    206 | Empty       | 11 |         |    0 | 00/8098               | ozunid_9                           
+  215 |  1 Unidrive.asm    206 | Equivalence | 11 |         |    0 | 00/8098               | Dispatch      equ   ozunid_9       
+  216 |  1 Unidrive.asm    207 | Code        | 11 |         |    3 | 00/8098 : 6C 06 00    |               jmp   ({$0006})      ;Simulate an indirect JSR to PC
+  217 |  1 Unidrive.asm    208 | Comment     | 11 |         |    0 | 00/809B               | *
+  218 |  1 Unidrive.asm    209 | Comment     | 11 |         |    0 | 00/809B               | *** Status Parameter Set for UNI ***
+  219 |  1 Unidrive.asm    210 | Empty       | 11 |         |    0 | 00/809B               | ozunid_10                          
+  220 |  1 Unidrive.asm    210 | Equivalence | 11 |         |    0 | 00/809B               | DParms        equ   ozunid_10      
+  221 |  1 Unidrive.asm    211 | Data        | 11 |         |    1 | 00/809B : 03          | DPParmsCt     dfb   3              ;Status calls have three parameters
+  222 |  1 Unidrive.asm    212 | Data        | 11 |         |    1 | 00/809C : 01          | DPUnit        dfb   1              
+  223 |  1 Unidrive.asm    213 | Data        | 11 |         |    2 | 00/809D : BE 80       | DPBuffer      dw    {ozunid_13}    
+  224 |  1 Unidrive.asm    214 | Data        | 11 |         |    1 | 00/809F : 05          | DPStatCode    dfb   {5}            
+  225 |  1 Unidrive.asm    215 | Comment     | 11 |         |    0 | 00/80A0               | *
+  226 |  1 Unidrive.asm    216 | Comment     | 11 |         |    0 | 00/80A0               | *
+  227 |  1 Unidrive.asm    217 | Comment     | 11 |         |    0 | 00/80A0               | *** Status Parameter Set for DIB ***
+  228 |  1 Unidrive.asm    218 | Empty       | 11 |         |    0 | 00/80A0               | ozunid_11                          
+  229 |  1 Unidrive.asm    218 | Equivalence | 11 |         |    0 | 00/80A0               | DParmsDIB     equ   ozunid_11      
+  230 |  1 Unidrive.asm    219 | Data        | 11 |         |    1 | 00/80A0 : 03          | DPParmsCt2    dfb   3              ;Status calls have three parameters
+  231 |  1 Unidrive.asm    220 | Data        | 11 |         |    1 | 00/80A1 : 01          | DPUnit2       dfb   1              
+  232 |  1 Unidrive.asm    221 | Data        | 11 |         |    2 | 00/80A2 : A5 80       | DPBuffer2     dw    {ozunid_12}    
+  233 |  1 Unidrive.asm    222 | Data        | 11 |         |    1 | 00/80A4 : 03          | DPStatCode2   dfb   {3}            
+  234 |  1 Unidrive.asm    223 | Comment     | 11 |         |    0 | 00/80A5               | *
+  235 |  1 Unidrive.asm    224 | Comment     | 11 |         |    0 | 00/80A5               | *
+  236 |  1 Unidrive.asm    225 | Comment     | 11 |         |    0 | 00/80A5               | *** Status List DIB ***
+  237 |  1 Unidrive.asm    226 | Empty       | 11 |         |    0 | 00/80A5               | ozunid_12                          
+  238 |  1 Unidrive.asm    226 | Equivalence | 11 |         |    0 | 00/80A5               | DIB           equ   ozunid_12      
+  239 |  1 Unidrive.asm    227 | Data        | 11 |         |    1 | 00/80A5 : 00          | DIBStatByte1  dfb   0              
+  240 |  1 Unidrive.asm    228 | Data        | 11 |         |    3 | 00/80A6 : 00 00 00    | DIBDevSize    dfb   0,0,0          
+  241 |  1 Unidrive.asm    229 | Data        | 11 |         |    1 | 00/80A9 : 00          | DIBNameLen    dfb   0              
+  242 |  1 Unidrive.asm    230 | Data        | 11 |         |   16 | 00/80AA : 00 00 00 00 | DIBName       ds    16,0           
+      |                        |             |    |         |      |           00 00 00 00 |
+      |                        |             |    |         |      |           00 00 00 00 |
+      |                        |             |    |         |      |           00 00 00 00 |
+  243 |  1 Unidrive.asm    231 | Data        | 11 |         |    1 | 00/80BA : 00          | DIBType       dfb   0              
+  244 |  1 Unidrive.asm    232 | Data        | 11 |         |    1 | 00/80BB : 00          | DIBSubType    dfb   0              
+  245 |  1 Unidrive.asm    233 | Data        | 11 |         |    2 | 00/80BC : 00 00       | DIBVersion    dw    0              
+  246 |  1 Unidrive.asm    234 | Comment     | 11 |         |    0 | 00/80BE               | *
+  247 |  1 Unidrive.asm    235 | Comment     | 11 |         |    0 | 00/80BE               | *** Status List UNI ***
+  248 |  1 Unidrive.asm    236 | Empty       | 11 |         |    0 | 00/80BE               | ozunid_13                          
+  249 |  1 Unidrive.asm    236 | Equivalence | 11 |         |    0 | 00/80BE               | UNI           equ   ozunid_13      
+  250 |  1 Unidrive.asm    237 | Data        | 11 |         |    1 | 00/80BE : 00          |               dfb   0              
+  251 |  1 Unidrive.asm    238 | Data        | 11 |         |    1 | 00/80BF : 00          | UNIError      dfb   0              
+  252 |  1 Unidrive.asm    239 | Data        | 11 |         |    1 | 00/80C0 : 00          | UNIRetries    dfb   0              
+  253 |  1 Unidrive.asm    240 | Data        | 11 |         |    1 | 00/80C1 : 00          | UNIAcc_reg    dfb   0              
+  254 |  1 Unidrive.asm    241 | Data        | 11 |         |    1 | 00/80C2 : 00          | UNIX_reg      dfb   0              
+  255 |  1 Unidrive.asm    242 | Data        | 11 |         |    1 | 00/80C3 : 00          | UNIY_reg      dfb   0              
+  256 |  1 Unidrive.asm    243 | Data        | 11 |         |    1 | 00/80C4 : 00          | UNIP_val      dfb   0              
+  257 |  1 Unidrive.asm    244 | Data        | 11 |         |    1 | 00/80C5 : 00          | HHH           dfb   0              
+  258 |  1 Unidrive.asm    245 | Comment     | 11 |         |    0 | 00/80C6               | *
+  259 |  1 Unidrive.asm    246 | Comment     | 11 |         |    0 | 00/80C6               | *** Set Address ***
+  260 |  1 Unidrive.asm    247 | Empty       | 11 |         |    0 | 00/80C6               | ozunid_14                          
+  261 |  1 Unidrive.asm    247 | Equivalence | 11 |         |    0 | 00/80C6               | SET_ADD       equ   ozunid_14      
+  262 |  1 Unidrive.asm    248 | Data        | 11 |         |    1 | 00/80C6 : 03          |               dfb   3              
+  263 |  1 Unidrive.asm    249 | Data        | 11 |         |    1 | 00/80C7 : 01          |               dfb   1              
+  264 |  1 Unidrive.asm    250 | Data        | 11 |         |    2 | 00/80C8 : E4 80       |               dw    {ozunid_20}    
+  265 |  1 Unidrive.asm    251 | Data        | 11 |         |    1 | 00/80CA : 06          |               dfb   {6}            
+  266 |  1 Unidrive.asm    252 | Comment     | 11 |         |    0 | 00/80CB               | *
+  267 |  1 Unidrive.asm    253 | Comment     | 11 |         |    0 | 00/80CB               | *** Download ***
+  268 |  1 Unidrive.asm    254 | Empty       | 11 |         |    0 | 00/80CB               | ozunid_15                          
+  269 |  1 Unidrive.asm    254 | Equivalence | 11 |         |    0 | 00/80CB               | DOWNLOAD      equ   ozunid_15      
+  270 |  1 Unidrive.asm    255 | Data        | 11 |         |    1 | 00/80CB : 03          |               dfb   3              
+  271 |  1 Unidrive.asm    256 | Data        | 11 |         |    1 | 00/80CC : 01          |               dfb   1              
+  272 |  1 Unidrive.asm    257 | Data        | 11 |         |    2 | 00/80CD : E8 80       |               dw    {ozunid_21}    
+  273 |  1 Unidrive.asm    258 | Data        | 11 |         |    1 | 00/80CF : 07          |               dfb   {7}            
+  274 |  1 Unidrive.asm    259 | Comment     | 11 |         |    0 | 00/80D0               | *
+  275 |  1 Unidrive.asm    260 | Comment     | 11 |         |    0 | 00/80D0               | *** Execute ***
+  276 |  1 Unidrive.asm    261 | Empty       | 11 |         |    0 | 00/80D0               | ozunid_16                          
+  277 |  1 Unidrive.asm    261 | Equivalence | 11 |         |    0 | 00/80D0               | EXE           equ   ozunid_16      
+  278 |  1 Unidrive.asm    262 | Data        | 11 |         |    1 | 00/80D0 : 03          |               dfb   3              
+  279 |  1 Unidrive.asm    263 | Data        | 11 |         |    1 | 00/80D1 : 01          |               dfb   1              
+  280 |  1 Unidrive.asm    264 | Data        | 11 |         |    2 | 00/80D2 : DC 80       |               dw    {ozunid_19}    
+  281 |  1 Unidrive.asm    265 | Data        | 11 |         |    1 | 00/80D4 : 05          |               dfb   {5}            
+  282 |  1 Unidrive.asm    266 | Comment     | 11 |         |    0 | 00/80D5               | *** Eject ***
+  283 |  1 Unidrive.asm    267 | Empty       | 11 |         |    0 | 00/80D5               | ozunid_17                          
+  284 |  1 Unidrive.asm    267 | Equivalence | 11 |         |    0 | 00/80D5               | E_JECT        equ   ozunid_17      
+  285 |  1 Unidrive.asm    268 | Data        | 11 |         |    1 | 00/80D5 : 03          |               dfb   3              
+  286 |  1 Unidrive.asm    269 | Data        | 11 |         |    1 | 00/80D6 : 01          |               dfb   1              
+  287 |  1 Unidrive.asm    270 | Data        | 11 |         |    2 | 00/80D7 : DA 80       |               dw    {ozunid_18}    
+  288 |  1 Unidrive.asm    271 | Data        | 11 |         |    1 | 00/80D9 : 04          |               dfb   {4}            
+  289 |  1 Unidrive.asm    272 | Comment     | 11 |         |    0 | 00/80DA               | *
+  290 |  1 Unidrive.asm    273 | Comment     | 11 |         |    0 | 00/80DA               | ******** CONTROL LISTS ********
+  291 |  1 Unidrive.asm    274 | Comment     | 11 |         |    0 | 00/80DA               | *
+  292 |  1 Unidrive.asm    275 | Comment     | 11 |         |    0 | 00/80DA               | *
+  293 |  1 Unidrive.asm    276 | Comment     | 11 |         |    0 | 00/80DA               | *** Eject ***
+  294 |  1 Unidrive.asm    277 | Empty       | 11 |         |    0 | 00/80DA               | ozunid_18                          
+  295 |  1 Unidrive.asm    277 | Equivalence | 11 |         |    0 | 00/80DA               | CNTL_LIST1    equ   ozunid_18      
+  296 |  1 Unidrive.asm    278 | Data        | 11 |         |    2 | 00/80DA : 00 00       |               dw    $0000          
+  297 |  1 Unidrive.asm    279 | Comment     | 11 |         |    0 | 00/80DC               | *
+  298 |  1 Unidrive.asm    280 | Comment     | 11 |         |    0 | 00/80DC               | *** Execute ***
+  299 |  1 Unidrive.asm    281 | Empty       | 11 |         |    0 | 00/80DC               | ozunid_19                          
+  300 |  1 Unidrive.asm    281 | Equivalence | 11 |         |    0 | 00/80DC               | CNTL_LIST2    equ   ozunid_19      
+  301 |  1 Unidrive.asm    282 | Data        | 11 |         |    1 | 00/80DC : 06          | Clow_byte     dfb   $06            
+  302 |  1 Unidrive.asm    283 | Data        | 11 |         |    1 | 00/80DD : 00          | Chigh_byte    dfb   $00            
+  303 |  1 Unidrive.asm    284 | Data        | 11 |         |    1 | 00/80DE : 00          | AccValue      dfb   $00            ; Input Value
+  304 |  1 Unidrive.asm    285 | Data        | 11 |         |    1 | 00/80DF : 00          | X_reg         dfb   $00            ; Input Value (N1)
+  305 |  1 Unidrive.asm    286 | Data        | 11 |         |    1 | 00/80E0 : 00          | Y_reg         dfb   $00            ; Input Value (N2)
+  306 |  1 Unidrive.asm    287 | Data        | 11 |         |    1 | 00/80E1 : 00          | ProStatus     dfb   $00            
+  307 |  1 Unidrive.asm    288 | Data        | 11 |         |    1 | 00/80E2 : 05          | LowPC_reg     dfb   $05            ; Like ORG
+  308 |  1 Unidrive.asm    289 | Data        | 11 |         |    1 | 00/80E3 : 05          | HighPC_reg    dfb   $05            
+  309 |  1 Unidrive.asm    290 | Comment     | 11 |         |    0 | 00/80E4               | *
+  310 |  1 Unidrive.asm    291 | Comment     | 11 |         |    0 | 00/80E4               | *** Set Address ***
+  311 |  1 Unidrive.asm    292 | Empty       | 11 |         |    0 | 00/80E4               | ozunid_20                          
+  312 |  1 Unidrive.asm    292 | Equivalence | 11 |         |    0 | 00/80E4               | CNTL_LIST3    equ   ozunid_20      
+  313 |  1 Unidrive.asm    293 | Data        | 11 |         |    1 | 00/80E4 : 02          | CountL_byte   dfb   $02            
+  314 |  1 Unidrive.asm    294 | Data        | 11 |         |    1 | 00/80E5 : 00          | CountH_byte   dfb   $00            
+  315 |  1 Unidrive.asm    295 | Data        | 11 |         |    1 | 00/80E6 : 05          | LByte_Addr    dfb   $05            ; Like ORG
+  316 |  1 Unidrive.asm    296 | Data        | 11 |         |    1 | 00/80E7 : 05          | HByte_Addr    dfb   $05            
+  317 |  1 Unidrive.asm    297 | Comment     | 11 |         |    0 | 00/80E8               | *
+  318 |  1 Unidrive.asm    298 | Comment     | 11 |         |    0 | 00/80E8               | *** Download ***
+  319 |  1 Unidrive.asm    299 | Empty       | 11 |         |    0 | 00/80E8               | ozunid_21                          
+  320 |  1 Unidrive.asm    299 | Equivalence | 11 |         |    0 | 00/80E8               | CNTL_LIST4    equ   ozunid_21      
+  321 |  1 Unidrive.asm    300 | Data        | 11 |         |    1 | 00/80E8 : 09          | LenghtL_byte  dfb   $09            ;<----- Lenght of Unidisk program Lo Byte
+  322 |  1 Unidrive.asm    301 | Data        | 11 |         |    1 | 00/80E9 : 00          | LenghtH_byte  dfb   $00            ;<----- Lenght of Unidisk program Hi Byte
+  323 |  1 Unidrive.asm    302 | Comment     | 11 |         |    0 | 00/80EA               | *
+  324 |  1 Unidrive.asm    303 | Comment     | 11 |         |    0 | 00/80EA               | *** Start UNIDISK Program ***
+  325 |  1 Unidrive.asm    304 | Empty       | 11 |         |    0 | 00/80EA               |                                    
+  326 |  1 Unidrive.asm    305 | Code        | 11 |         |    2 | 00/80EA : 86 C0       |               stx   $C0            
+  327 |  1 Unidrive.asm    306 | Code        | 11 |         |    2 | 00/80EC : 84 C1       |               sty   $C1            
+  328 |  1 Unidrive.asm    307 | Empty       | 11 |         |    0 | 00/80EE               |                                    
+  329 |  1 Unidrive.asm    308 | Code        | 11 |         |    2 | 00/80EE : A5 C0       |               lda   $C0            
+  330 |  1 Unidrive.asm    309 | Code        | 11 |         |    2 | 00/80F0 : 65 C1       |               adc   $C1            
+  331 |  1 Unidrive.asm    310 | Empty       | 11 |         |    0 | 00/80F2               |                                    
+  332 |  1 Unidrive.asm    311 | Code        | 11 |         |    1 | 00/80F2 : 60          |               rts                  
+------+------------------------+-------------+----+---------+------+-----------------------+-------------------------------------------------------------------

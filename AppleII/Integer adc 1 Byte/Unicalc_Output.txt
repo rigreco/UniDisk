@@ -1,0 +1,415 @@
+------+-----------------------+-------------+----+---------+------+-----------------------+-------------------------------------------------------------------
+ Line | # File           Line | Line Type   | MX |  Reloc  | Size | Address   Object Code |  Source Code                                                      
+------+-----------------------+-------------+----+---------+------+-----------------------+-------------------------------------------------------------------
+    1 |  1 Unicalc.asm      1 | Comment     | 11 |         |    0 | 00/8000               | * @com.wudsn.ide.asm.hardware=APPLE2
+    2 |  1 Unicalc.asm      2 | Comment     | 11 |         |    0 | 00/8000               | * Protocol Converter Call
+    3 |  1 Unicalc.asm      3 | Directive   | 11 |         |    0 | 00/8000               |               XC                   
+    4 |  1 Unicalc.asm      4 | Equivalence | 11 |         |    0 | 00/8000               | ZPTempL       equ   $0006          ;Temporary zero page storage
+    5 |  1 Unicalc.asm      5 | Equivalence | 11 |         |    0 | 00/8000               | ZPTempH       equ   $0007          
+    6 |  1 Unicalc.asm      6 | Comment     | 11 |         |    0 | 00/8000               | *** Pointers ***
+    7 |  1 Unicalc.asm      7 | Equivalence | 11 |         |    0 | 00/8000               | LowMain       equ   $000A          
+    8 |  1 Unicalc.asm      8 | Equivalence | 11 |         |    0 | 00/8000               | HiMain        equ   $000B          
+    9 |  1 Unicalc.asm      9 | Comment     | 11 |         |    0 | 00/8000               | *** Monitor routines ***
+   10 |  1 Unicalc.asm     10 | Equivalence | 11 |         |    0 | 00/8000               | COut          equ   $FDED          ;Console output ASCII
+   11 |  1 Unicalc.asm     11 | Equivalence | 11 |         |    0 | 00/8000               | COUT1         equ   $FDF0          ;Output to screen
+   12 |  1 Unicalc.asm     12 | Equivalence | 11 |         |    0 | 00/8000               | CROut         equ   $FD8E          ;Carriage return
+   13 |  1 Unicalc.asm     13 | Equivalence | 11 |         |    0 | 00/8000               | PRbyte        equ   $FDDA          ;Print byte in hex
+   14 |  1 Unicalc.asm     14 | Equivalence | 11 |         |    0 | 00/8000               | PRBL2         equ   $F94A          ;Print many spaces
+   15 |  1 Unicalc.asm     15 | Equivalence | 11 |         |    0 | 00/8000               | KEYIN         equ   $FD1B          ;Waits for keypress
+   16 |  1 Unicalc.asm     16 | Comment     | 11 |         |    0 | 00/8000               | ** Command Code **
+   17 |  1 Unicalc.asm     17 | Equivalence | 11 |         |    0 | 00/8000               | StatusCmd     equ   0              
+   18 |  1 Unicalc.asm     18 | Comment     | 11 |         |    0 | 00/8000               | ** Status Code **
+   19 |  1 Unicalc.asm     19 | Equivalence | 11 |         |    0 | 00/8000               | StatusDIB     equ   3              
+   20 |  1 Unicalc.asm     20 | Equivalence | 11 |         |    0 | 00/8000               | StatusUNI     equ   5              
+   21 |  1 Unicalc.asm     21 | Comment     | 11 |         |    0 | 00/8000               | *
+   22 |  1 Unicalc.asm     22 | Equivalence | 11 |         |    0 | 00/8000               | ControlCmd    equ   4              
+   23 |  1 Unicalc.asm     23 | Comment     | 11 |         |    0 | 00/8000               | ** Control Codes **
+   24 |  1 Unicalc.asm     24 | Equivalence | 11 |         |    0 | 00/8000               | Eject         equ   4              
+   25 |  1 Unicalc.asm     25 | Equivalence | 11 |         |    0 | 00/8000               | Run           equ   5              
+   26 |  1 Unicalc.asm     26 | Equivalence | 11 |         |    0 | 00/8000               | SetDWLoad     equ   6              
+   27 |  1 Unicalc.asm     27 | Equivalence | 11 |         |    0 | 00/8000               | DWLoad        equ   7              
+   28 |  1 Unicalc.asm     28 | Comment     | 11 |         |    0 | 00/8000               | *
+   29 |  1 Unicalc.asm     29 | Directive   | 11 |         |    0 | 00/8000               |               org   $8000          
+   30 |  1 Unicalc.asm     30 | Comment     | 11 |         |    0 | 00/8000               | *****************************************************
+   31 |  1 Unicalc.asm     31 | Comment     | 11 |         |    0 | 00/8000               | * Presentation message **************
+   32 |  1 Unicalc.asm     32 | Comment     | 11 |         |    0 | 00/8000               | *
+   33 |  1 Unicalc.asm     33 | Code        | 11 |         |    2 | 00/8000 : A2 00       |               ldx   #0             
+   34 |  1 Unicalc.asm     34 | Empty       | 11 |         |    0 | 00/8002               | ozunid_1                           
+   35 |  1 Unicalc.asm     34 | Equivalence | 11 |         |    0 | 00/8002               | LOOP          equ   ozunid_1       
+   36 |  1 Unicalc.asm     35 | Code        | 11 |         |    3 | 00/8002 : BD 0D 80    |               lda   DATA,x         
+   37 |  1 Unicalc.asm     36 | Code        | 11 |         |    2 | 00/8005 : F0 27       |               beq   ME2            
+   38 |  1 Unicalc.asm     37 | Code        | 11 |         |    3 | 00/8007 : 20 ED FD    |               jsr   {$FDED}        
+   39 |  1 Unicalc.asm     38 | Code        | 11 |         |    1 | 00/800A : E8          |               inx                  
+   40 |  1 Unicalc.asm     39 | Code        | 11 |         |    2 | 00/800B : D0 F5       |               bne   {ozunid_1}     
+   41 |  1 Unicalc.asm     40 | Comment     | 11 |         |    0 | 00/800D               | *
+   42 |  1 Unicalc.asm     41 | Data        | 11 |         |   31 | 00/800D : 55 4E 49 44 | DATA          asc   'UNIDISK 3.5 UTILITY BY R. GRECO'
+      |                       |             |    |         |      |           49 53 4B 20 |
+      |                       |             |    |         |      |           33 2E 35 20 |
+      |                       |             |    |         |      |           55 54 49 4C |
+      |                       |             |    |         |      |           49 54 59 20 |
+      |                       |             |    |         |      |           42 59 20 52 |
+      |                       |             |    |         |      |           2E 20 47 52 |
+      |                       |             |    |         |      |           45 43 4F    |
+   43 |  1 Unicalc.asm     42 | Data        | 11 |         |    2 | 00/802C : 8D 00       |               dfb   $8D,0          ; Inverse mode on
+   44 |  1 Unicalc.asm     43 | Empty       | 11 |         |    0 | 00/802E               |                                    
+   45 |  1 Unicalc.asm     44 | Code        | 11 |         |    3 | 00/802E : 20 8E FD    | ME2           jsr   {$FD8E}        
+   46 |  1 Unicalc.asm     45 | Code        | 11 |         |    3 | 00/8031 : 20 8E FD    |               jsr   {$FD8E}        
+   47 |  1 Unicalc.asm     46 | Empty       | 11 |         |    0 | 00/8034               |                                    
+   48 |  1 Unicalc.asm     47 | Code        | 11 |         |    2 | 00/8034 : A2 00       |               ldx   #0             
+   49 |  1 Unicalc.asm     48 | Empty       | 11 |         |    0 | 00/8036               | ozunid_2                           
+   50 |  1 Unicalc.asm     48 | Equivalence | 11 |         |    0 | 00/8036               | LOOP2         equ   ozunid_2       
+   51 |  1 Unicalc.asm     49 | Code        | 11 |         |    3 | 00/8036 : BD 43 80    |               lda   DATA2,x        
+   52 |  1 Unicalc.asm     50 | Code        | 11 |         |    2 | 00/8039 : F0 18       |               beq   START          
+   53 |  1 Unicalc.asm     51 | Code        | 11 |         |    2 | 00/803B : 09 80       |               ora   #$80           
+   54 |  1 Unicalc.asm     52 | Code        | 11 |         |    3 | 00/803D : 20 ED FD    |               jsr   {$FDED}        
+   55 |  1 Unicalc.asm     53 | Code        | 11 |         |    1 | 00/8040 : E8          |               inx                  
+   56 |  1 Unicalc.asm     54 | Code        | 11 |         |    2 | 00/8041 : D0 F3       |               bne   {ozunid_2}     
+   57 |  1 Unicalc.asm     55 | Comment     | 11 |         |    0 | 00/8043               | *
+   58 |  1 Unicalc.asm     56 | Data        | 11 |         |   14 | 00/8043 : 41 20 20 20 | DATA2         asc   'A    X  Y    P'
+      |                       |             |    |         |      |           20 58 20 20 |
+      |                       |             |    |         |      |           59 20 20 20 |
+      |                       |             |    |         |      |           20 50       |
+   59 |  1 Unicalc.asm     57 | Data        | 11 |         |    2 | 00/8051 : 8D 00       |               dfb   $8D,0          ; Inverse mode on
+   60 |  1 Unicalc.asm     58 | Comment     | 11 |         |    0 | 00/8053               | *****************************************************
+   61 |  1 Unicalc.asm     59 | Comment     | 11 |         |    0 | 00/8053               | *
+   62 |  1 Unicalc.asm     60 | Comment     | 11 |         |    0 | 00/8053               | * Find a Protocol Converter in one of the slots.
+   63 |  1 Unicalc.asm     61 | Code        | 11 |         |    3 | 00/8053 : 20 D1 80    | START         jsr   {ozunid_6}     
+   64 |  1 Unicalc.asm     62 | Code        | 11 |         |    2 | 00/8056 : B0 1C       |               bcs   {ozunid_3}     
+   65 |  1 Unicalc.asm     63 | Comment     | 11 |         |    0 | 00/8058               | *
+   66 |  1 Unicalc.asm     64 | Comment     | 11 |         |    0 | 00/8058               | * Now make the DIB call to the first guy
+   67 |  1 Unicalc.asm     65 | Comment     | 11 |         |    0 | 00/8058               | *
+   68 |  1 Unicalc.asm     66 | Comment     | 11 |         |    0 | 00/8058               | *		jsr Dispatch
+   69 |  1 Unicalc.asm     67 | Comment     | 11 |         |    0 | 00/8058               | *		dfb StatusCmd
+   70 |  1 Unicalc.asm     68 | Comment     | 11 |         |    0 | 00/8058               | *		dw DParmsDIB
+   71 |  1 Unicalc.asm     69 | Comment     | 11 |         |    0 | 00/8058               | *		bcs Error
+   72 |  1 Unicalc.asm     70 | Comment     | 11 |         |    0 | 00/8058               | *
+   73 |  1 Unicalc.asm     71 | Comment     | 11 |         |    0 | 00/8058               | * Got the DIB; now print the name string
+   74 |  1 Unicalc.asm     72 | Comment     | 11 |         |    0 | 00/8058               | *
+   75 |  1 Unicalc.asm     73 | Comment     | 11 |         |    0 | 00/8058               | *            	ldx #0
+   76 |  1 Unicalc.asm     74 | Comment     | 11 |         |    0 | 00/8058               | * morechars  	equ *
+   77 |  1 Unicalc.asm     75 | Comment     | 11 |         |    0 | 00/8058               | * 		lda DIBName,x
+   78 |  1 Unicalc.asm     76 | Comment     | 11 |         |    0 | 00/8058               | *		ora #$80 ;COut wants high Bit set
+   79 |  1 Unicalc.asm     77 | Comment     | 11 |         |    0 | 00/8058               | * 		jsr COut ; ASCII
+   80 |  1 Unicalc.asm     78 | Comment     | 11 |         |    0 | 00/8058               | * 		inx
+   81 |  1 Unicalc.asm     79 | Comment     | 11 |         |    0 | 00/8058               | * 		cpx DIBNameLen
+   82 |  1 Unicalc.asm     80 | Comment     | 11 |         |    0 | 00/8058               | * 		bne morechars
+   83 |  1 Unicalc.asm     81 | Comment     | 11 |         |    0 | 00/8058               | ************************************* 		
+   84 |  1 Unicalc.asm     82 | Comment     | 11 |         |    0 | 00/8058               | * 		ldx #02 ; Set 2 space
+   85 |  1 Unicalc.asm     83 | Comment     | 11 |         |    0 | 00/8058               | *  		jsr PRBL2
+   86 |  1 Unicalc.asm     84 | Comment     | 11 |         |    0 | 00/8058               | ** Print Type ***********************		
+   87 |  1 Unicalc.asm     85 | Comment     | 11 |         |    0 | 00/8058               | * 		lda DIBType
+   88 |  1 Unicalc.asm     86 | Comment     | 11 |         |    0 | 00/8058               | * 		jsr PRbyte ; HEX form
+   89 |  1 Unicalc.asm     87 | Comment     | 11 |         |    0 | 00/8058               | *************************************		
+   90 |  1 Unicalc.asm     88 | Comment     | 11 |         |    0 | 00/8058               | *		ldx #02 ; Set 2 space
+   91 |  1 Unicalc.asm     89 | Comment     | 11 |         |    0 | 00/8058               | *  		jsr PRBL2
+   92 |  1 Unicalc.asm     90 | Comment     | 11 |         |    0 | 00/8058               | ** Print Firmware version ***********
+   93 |  1 Unicalc.asm     91 | Comment     | 11 |         |    0 | 00/8058               | * 		ldx #0
+   94 |  1 Unicalc.asm     92 | Comment     | 11 |         |    0 | 00/8058               | * morechars2  	equ *
+   95 |  1 Unicalc.asm     93 | Comment     | 11 |         |    0 | 00/8058               | * 		lda DIBVersion,x
+   96 |  1 Unicalc.asm     94 | Comment     | 11 |         |    0 | 00/8058               | *		jsr PRbyte ; HEX form
+   97 |  1 Unicalc.asm     95 | Comment     | 11 |         |    0 | 00/8058               | * 		inx
+   98 |  1 Unicalc.asm     96 | Comment     | 11 |         |    0 | 00/8058               | * 		cpx #$02 ; 2 Byte
+   99 |  1 Unicalc.asm     97 | Comment     | 11 |         |    0 | 00/8058               | * 		bne morechars2
+  100 |  1 Unicalc.asm     98 | Comment     | 11 |         |    0 | 00/8058               | * 		jsr COut
+  101 |  1 Unicalc.asm     99 | Comment     | 11 |         |    0 | 00/8058               | ************************************** 		
+  102 |  1 Unicalc.asm    100 | Code        | 11 |         |    3 | 00/8058 : 20 8E FD    |               jsr   {$FD8E}        
+  103 |  1 Unicalc.asm    101 | Comment     | 11 |         |    0 | 00/805B               | ** Wait keypress to continue **
+  104 |  1 Unicalc.asm    102 | Comment     | 11 |         |    0 | 00/805B               | *
+  105 |  1 Unicalc.asm    103 | Code        | 11 |         |    3 | 00/805B : 20 1B FD    |               jsr   {$FD1B}        
+  106 |  1 Unicalc.asm    104 | Comment     | 11 |         |    0 | 00/805E               | *		
+  107 |  1 Unicalc.asm    105 | Comment     | 11 |         |    0 | 00/805E               | *** Eject ***
+  108 |  1 Unicalc.asm    106 | Code        | 11 |         |    3 | 00/805E : 20 06 81    |               jsr   {ozunid_11}    
+  109 |  1 Unicalc.asm    107 | Data        | 11 |         |    1 | 00/8061 : 04          |               dfb   {4}            
+  110 |  1 Unicalc.asm    108 | Data        | 11 |         |    2 | 00/8062 : 43 81       |               dw    {ozunid_19}    
+  111 |  1 Unicalc.asm    109 | Comment     | 11 |         |    0 | 00/8064               | *** Set start HiMain Memory Pointers ***
+  112 |  1 Unicalc.asm    110 | Comment     | 11 |         |    0 | 00/8064               | *  		lda #$20 ; Hi Byte start (//c ram)
+  113 |  1 Unicalc.asm    111 | Comment     | 11 |         |    0 | 00/8064               | *  		sta HiMain ; HiMain=$20 set
+  114 |  1 Unicalc.asm    112 | Comment     | 11 |         |    0 | 00/8064               | *** Set Address ***
+  115 |  1 Unicalc.asm    113 | Code        | 11 |         |    3 | 00/8064 : 20 06 81    |               jsr   {ozunid_11}    
+  116 |  1 Unicalc.asm    114 | Data        | 11 |         |    1 | 00/8067 : 04          |               dfb   {4}            
+  117 |  1 Unicalc.asm    115 | Data        | 11 |         |    2 | 00/8068 : 34 81       |               dw    {ozunid_16}    
+  118 |  1 Unicalc.asm    116 | Comment     | 11 |         |    0 | 00/806A               | *** Download ***
+  119 |  1 Unicalc.asm    117 | Code        | 11 |         |    3 | 00/806A : 20 06 81    |               jsr   {ozunid_11}    
+  120 |  1 Unicalc.asm    118 | Data        | 11 |         |    1 | 00/806D : 04          |               dfb   {4}            
+  121 |  1 Unicalc.asm    119 | Data        | 11 |         |    2 | 00/806E : 39 81       |               dw    {ozunid_17}    
+  122 |  1 Unicalc.asm    120 | Comment     | 11 |         |    0 | 00/8070               | *  		
+  123 |  1 Unicalc.asm    121 | Code        | 11 |         |    3 | 00/8070 : 20 96 80    |               jsr   EXEC           ; Jump the Error routine
+  124 |  1 Unicalc.asm    122 | Code        | 11 |         |    1 | 00/8073 : 60          |               rts                  
+  125 |  1 Unicalc.asm    123 | Comment     | 11 |         |    0 | 00/8074               | *********************************************
+  126 |  1 Unicalc.asm    124 | Empty       | 11 |         |    0 | 00/8074               | ozunid_3                           
+  127 |  1 Unicalc.asm    124 | Equivalence | 11 |         |    0 | 00/8074               | Error         equ   ozunid_3       
+  128 |  1 Unicalc.asm    125 | Comment     | 11 |         |    0 | 00/8074               | *
+  129 |  1 Unicalc.asm    126 | Comment     | 11 |         |    0 | 00/8074               | * There's either no PC around, or there was no give message
+  130 |  1 Unicalc.asm    127 | Comment     | 11 |         |    0 | 00/8074               | *
+  131 |  1 Unicalc.asm    128 | Code        | 11 |         |    2 | 00/8074 : A2 00       |               ldx   #0             
+  132 |  1 Unicalc.asm    129 | Empty       | 11 |         |    0 | 00/8076               | ozunid_4                           
+  133 |  1 Unicalc.asm    129 | Equivalence | 11 |         |    0 | 00/8076               | err1          equ   ozunid_4       
+  134 |  1 Unicalc.asm    130 | Code        | 11 |         |    3 | 00/8076 : BD 82 80    |               lda   Message,x      
+  135 |  1 Unicalc.asm    131 | Code        | 11 |         |    2 | 00/8079 : F0 06       |               beq   {ozunid_5}     
+  136 |  1 Unicalc.asm    132 | Code        | 11 |         |    3 | 00/807B : 20 ED FD    |               jsr   {$FDED}        
+  137 |  1 Unicalc.asm    133 | Code        | 11 |         |    1 | 00/807E : E8          |               inx                  
+  138 |  1 Unicalc.asm    134 | Code        | 11 |         |    2 | 00/807F : D0 F5       |               bne   {ozunid_4}     
+  139 |  1 Unicalc.asm    135 | Comment     | 11 |         |    0 | 00/8081               | *
+  140 |  1 Unicalc.asm    136 | Empty       | 11 |         |    0 | 00/8081               | ozunid_5                           
+  141 |  1 Unicalc.asm    136 | Equivalence | 11 |         |    0 | 00/8081               | errout        equ   ozunid_5       
+  142 |  1 Unicalc.asm    137 | Code        | 11 |         |    1 | 00/8081 : 60          |               rts                  
+  143 |  1 Unicalc.asm    138 | Comment     | 11 |         |    0 | 00/8082               | *
+  144 |  1 Unicalc.asm    139 | Data        | 11 |         |   18 | 00/8082 : 4E 4F 20 50 | Message       asc   'NO PC OR NO DEVICE'
+      |                       |             |    |         |      |           43 20 4F 52 |
+      |                       |             |    |         |      |           20 4E 4F 20 |
+      |                       |             |    |         |      |           44 45 56 49 |
+      |                       |             |    |         |      |           43 45       |
+  145 |  1 Unicalc.asm    140 | Data        | 11 |         |    2 | 00/8094 : 8D 00       |               dfb   $8D,0          
+  146 |  1 Unicalc.asm    141 | Comment     | 11 |         |    0 | 00/8096               | *********************************************   		
+  147 |  1 Unicalc.asm    142 | Empty       | 11 |         |    0 | 00/8096               |                                    
+  148 |  1 Unicalc.asm    143 | Comment     | 11 |         |    0 | 00/8096               | *** Set and Reset LoMain Memory Counter ***
+  149 |  1 Unicalc.asm    144 | Comment     | 11 |         |    0 | 00/8096               | * RESET  		ldx #$FF ;Lo Byte start One more before $00 (//c ram)
+  150 |  1 Unicalc.asm    145 | Comment     | 11 |         |    0 | 00/8096               | *  		clc
+  151 |  1 Unicalc.asm    146 | Comment     | 11 |         |    0 | 00/8096               | *  		ldy Y_reg ; 1 time $DF --> Y
+  152 |  1 Unicalc.asm    147 | Comment     | 11 |         |    0 | 00/8096               | *  		iny	  ; Y+ --> $FF	
+  153 |  1 Unicalc.asm    148 | Comment     | 11 |         |    0 | 00/8096               | *  		sty Y_reg ; Y --> Y_reg Uni=$FF
+  154 |  1 Unicalc.asm    149 | Comment     | 11 |         |    0 | 00/8096               | *** Execute ***
+  155 |  1 Unicalc.asm    150 | Comment     | 11 |         |    0 | 00/8096               | * EXEC  		inx
+  156 |  1 Unicalc.asm    151 | Comment     | 11 |         |    0 | 00/8096               | *  		stx LowMain ; 1 time set LowMain=$00 
+  157 |  1 Unicalc.asm    152 | Comment     | 11 |         |    0 | 00/8096               | *  		stx X_reg
+  158 |  1 Unicalc.asm    153 | Code        | 11 |         |    3 | 00/8096 : 20 06 81    | EXEC          jsr   {ozunid_11}    
+  159 |  1 Unicalc.asm    154 | Data        | 11 |         |    1 | 00/8099 : 04          |               dfb   {4}            
+  160 |  1 Unicalc.asm    155 | Data        | 11 |         |    2 | 00/809A : 3E 81       |               dw    {ozunid_18}    
+  161 |  1 Unicalc.asm    156 | Code        | 11 |         |    3 | 00/809C : 20 06 81    | READ          jsr   {ozunid_11}    
+  162 |  1 Unicalc.asm    157 | Data        | 11 |         |    1 | 00/809F : 00          |               dfb   {0}            
+  163 |  1 Unicalc.asm    158 | Data        | 11 |         |    2 | 00/80A0 : 09 81       |               dw    {ozunid_12}    
+  164 |  1 Unicalc.asm    159 | Code        | 11 |         |    2 | 00/80A2 : B0 D0       |               bcs   {ozunid_3}     
+  165 |  1 Unicalc.asm    160 | Comment     | 11 |         |    0 | 00/80A4               | *
+  166 |  1 Unicalc.asm    161 | Comment     | 11 |         |    0 | 00/80A4               | **** Screen Output ****
+  167 |  1 Unicalc.asm    162 | Comment     | 11 |         |    0 | 00/80A4               | *		
+  168 |  1 Unicalc.asm    163 | Comment     | 11 |         |    0 | 00/80A4               | *** Accumulator ***
+  169 |  1 Unicalc.asm    164 | Code        | 11 |         |    3 | 00/80A4 : AD 2F 81    |               lda   UNIAcc_reg     
+  170 |  1 Unicalc.asm    165 | Code        | 11 |         |    3 | 00/80A7 : 20 DA FD    |               jsr   {$FDDA}        
+  171 |  1 Unicalc.asm    166 | Code        | 11 |         |    2 | 00/80AA : A2 03       |               ldx   #03            ; Set 3 space
+  172 |  1 Unicalc.asm    167 | Code        | 11 |         |    3 | 00/80AC : 20 4A F9    |               jsr   {$F94A}        
+  173 |  1 Unicalc.asm    168 | Comment     | 11 |         |    0 | 00/80AF               | *** X Register ***
+  174 |  1 Unicalc.asm    169 | Code        | 11 |         |    3 | 00/80AF : AD 30 81    |               lda   UNIX_reg       
+  175 |  1 Unicalc.asm    170 | Code        | 11 |         |    3 | 00/80B2 : 20 DA FD    |               jsr   {$FDDA}        
+  176 |  1 Unicalc.asm    171 | Code        | 11 |         |    2 | 00/80B5 : A2 01       |               ldx   #01            ; Set one space
+  177 |  1 Unicalc.asm    172 | Code        | 11 |         |    3 | 00/80B7 : 20 4A F9    |               jsr   {$F94A}        
+  178 |  1 Unicalc.asm    173 | Comment     | 11 |         |    0 | 00/80BA               | *** Y Register ***
+  179 |  1 Unicalc.asm    174 | Code        | 11 |         |    3 | 00/80BA : AD 31 81    |               lda   UNIY_reg       
+  180 |  1 Unicalc.asm    175 | Code        | 11 |         |    3 | 00/80BD : 20 DA FD    |               jsr   {$FDDA}        
+  181 |  1 Unicalc.asm    176 | Code        | 11 |         |    2 | 00/80C0 : A2 03       |               ldx   #03            ; Set one space
+  182 |  1 Unicalc.asm    177 | Code        | 11 |         |    3 | 00/80C2 : 20 4A F9    |               jsr   {$F94A}        
+  183 |  1 Unicalc.asm    178 | Comment     | 11 |         |    0 | 00/80C5               | *** Process Status ***
+  184 |  1 Unicalc.asm    179 | Code        | 11 |         |    3 | 00/80C5 : AD 32 81    |               lda   UNIP_val       
+  185 |  1 Unicalc.asm    180 | Code        | 11 |         |    3 | 00/80C8 : 20 DA FD    |               jsr   {$FDDA}        
+  186 |  1 Unicalc.asm    181 | Code        | 11 |         |    2 | 00/80CB : A2 05       |               ldx   #05            ; Set five space
+  187 |  1 Unicalc.asm    182 | Code        | 11 |         |    3 | 00/80CD : 20 4A F9    |               jsr   {$F94A}        
+  188 |  1 Unicalc.asm    183 | Comment     | 11 |         |    0 | 00/80D0               | ** //c Memory store adress **
+  189 |  1 Unicalc.asm    184 | Comment     | 11 |         |    0 | 00/80D0               | *  		lda HiMain
+  190 |  1 Unicalc.asm    185 | Comment     | 11 |         |    0 | 00/80D0               | *  		jsr PRbyte
+  191 |  1 Unicalc.asm    186 | Comment     | 11 |         |    0 | 00/80D0               | *  		lda LowMain
+  192 |  1 Unicalc.asm    187 | Comment     | 11 |         |    0 | 00/80D0               | *  		jsr PRbyte
+  193 |  1 Unicalc.asm    188 | Comment     | 11 |         |    0 | 00/80D0               | *  		jsr CROut
+  194 |  1 Unicalc.asm    189 | Comment     | 11 |         |    0 | 00/80D0               | **** Store in //c Main Memory ****
+  195 |  1 Unicalc.asm    190 | Comment     | 11 |         |    0 | 00/80D0               | *  		ldx X_reg
+  196 |  1 Unicalc.asm    191 | Comment     | 11 |         |    0 | 00/80D0               | *  		lda UNIAcc_reg ;#$FB Test
+  197 |  1 Unicalc.asm    192 | Comment     | 11 |         |    0 | 00/80D0               | *  		ldy #0
+  198 |  1 Unicalc.asm    193 | Comment     | 11 |         |    0 | 00/80D0               | *  		sta (LowMain),y
+  199 |  1 Unicalc.asm    194 | Comment     | 11 |         |    0 | 00/80D0               | *  		cpx UNIL_End
+  200 |  1 Unicalc.asm    195 | Comment     | 11 |         |    0 | 00/80D0               | *  		bne EXEC
+  201 |  1 Unicalc.asm    196 | Comment     | 11 |         |    0 | 00/80D0               | * UNIL_End  	dfb $FF ; Lo Byte stop (Unidisk) - $C0 for zero page
+  202 |  1 Unicalc.asm    197 | Comment     | 11 |         |    0 | 00/80D0               | *** Increment HiMain ***
+  203 |  1 Unicalc.asm    198 | Comment     | 11 |         |    0 | 00/80D0               | *  		inc HiMain
+  204 |  1 Unicalc.asm    199 | Comment     | 11 |         |    0 | 00/80D0               | *  		ldy Y_reg
+  205 |  1 Unicalc.asm    200 | Comment     | 11 |         |    0 | 00/80D0               | *  		cpy UNIH_End
+  206 |  1 Unicalc.asm    201 | Comment     | 11 |         |    0 | 00/80D0               | *  		bne RESET
+  207 |  1 Unicalc.asm    202 | Comment     | 11 |         |    0 | 00/80D0               | * UNIH_End  	dfb $FF ; Hi Byte stop (Unidisk) - $00 for zero page
+  208 |  1 Unicalc.asm    203 | Comment     | 11 |         |    0 | 00/80D0               | *
+  209 |  1 Unicalc.asm    204 | Code        | 11 |         |    1 | 00/80D0 : 60          |               rts                  
+  210 |  1 Unicalc.asm    205 | Empty       | 11 |         |    0 | 00/80D1               |                                    
+  211 |  1 Unicalc.asm    206 | Comment     | 11 |         |    0 | 00/80D1               | ******************************************************
+  212 |  1 Unicalc.asm    207 | Empty       | 11 |         |    0 | 00/80D1               | ozunid_6                           
+  213 |  1 Unicalc.asm    207 | Equivalence | 11 |         |    0 | 00/80D1               | FindPC        equ   ozunid_6       
+  214 |  1 Unicalc.asm    208 | Comment     | 11 |         |    0 | 00/80D1               | *
+  215 |  1 Unicalc.asm    209 | Comment     | 11 |         |    0 | 00/80D1               | * Search slot 7 to slot 1 looking for signature bytes
+  216 |  1 Unicalc.asm    210 | Comment     | 11 |         |    0 | 00/80D1               | *
+  217 |  1 Unicalc.asm    211 | Code        | 11 |         |    2 | 00/80D1 : A2 07       |               ldx   #7             ;Do for seven slots
+  218 |  1 Unicalc.asm    212 | Code        | 11 |         |    2 | 00/80D3 : A9 C7       |               lda   #$C7           
+  219 |  1 Unicalc.asm    213 | Code        | 11 |         |    2 | 00/80D5 : 85 07       |               sta   {$0007}        
+  220 |  1 Unicalc.asm    214 | Code        | 11 |         |    2 | 00/80D7 : A9 00       |               lda   #$00           
+  221 |  1 Unicalc.asm    215 | Code        | 11 |         |    2 | 00/80D9 : 85 06       |               sta   {$0006}        
+  222 |  1 Unicalc.asm    216 | Comment     | 11 |         |    0 | 00/80DB               | *
+  223 |  1 Unicalc.asm    217 | Empty       | 11 |         |    0 | 00/80DB               | ozunid_7                           
+  224 |  1 Unicalc.asm    217 | Equivalence | 11 |         |    0 | 00/80DB               | newslot       equ   ozunid_7       
+  225 |  1 Unicalc.asm    218 | Code        | 11 |         |    2 | 00/80DB : A0 07       |               ldy   #7             
+  226 |  1 Unicalc.asm    219 | Comment     | 11 |         |    0 | 00/80DD               | *
+  227 |  1 Unicalc.asm    220 | Empty       | 11 |         |    0 | 00/80DD               | ozunid_8                           
+  228 |  1 Unicalc.asm    220 | Equivalence | 11 |         |    0 | 00/80DD               | again         equ   ozunid_8       
+  229 |  1 Unicalc.asm    221 | Code        | 11 |         |    2 | 00/80DD : B1 06       |               lda   ({$0006}),y    
+  230 |  1 Unicalc.asm    222 | Code        | 11 |         |    3 | 00/80DF : D9 FE 80    |               cmp   sigtab,y       ;One for byte signature
+  231 |  1 Unicalc.asm    223 | Code        | 11 |         |    2 | 00/80E2 : F0 07       |               beq   {ozunid_9}     ;Found one signature byte
+  232 |  1 Unicalc.asm    224 | Code        | 11 |         |    2 | 00/80E4 : C6 07       |               dec   {$0007}        
+  233 |  1 Unicalc.asm    225 | Code        | 11 |         |    1 | 00/80E6 : CA          |               dex                  
+  234 |  1 Unicalc.asm    226 | Code        | 11 |         |    2 | 00/80E7 : D0 F2       |               bne   {ozunid_7}     
+  235 |  1 Unicalc.asm    227 | Comment     | 11 |         |    0 | 00/80E9               | *
+  236 |  1 Unicalc.asm    228 | Comment     | 11 |         |    0 | 00/80E9               | * if we get here, no PC find
+  237 |  1 Unicalc.asm    229 | Code        | 11 |         |    1 | 00/80E9 : 38          |               sec                  
+  238 |  1 Unicalc.asm    230 | Code        | 11 |         |    1 | 00/80EA : 60          |               rts                  
+  239 |  1 Unicalc.asm    231 | Comment     | 11 |         |    0 | 00/80EB               | *
+  240 |  1 Unicalc.asm    232 | Comment     | 11 |         |    0 | 00/80EB               | * if we get here, no byte find on PC
+  241 |  1 Unicalc.asm    233 | Empty       | 11 |         |    0 | 00/80EB               | ozunid_9                           
+  242 |  1 Unicalc.asm    233 | Equivalence | 11 |         |    0 | 00/80EB               | maybe         equ   ozunid_9       
+  243 |  1 Unicalc.asm    234 | Code        | 11 |         |    1 | 00/80EB : 88          |               dey                  
+  244 |  1 Unicalc.asm    235 | Code        | 11 |         |    1 | 00/80EC : 88          |               dey                  ;if N=1 then all sig bytes OK
+  245 |  1 Unicalc.asm    236 | Code        | 11 |         |    2 | 00/80ED : 10 EE       |               bpl   {ozunid_8}     
+  246 |  1 Unicalc.asm    237 | Comment     | 11 |         |    0 | 00/80EF               | * Found PC interface. Set up call address.
+  247 |  1 Unicalc.asm    238 | Comment     | 11 |         |    0 | 00/80EF               | * we already have high byte ($CN), we need low byte
+  248 |  1 Unicalc.asm    239 | Comment     | 11 |         |    0 | 00/80EF               | *
+  249 |  1 Unicalc.asm    240 | Empty       | 11 |         |    0 | 00/80EF               | ozunid_10                          
+  250 |  1 Unicalc.asm    240 | Equivalence | 11 |         |    0 | 00/80EF               | foundPC       equ   ozunid_10      
+  251 |  1 Unicalc.asm    241 | Code        | 11 |         |    2 | 00/80EF : A9 FF       |               lda   #$FF           
+  252 |  1 Unicalc.asm    242 | Code        | 11 |         |    2 | 00/80F1 : 85 06       |               sta   {$0006}        
+  253 |  1 Unicalc.asm    243 | Code        | 11 |         |    2 | 00/80F3 : A0 00       |               ldy   #0             ;For indirect load
+  254 |  1 Unicalc.asm    244 | Code        | 11 |         |    2 | 00/80F5 : B1 06       |               lda   ({$0006}),y    ;Get the byte
+  255 |  1 Unicalc.asm    245 | Comment     | 11 |         |    0 | 00/80F7               | *
+  256 |  1 Unicalc.asm    246 | Comment     | 11 |         |    0 | 00/80F7               | * Now the Acc has the low oreder ProDOS entry point.
+  257 |  1 Unicalc.asm    247 | Comment     | 11 |         |    0 | 00/80F7               | * The PC entry is three locations past this ...
+  258 |  1 Unicalc.asm    248 | Comment     | 11 |         |    0 | 00/80F7               | *
+  259 |  1 Unicalc.asm    249 | Code        | 11 |         |    1 | 00/80F7 : 18          |               clc                  
+  260 |  1 Unicalc.asm    250 | Code        | 11 |         |    2 | 00/80F8 : 69 03       |               adc   #3             
+  261 |  1 Unicalc.asm    251 | Code        | 11 |         |    2 | 00/80FA : 85 06       |               sta   {$0006}        
+  262 |  1 Unicalc.asm    252 | Comment     | 11 |         |    0 | 00/80FC               | *
+  263 |  1 Unicalc.asm    253 | Comment     | 11 |         |    0 | 00/80FC               | * Now ZPTempL has PC entry point.
+  264 |  1 Unicalc.asm    254 | Comment     | 11 |         |    0 | 00/80FC               | * Return with carry clear.
+  265 |  1 Unicalc.asm    255 | Comment     | 11 |         |    0 | 00/80FC               | *
+  266 |  1 Unicalc.asm    256 | Code        | 11 |         |    1 | 00/80FC : 18          |               clc                  
+  267 |  1 Unicalc.asm    257 | Code        | 11 |         |    1 | 00/80FD : 60          |               rts                  
+  268 |  1 Unicalc.asm    258 | Comment     | 11 |         |    0 | 00/80FE               | ***********************************************************
+  269 |  1 Unicalc.asm    259 | Comment     | 11 |         |    0 | 00/80FE               | *
+  270 |  1 Unicalc.asm    260 | Comment     | 11 |         |    0 | 00/80FE               | * There are the PC signature bytes in their relative order.
+  271 |  1 Unicalc.asm    261 | Comment     | 11 |         |    0 | 00/80FE               | * The $FF bytes are filler bytes and are not compared.
+  272 |  1 Unicalc.asm    262 | Comment     | 11 |         |    0 | 00/80FE               | *
+  273 |  1 Unicalc.asm    263 | Data        | 11 |         |    4 | 00/80FE : FF 20 FF 00 | sigtab        dfb   $FF,$20,$FF,$00
+  274 |  1 Unicalc.asm    264 | Data        | 11 |         |    4 | 00/8102 : FF 03 FF 00 |               dfb   $FF,$03,$FF,$00
+  275 |  1 Unicalc.asm    265 | Comment     | 11 |         |    0 | 00/8106               | *
+  276 |  1 Unicalc.asm    266 | Empty       | 11 |         |    0 | 00/8106               | ozunid_11                          
+  277 |  1 Unicalc.asm    266 | Equivalence | 11 |         |    0 | 00/8106               | Dispatch      equ   ozunid_11      
+  278 |  1 Unicalc.asm    267 | Code        | 11 |         |    3 | 00/8106 : 6C 06 00    |               jmp   ({$0006})      ;Simulate an indirect JSR to PC
+  279 |  1 Unicalc.asm    268 | Comment     | 11 |         |    0 | 00/8109               | *
+  280 |  1 Unicalc.asm    269 | Comment     | 11 |         |    0 | 00/8109               | *** Status Parameter Set for UNI ***
+  281 |  1 Unicalc.asm    270 | Empty       | 11 |         |    0 | 00/8109               | ozunid_12                          
+  282 |  1 Unicalc.asm    270 | Equivalence | 11 |         |    0 | 00/8109               | DParms        equ   ozunid_12      
+  283 |  1 Unicalc.asm    271 | Data        | 11 |         |    1 | 00/8109 : 03          | DPParmsCt     dfb   3              ;Status calls have three parameters
+  284 |  1 Unicalc.asm    272 | Data        | 11 |         |    1 | 00/810A : 01          | DPUnit        dfb   1              
+  285 |  1 Unicalc.asm    273 | Data        | 11 |         |    2 | 00/810B : 2C 81       | DPBuffer      dw    {ozunid_15}    
+  286 |  1 Unicalc.asm    274 | Data        | 11 |         |    1 | 00/810D : 05          | DPStatCode    dfb   {5}            
+  287 |  1 Unicalc.asm    275 | Comment     | 11 |         |    0 | 00/810E               | *
+  288 |  1 Unicalc.asm    276 | Comment     | 11 |         |    0 | 00/810E               | *
+  289 |  1 Unicalc.asm    277 | Comment     | 11 |         |    0 | 00/810E               | *** Status Parameter Set for DIB ***
+  290 |  1 Unicalc.asm    278 | Empty       | 11 |         |    0 | 00/810E               | ozunid_13                          
+  291 |  1 Unicalc.asm    278 | Equivalence | 11 |         |    0 | 00/810E               | DParmsDIB     equ   ozunid_13      
+  292 |  1 Unicalc.asm    279 | Data        | 11 |         |    1 | 00/810E : 03          | DPParmsCt2    dfb   3              ;Status calls have three parameters
+  293 |  1 Unicalc.asm    280 | Data        | 11 |         |    1 | 00/810F : 01          | DPUnit2       dfb   1              
+  294 |  1 Unicalc.asm    281 | Data        | 11 |         |    2 | 00/8110 : 13 81       | DPBuffer2     dw    {ozunid_14}    
+  295 |  1 Unicalc.asm    282 | Data        | 11 |         |    1 | 00/8112 : 03          | DPStatCode2   dfb   {3}            
+  296 |  1 Unicalc.asm    283 | Comment     | 11 |         |    0 | 00/8113               | *
+  297 |  1 Unicalc.asm    284 | Comment     | 11 |         |    0 | 00/8113               | *
+  298 |  1 Unicalc.asm    285 | Comment     | 11 |         |    0 | 00/8113               | *** Status List DIB ***
+  299 |  1 Unicalc.asm    286 | Empty       | 11 |         |    0 | 00/8113               | ozunid_14                          
+  300 |  1 Unicalc.asm    286 | Equivalence | 11 |         |    0 | 00/8113               | DIB           equ   ozunid_14      
+  301 |  1 Unicalc.asm    287 | Data        | 11 |         |    1 | 00/8113 : 00          | DIBStatByte1  dfb   0              
+  302 |  1 Unicalc.asm    288 | Data        | 11 |         |    3 | 00/8114 : 00 00 00    | DIBDevSize    dfb   0,0,0          
+  303 |  1 Unicalc.asm    289 | Data        | 11 |         |    1 | 00/8117 : 00          | DIBNameLen    dfb   0              
+  304 |  1 Unicalc.asm    290 | Data        | 11 |         |   16 | 00/8118 : 00 00 00 00 | DIBName       ds    16,0           
+      |                       |             |    |         |      |           00 00 00 00 |
+      |                       |             |    |         |      |           00 00 00 00 |
+      |                       |             |    |         |      |           00 00 00 00 |
+  305 |  1 Unicalc.asm    291 | Data        | 11 |         |    1 | 00/8128 : 00          | DIBType       dfb   0              
+  306 |  1 Unicalc.asm    292 | Data        | 11 |         |    1 | 00/8129 : 00          | DIBSubType    dfb   0              
+  307 |  1 Unicalc.asm    293 | Data        | 11 |         |    2 | 00/812A : 00 00       | DIBVersion    dw    0              
+  308 |  1 Unicalc.asm    294 | Comment     | 11 |         |    0 | 00/812C               | *
+  309 |  1 Unicalc.asm    295 | Comment     | 11 |         |    0 | 00/812C               | *** Status List UNI ***
+  310 |  1 Unicalc.asm    296 | Empty       | 11 |         |    0 | 00/812C               | ozunid_15                          
+  311 |  1 Unicalc.asm    296 | Equivalence | 11 |         |    0 | 00/812C               | UNI           equ   ozunid_15      
+  312 |  1 Unicalc.asm    297 | Data        | 11 |         |    1 | 00/812C : 00          |               dfb   0              
+  313 |  1 Unicalc.asm    298 | Data        | 11 |         |    1 | 00/812D : 00          | UNIError      dfb   0              
+  314 |  1 Unicalc.asm    299 | Data        | 11 |         |    1 | 00/812E : 00          | UNIRetries    dfb   0              
+  315 |  1 Unicalc.asm    300 | Data        | 11 |         |    1 | 00/812F : 00          | UNIAcc_reg    dfb   0              
+  316 |  1 Unicalc.asm    301 | Data        | 11 |         |    1 | 00/8130 : 00          | UNIX_reg      dfb   0              
+  317 |  1 Unicalc.asm    302 | Data        | 11 |         |    1 | 00/8131 : 00          | UNIY_reg      dfb   0              
+  318 |  1 Unicalc.asm    303 | Data        | 11 |         |    1 | 00/8132 : 00          | UNIP_val      dfb   0              
+  319 |  1 Unicalc.asm    304 | Data        | 11 |         |    1 | 00/8133 : 00          | HHH           dfb   0              
+  320 |  1 Unicalc.asm    305 | Comment     | 11 |         |    0 | 00/8134               | *
+  321 |  1 Unicalc.asm    306 | Comment     | 11 |         |    0 | 00/8134               | *** Set Address ***
+  322 |  1 Unicalc.asm    307 | Empty       | 11 |         |    0 | 00/8134               | ozunid_16                          
+  323 |  1 Unicalc.asm    307 | Equivalence | 11 |         |    0 | 00/8134               | SET_ADD       equ   ozunid_16      
+  324 |  1 Unicalc.asm    308 | Data        | 11 |         |    1 | 00/8134 : 03          |               dfb   3              
+  325 |  1 Unicalc.asm    309 | Data        | 11 |         |    1 | 00/8135 : 01          |               dfb   1              
+  326 |  1 Unicalc.asm    310 | Data        | 11 |         |    2 | 00/8136 : 52 81       |               dw    {ozunid_22}    
+  327 |  1 Unicalc.asm    311 | Data        | 11 |         |    1 | 00/8138 : 06          |               dfb   {6}            
+  328 |  1 Unicalc.asm    312 | Comment     | 11 |         |    0 | 00/8139               | *
+  329 |  1 Unicalc.asm    313 | Comment     | 11 |         |    0 | 00/8139               | *** Download ***
+  330 |  1 Unicalc.asm    314 | Empty       | 11 |         |    0 | 00/8139               | ozunid_17                          
+  331 |  1 Unicalc.asm    314 | Equivalence | 11 |         |    0 | 00/8139               | DOWNLOAD      equ   ozunid_17      
+  332 |  1 Unicalc.asm    315 | Data        | 11 |         |    1 | 00/8139 : 03          |               dfb   3              
+  333 |  1 Unicalc.asm    316 | Data        | 11 |         |    1 | 00/813A : 01          |               dfb   1              
+  334 |  1 Unicalc.asm    317 | Data        | 11 |         |    2 | 00/813B : 56 81       |               dw    {ozunid_23}    
+  335 |  1 Unicalc.asm    318 | Data        | 11 |         |    1 | 00/813D : 07          |               dfb   {7}            
+  336 |  1 Unicalc.asm    319 | Comment     | 11 |         |    0 | 00/813E               | *
+  337 |  1 Unicalc.asm    320 | Comment     | 11 |         |    0 | 00/813E               | *** Execute ***
+  338 |  1 Unicalc.asm    321 | Empty       | 11 |         |    0 | 00/813E               | ozunid_18                          
+  339 |  1 Unicalc.asm    321 | Equivalence | 11 |         |    0 | 00/813E               | EXE           equ   ozunid_18      
+  340 |  1 Unicalc.asm    322 | Data        | 11 |         |    1 | 00/813E : 03          |               dfb   3              
+  341 |  1 Unicalc.asm    323 | Data        | 11 |         |    1 | 00/813F : 01          |               dfb   1              
+  342 |  1 Unicalc.asm    324 | Data        | 11 |         |    2 | 00/8140 : 4A 81       |               dw    {ozunid_21}    
+  343 |  1 Unicalc.asm    325 | Data        | 11 |         |    1 | 00/8142 : 05          |               dfb   {5}            
+  344 |  1 Unicalc.asm    326 | Comment     | 11 |         |    0 | 00/8143               | *** Eject ***
+  345 |  1 Unicalc.asm    327 | Empty       | 11 |         |    0 | 00/8143               | ozunid_19                          
+  346 |  1 Unicalc.asm    327 | Equivalence | 11 |         |    0 | 00/8143               | E_JECT        equ   ozunid_19      
+  347 |  1 Unicalc.asm    328 | Data        | 11 |         |    1 | 00/8143 : 03          |               dfb   3              
+  348 |  1 Unicalc.asm    329 | Data        | 11 |         |    1 | 00/8144 : 01          |               dfb   1              
+  349 |  1 Unicalc.asm    330 | Data        | 11 |         |    2 | 00/8145 : 48 81       |               dw    {ozunid_20}    
+  350 |  1 Unicalc.asm    331 | Data        | 11 |         |    1 | 00/8147 : 04          |               dfb   {4}            
+  351 |  1 Unicalc.asm    332 | Comment     | 11 |         |    0 | 00/8148               | *
+  352 |  1 Unicalc.asm    333 | Comment     | 11 |         |    0 | 00/8148               | ******** CONTROL LISTS ********
+  353 |  1 Unicalc.asm    334 | Comment     | 11 |         |    0 | 00/8148               | *
+  354 |  1 Unicalc.asm    335 | Comment     | 11 |         |    0 | 00/8148               | *
+  355 |  1 Unicalc.asm    336 | Comment     | 11 |         |    0 | 00/8148               | *** Eject ***
+  356 |  1 Unicalc.asm    337 | Empty       | 11 |         |    0 | 00/8148               | ozunid_20                          
+  357 |  1 Unicalc.asm    337 | Equivalence | 11 |         |    0 | 00/8148               | CNTL_LIST1    equ   ozunid_20      
+  358 |  1 Unicalc.asm    338 | Data        | 11 |         |    2 | 00/8148 : 00 00       |               dw    $0000          
+  359 |  1 Unicalc.asm    339 | Comment     | 11 |         |    0 | 00/814A               | *
+  360 |  1 Unicalc.asm    340 | Comment     | 11 |         |    0 | 00/814A               | *** Execute ***
+  361 |  1 Unicalc.asm    341 | Empty       | 11 |         |    0 | 00/814A               | ozunid_21                          
+  362 |  1 Unicalc.asm    341 | Equivalence | 11 |         |    0 | 00/814A               | CNTL_LIST2    equ   ozunid_21      
+  363 |  1 Unicalc.asm    342 | Data        | 11 |         |    1 | 00/814A : 06          | Clow_byte     dfb   $06            
+  364 |  1 Unicalc.asm    343 | Data        | 11 |         |    1 | 00/814B : 00          | Chigh_byte    dfb   $00            
+  365 |  1 Unicalc.asm    344 | Data        | 11 |         |    1 | 00/814C : 00          | AccValue      dfb   $00            ; Input Value
+  366 |  1 Unicalc.asm    345 | Data        | 11 |         |    1 | 00/814D : 0A          | X_reg         dfb   $0A            ; Input Value (N1)
+  367 |  1 Unicalc.asm    346 | Data        | 11 |         |    1 | 00/814E : 01          | Y_reg         dfb   $01            ; Input Value (N2)
+  368 |  1 Unicalc.asm    347 | Data        | 11 |         |    1 | 00/814F : 00          | ProStatus     dfb   $00            
+  369 |  1 Unicalc.asm    348 | Data        | 11 |         |    1 | 00/8150 : 05          | LowPC_reg     dfb   $05            
+  370 |  1 Unicalc.asm    349 | Data        | 11 |         |    1 | 00/8151 : 05          | HighPC_reg    dfb   $05            
+  371 |  1 Unicalc.asm    350 | Comment     | 11 |         |    0 | 00/8152               | *
+  372 |  1 Unicalc.asm    351 | Comment     | 11 |         |    0 | 00/8152               | *** Set Address ***
+  373 |  1 Unicalc.asm    352 | Empty       | 11 |         |    0 | 00/8152               | ozunid_22                          
+  374 |  1 Unicalc.asm    352 | Equivalence | 11 |         |    0 | 00/8152               | CNTL_LIST3    equ   ozunid_22      
+  375 |  1 Unicalc.asm    353 | Data        | 11 |         |    1 | 00/8152 : 02          | CountL_byte   dfb   $02            
+  376 |  1 Unicalc.asm    354 | Data        | 11 |         |    1 | 00/8153 : 00          | CountH_byte   dfb   $00            
+  377 |  1 Unicalc.asm    355 | Data        | 11 |         |    1 | 00/8154 : 05          | LByte_Addr    dfb   $05            
+  378 |  1 Unicalc.asm    356 | Data        | 11 |         |    1 | 00/8155 : 05          | HByte_Addr    dfb   $05            
+  379 |  1 Unicalc.asm    357 | Comment     | 11 |         |    0 | 00/8156               | *
+  380 |  1 Unicalc.asm    358 | Comment     | 11 |         |    0 | 00/8156               | *** Download ***
+  381 |  1 Unicalc.asm    359 | Empty       | 11 |         |    0 | 00/8156               | ozunid_23                          
+  382 |  1 Unicalc.asm    359 | Equivalence | 11 |         |    0 | 00/8156               | CNTL_LIST4    equ   ozunid_23      
+  383 |  1 Unicalc.asm    360 | Data        | 11 |         |    1 | 00/8156 : 09          | LenghtL_byte  dfb   $09            ;<----- Lenght of Unidisk program Lo Byte
+  384 |  1 Unicalc.asm    361 | Data        | 11 |         |    1 | 00/8157 : 00          | LenghtH_byte  dfb   $00            ;<----- Lenght of Unidisk program Hi Byte
+  385 |  1 Unicalc.asm    362 | Comment     | 11 |         |    0 | 00/8158               | *
+  386 |  1 Unicalc.asm    363 | Comment     | 11 |         |    0 | 00/8158               | *** Start UNIDISK Program ***
+  387 |  1 Unicalc.asm    364 | Empty       | 11 |         |    0 | 00/8158               |                                    
+  388 |  1 Unicalc.asm    365 | Code        | 11 |         |    2 | 00/8158 : 86 C0       |               stx   $C0            
+  389 |  1 Unicalc.asm    366 | Code        | 11 |         |    2 | 00/815A : 84 C1       |               sty   $C1            
+  390 |  1 Unicalc.asm    367 | Empty       | 11 |         |    0 | 00/815C               |                                    
+  391 |  1 Unicalc.asm    368 | Code        | 11 |         |    2 | 00/815C : A5 C0       |               lda   $C0            
+  392 |  1 Unicalc.asm    369 | Code        | 11 |         |    2 | 00/815E : 65 C1       |               adc   $C1            
+  393 |  1 Unicalc.asm    370 | Empty       | 11 |         |    0 | 00/8160               |                                    
+  394 |  1 Unicalc.asm    371 | Code        | 11 |         |    1 | 00/8160 : 60          |               rts                  
+------+-----------------------+-------------+----+---------+------+-----------------------+-------------------------------------------------------------------
