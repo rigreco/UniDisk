@@ -1,3 +1,24 @@
+*
+*    TestN <alfa>
+*
+*    This routine is identical replica of Unidisk routin: 
+*    2 Byte Add of the first N integer numbers calculation.
+*    For speed test compare between Apple II and Unidisk.
+*    
+*    Copyright (C) 2015  Riccardo Greco <rigreco.grc@gmail.com>.
+*
+*    This program is free software: you can redistribute it and/or modify
+*    it under the terms of the GNU General Public License as published by
+*    the Free Software Foundation, either version 3 of the License, or
+*    (at your option) any later version.
+*    This program is distributed in the hope that it will be useful,
+*    but WITHOUT ANY WARRANTY; without even the implied warranty of
+*    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+*    GNU General Public License for more details.
+*    You should have received a copy of the GNU General Public License
+*    along with this program.  If not, see <http://www.gnu.org/licenses/>.
+*
+*
 * @com.wudsn.ide.asm.hardware=APPLE2
 *** Start UNIDISK Program ***
 ** Two byte adc **
