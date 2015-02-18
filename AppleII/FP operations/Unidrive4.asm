@@ -87,31 +87,33 @@ Message  	asc 'NO PC OR NO DEVICE'
 ** Set the Input Value first in Dynamic data **
 		** 4 Byte N1 to FP1 **
 EXEC  		lda N1	  	;X1
-		sta $8238 	; Absolute addressing
+		sta $822F 	; Absolute addressing
 		lda N1+1	;M1 (1)
-		sta $8239
+		sta $8230
 		lda N1+2	;M1 (2)
-		sta $823A
+		sta $8231
 		lda N1+3	;M1 (3)
-		sta $823B
+		sta $8232
 				
 		** 4 Byte N2 to FP2 **
 		lda N2		;X2
-		sta $823C
+		sta $8233
 		lda N2+1	;M2 (1)
-		sta $823D
+		sta $8234
 		lda N2+2	;M2 (2)
-		sta $823E
+		sta $8235
 		lda N2+3	;M2 (3)
-		sta $823F
+		sta $8236
 			
 *** Download ***
   		jsr Dispatch
   		dfb ControlCmd
   		dw DOWNLOAD
 ** Set Unidisk Registers **
-		lda #01		;First time
-		sta UNIAcc_reg  				
+*		lda #01		;First time
+*		sta UNIAcc_reg
+* The program begin to PC preset to $0500 *
+* 				
 ** Execute **			
 		jsr Dispatch
   		dfb ControlCmd
@@ -133,8 +135,8 @@ READ  		jsr Dispatch
   		sta N1+2
   		
 ** Second time execute **		
-		lda #02		; Second time
-		sta UNIAcc_reg 
+		lda #$3C      ; Target the secont time entry point
+		sta LowPC_reg ; Second time set new value of PC
 ** Execute **			
 		jsr Dispatch
   		dfb ControlCmd
@@ -276,8 +278,8 @@ AccValue  	dfb $00 ; Init Value Unidisk Accumulator Register
 X_reg  		dfb $00 ; Init Value Unidisk X Register
 Y_reg  		dfb $00 ; Init Value Unidisk Y Register
 ProStatus  	dfb $00 ; Init Value Unidisk Status Register
-LowPC_reg  	dfb $00 ; Init Value Unidisk Program Counter $0500
-HighPC_reg  	dfb $05
+LowPC_reg  	dfb $00 ; Init Value Unidisk Program Counter $0500 at eny dowload
+HighPC_reg  	dfb $05 ; $05 first execution, $3C second execution
 *
 *** Set Address ***
 CNTL_LIST3  	equ *
@@ -288,7 +290,7 @@ HByte_Addr  	dfb $05
 *
 *** Download ***
 CNTL_LIST4  	equ *
-LenghtL_byte  	dfb $38 ;<----- Lenght of Unidisk program Lo  - Byte 312 byte
+LenghtL_byte  	dfb $34 ;<----- Lenght of Unidisk program Lo  - Byte 312 byte
 LenghtH_byte  	dfb $01 ;<----- Lenght of Unidisk program Hi Byte
 *
 **************** Start UNIDISK Program ****************
@@ -307,14 +309,10 @@ M1        	EQU  $C6	;$FB  ;  $F9 - $FB
 E         	EQU  $C9	;$FE  ;  $FC
 
 OVLOC     	EQU  $C10	;$3F5	;Overflow routine is not implemented at now)
+
 *
 ** Main program **
 *
-* CHK if is the second execution *
-
-		cmp #02
-		beq SECOND ;Only to read the rest part of result
-			
 ** Input data to Zero Page **
 		
 		** FP1 **
@@ -353,7 +351,7 @@ OVLOC     	EQU  $C10	;$3F5	;Overflow routine is not implemented at now)
 		
 		rts
 *** Output Data result FP1 to Unidisk registers Second Time latest 1 Byte out ***		
-SECOND		lda M1+2
+SECOND		lda M1+2 ; Entry point by Program Counter set
 
 		rts		
 ***************************************************
@@ -375,8 +373,6 @@ SECOND		lda M1+2
       ***********************
 *     TITLE "FLOATING POINT ROUTINES for Unidisk memory"
 *
-
-*          ORG  $300
           
 ADD	  CLC      	;CLEAR CARRY
 	  LDX  #$2      ;INDEX FOR 3-BYTE ADD.
