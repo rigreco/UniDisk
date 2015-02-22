@@ -22,15 +22,14 @@ FAC		equ $9D
 ENTRY		jsr CHKCOM
 		jsr FRMNUM	;VARIABLE X ->FAC
 
-** FP1 to FAC conversion (conversion not yet) **
+** FPC to FP1 conversion (conversion not yet) **
 
 		lda FAC
 		dec A
 		sta FP1
 		
 		lda FAC+1
-		eor #$80
-		lsr
+		eor #$F0 ; Not Hi Byte
 		sta FP1+1
 		
 		lda FAC+2
@@ -39,10 +38,13 @@ ENTRY		jsr CHKCOM
 		lda FAC+3
 		sta FP1+3
 		
-		lda FAC+3
+		lda #0
 		sta E
 		
-		lda FAC+4
-		sta SIGN
+;		lda FAC+4
+;		sta E
 		
-		brk
+;		lda FAC+4
+;		sta SIGN
+		
+		rts

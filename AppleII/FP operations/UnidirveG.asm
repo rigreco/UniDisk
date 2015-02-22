@@ -342,8 +342,7 @@ OVLOC     	EQU  $C10	;$3F5	;Overflow routine is not implemented at now)
 ******************************************************************
 *
 ** Simple ADD **
-		jsr FADD ; Call ADD To add two numbers in floating point form
-*		jsr FIX  ; Call FIX To extract the integer portion of a floating point number with truncation 
+		jsr FADD ; Call FP routine
 		
 *** Output Data result FP1 to Unidisk registers First Time first 3 Byte out ***
 		lda X1
