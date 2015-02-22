@@ -1,10 +1,10 @@
 * @com.wudsn.ide.asm.hardware=APPLE2
 ************************************
 * 	FP1 TO FAC TO BASIC        *
-*          CALL 32768,Y            *
+*          CALL 768,Y      	   *
 *	   PRINT Y		   *
 ************************************
-		org $8000
+		org $300
 		
 CHKCOM		equ $DEBE
 PTRGET		equ $DFE3
@@ -16,7 +16,7 @@ FP1		equ $FA	;Translate F8 --> FA
 E		equ $FE ;Translate FC --> FE
 SIGN		equ $EB ;Translate F3 --> EB
 
-MEM		equ $8080
+MEM		equ $0380
 *
 		** FP1 to MEM to FAC conversion FAC 5 Bytes **
 *
