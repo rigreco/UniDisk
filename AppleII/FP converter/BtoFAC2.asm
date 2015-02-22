@@ -28,21 +28,26 @@ ENTRY		jsr CHKCOM
 		dec A
 		sta FP1
 		
+		clc
 		lda FAC+1
-		eor #$F0 ; Not Hi Byte
+		ror
+		;eor #$F0 ; Not Hi Byte
 		sta FP1+1
 		
 		lda FAC+2
+		ror
 		sta FP1+2
 		
 		lda FAC+3
+		ror
 		sta FP1+3
 		
-		lda #0
-		sta E
-		
-;		lda FAC+4
+;		lda #0
 ;		sta E
+		
+		lda FAC+4
+		ror
+		sta E
 		
 ;		lda FAC+4
 ;		sta SIGN

@@ -24,18 +24,23 @@ ENTRY		lda FP1		; X1 1 Byte --> 9D FAC
 		inc A		; 2^(FP1+1)
 		sta MEM
 		
+		clc
 		lda FP1+1	; M1 Hi 2 Byte --> 9E FAC
-		asl
+		rol
+		;asl
 		eor #$80	; Not Hi Bit Mantissa (change Sign)
 		sta MEM+1
 		
 		lda FP1+2	; M1 3 Byte --> 9F FAC
+		rol
 		sta MEM+2
 		
 		lda FP1+3	; M1 Lo 4 Byte --> A0 FAC
+		rol
 		sta MEM+3
 		
 		lda E		; Extra 00 5 Byte --> A1 FAC
+		rol
 		sta MEM+4
 		
 *		lda $EB		; SIGN (F3 to EB) 6 Byte --> A2 FAC
