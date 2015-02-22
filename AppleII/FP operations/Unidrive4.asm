@@ -87,31 +87,33 @@ Message  	asc 'NO PC OR NO DEVICE'
 ** Set the Input Value first in Dynamic data **
 		** 4 Byte N1 to FP1 **
 EXEC  		lda N1	  	;X1
-		sta $8111 	; Absolute addressing
+		sta $822F 	; Absolute addressing
 		lda N1+1	;M1 (1)
-		sta $8112
+		sta $8230
 		lda N1+2	;M1 (2)
-		sta 
-		lda N1+2	;M1 (3)
-		sta
+		sta $8231
+		lda N1+3	;M1 (3)
+		sta $8232
 				
 		** 4 Byte N2 to FP2 **
 		lda N2		;X2
-		sta $80EB
+		sta $8233
 		lda N2+1	;M2 (1)
-		sta $80EC
+		sta $8234
 		lda N2+2	;M2 (2)
-		sta 
-		lda N2+2	;M2 (3)
-		sta
+		sta $8235
+		lda N2+3	;M2 (3)
+		sta $8236
 			
 *** Download ***
   		jsr Dispatch
   		dfb ControlCmd
   		dw DOWNLOAD
 ** Set Unidisk Registers **
-		lda #01		;First time
-		sta UNIAcc_reg  				
+*		lda #01		;First time
+*		sta UNIAcc_reg
+* The program begin to PC preset to $0500 *
+* 				
 ** Execute **			
 		jsr Dispatch
   		dfb ControlCmd
@@ -133,8 +135,8 @@ READ  		jsr Dispatch
   		sta N1+2
   		
 ** Second time execute **		
-		lda #02		; Second time
-		sta UNIAcc_reg 
+		lda #$3C      ; Target the secont time entry point
+		sta LowPC_reg ; Second time set new value of PC
 ** Execute **			
 		jsr Dispatch
   		dfb ControlCmd
@@ -143,11 +145,11 @@ READ  		jsr Dispatch
  		jsr Dispatch
   		dfb StatusCmd
   		dw DParms
-  		bcs Error
+*  		bcs Error
   				 		
 * 		Second time execute only to read the latest Byte of FP1*
 		lda UNIAcc_reg
-		sta N1+2		 
+		sta N1+3		 
 *
   		rts
 
@@ -272,27 +274,28 @@ CNTL_LIST1  	equ *
 CNTL_LIST2  	equ *
 Clow_byte  	dfb $06
 Chigh_byte  	dfb $00
-AccValue  	dfb $00 ; Input Value
-X_reg  		dfb $00 ; Input Value (N1)
-Y_reg  		dfb $00 ; Input Value (N2)
-ProStatus  	dfb $00 ; Input Value
-LowPC_reg  	dfb $05 ; Like ORG
-HighPC_reg  	dfb $05
+AccValue  	dfb $00 ; Init Value Unidisk Accumulator Register
+X_reg  		dfb $00 ; Init Value Unidisk X Register
+Y_reg  		dfb $00 ; Init Value Unidisk Y Register
+ProStatus  	dfb $00 ; Init Value Unidisk Status Register
+LowPC_reg  	dfb $00 ; Init Value Unidisk Program Counter $0500 at eny dowload
+HighPC_reg  	dfb $05 ; $05 first execution, $3C second execution
 *
 *** Set Address ***
 CNTL_LIST3  	equ *
 CountL_byte  	dfb $02
 CountH_byte  	dfb $00
-LByte_Addr  	dfb $05 ; Like ORG
+LByte_Addr  	dfb $00 ; ORG of Unidisk program, set begin program address $0500
 HByte_Addr  	dfb $05
 *
 *** Download ***
 CNTL_LIST4  	equ *
-LenghtL_byte  	dfb $4A ;<----- Lenght of Unidisk program Lo Byte
-LenghtH_byte  	dfb $00 ;<----- Lenght of Unidisk program Hi Byte
+LenghtL_byte  	dfb $34 ;<----- Lenght of Unidisk program Lo  - Byte 312 byte
+LenghtH_byte  	dfb $01 ;<----- Lenght of Unidisk program Hi Byte
 *
-*** Start UNIDISK Program ***
-		org $0505
+**************** Start UNIDISK Program ****************
+*
+		org $0500 ; Start Unidisk program address
 		
 SIGN      	EQU  $C0	;$EB  ;  $F3
 
@@ -306,14 +309,10 @@ M1        	EQU  $C6	;$FB  ;  $F9 - $FB
 E         	EQU  $C9	;$FE  ;  $FC
 
 OVLOC     	EQU  $C10	;$3F5	;Overflow routine is not implemented at now)
+
 *
 ** Main program **
 *
-* CHK if is the second execution *
-
-		cmp #02
-		beq SECOND
-			
 ** Input data to Zero Page **
 		
 		** FP1 **
@@ -338,24 +337,26 @@ OVLOC     	EQU  $C10	;$3F5	;Overflow routine is not implemented at now)
 		lda FP2+3
 		sta M2+2
 
-*** Target Function ***
-*	Y=N1+N2
-
+************************** Target Function ***********************
+*				Y=N1+N2	   			 *
+******************************************************************
+*
 ** Simple ADD **
-		jsr FADD
+		jsr FADD ; Call FP routine
 		
-*** Output Data result FP1 to Unidisk registers First Time first 3 Byte***
+*** Output Data result FP1 to Unidisk registers First Time first 3 Byte out ***
 		lda X1
 		ldx M1
 		ldy M1+1
 		
 		rts
-*** Output Data result FP1 to Unidisk registers Second Time latest 1 Byte***		
-SECOND		lda M1+2
+*** Output Data result FP1 to Unidisk registers Second Time latest 1 Byte out ***		
+SECOND		lda M1+2 ; Entry point by Program Counter set
 
 		rts		
-
-** FP Routine **
+***************************************************
+*
+***************** FP Routine *****************
 *
       ***********************
       *                     *
@@ -372,8 +373,6 @@ SECOND		lda M1+2
       ***********************
 *     TITLE "FLOATING POINT ROUTINES for Unidisk memory"
 *
-
-*          ORG  $300
           
 ADD	  CLC      	;CLEAR CARRY
 	  LDX  #$2      ;INDEX FOR 3-BYTE ADD.
