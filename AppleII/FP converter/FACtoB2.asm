@@ -42,7 +42,7 @@ ENTRY		lda FP1		; X1 1 Byte --> 9D FAC
 *		sta MEM+5
 		***************************
 * 
-		ldy #$80 	;Hi Byte MEM
+		ldy #$03 	;Hi Byte MEM
 		lda #$80 	;Lo Byte MEM
 		jsr MOVFM	;MEM->FAC (9D to A2)
 *
