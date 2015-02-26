@@ -22,6 +22,7 @@ FP2		equ $EC
 ** Applesoft FP Accumulator 5 Byte + 1 Byte Sign **
 FAC		equ $9D
 
+** Variabile Memory location $0380 **
 
 		***************************
 
@@ -33,6 +34,7 @@ ENTRY1		jsr CHKCOM
 		lda FAC
 		dec A		; dec the EXP
 		sta FP1
+		sta FP2 ; Copy
 		
 		lda FAC+5
 		bmi NEG		; chk the Hi bit of 1 byte Mantissa
@@ -44,6 +46,7 @@ POS		clc		; Hi bit 0 for negative
 		ror		; Didide for 2^1
 		
 		sta FP1+1
+		sta FP2+1 ; Copy
 		
 		jmp CONT
 
@@ -56,15 +59,18 @@ NEG		clc		; Hi bit 1 for positive
 		clc
 		adc #01		; Two's complement, +1
 		
-		sta FP1+1		
+		sta FP1+1
+		sta FP2+1 ; Copy		
 		
 CONT		lda FAC+2
 		ror
 		sta FP1+2
+		sta FP2+2 ; Copy
 		
 		lda FAC+3
 		ror
 		sta FP1+3
+		sta FP2+3 ; Copy FP2=FP1 X2=X1
 		
 		lda FAC+4
 		ror
@@ -72,38 +78,17 @@ CONT		lda FAC+2
 	
 		;brk
 		rts
-************************************
-*       	FP1 Calc	   *			
-*		CALL 821	   *
-************************************
 
-** 	Copy FP1 to FP2 	  **
-
-ENTRY2		lda FP1			
-		sta FP2		;X1-->X2
-			
-		lda FP1+1	;M1-->M2
-		sta FP2+1	
-		lda FP1+2
-		sta FP2+2
-		lda FP1+3
-		sta FP2+3
-*		
-**		Y=X*X 		**
-*		
-		jsr $8000	;Unidrive4p
-
-		rts
 ************************************
 * 	FP1 TO FAC TO BASIC        *
-*          CALL 841,Y      	   *
+*          CALL 831,Y      	   *
 *	   PRINT Y		   *
 ************************************
 
 *
-** FP1 to MEM to FAC conversion **
+** FP1 to FAC conversion **
 *
-ENTRY3		lda FP1		; X1 1 Byte --> 9D FAC
+ENTRY2		lda FP1		; X1 1 Byte --> 9D FAC
 		inc A		; 2^(FP1+1) inc EXP
 		sta FAC
 		
