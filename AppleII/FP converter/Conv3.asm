@@ -148,8 +148,8 @@ CONT2		lda FP1+2	; M1 3 Byte --> 9F FAC
 		;brk
 		***************************
 * 
-		ldy #$03 	;Hi Byte MEM
-		lda #$80 	;Lo Byte MEM
+		;ldy #$03 	;Hi Byte MEM
+		;lda #$80 	;Lo Byte MEM
 *
 		jsr CHKCOM
 		jsr PTRGET

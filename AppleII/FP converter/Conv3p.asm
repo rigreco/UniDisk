@@ -133,11 +133,11 @@ CONT2		lda FP1+2	; M1 3 Byte --> 9F FAC
 		;brk
 		***************************
 * 
-		ldy #$03 	;Hi Byte MEM
-		lda #$80 	;Lo Byte MEM
+		;ldy #$03 	;Hi Byte MEM
+		;lda #$80 	;Lo Byte MEM
 *
 		jsr CHKCOM
-		jsr PTRGET
+		jsr PTRGET	; Return the Y and A pointing to the specific variabile
 		tax
 		jsr MOVMF	;FAC->VARIABLE Y (5 Bytes Packed)
 		
