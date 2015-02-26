@@ -35,6 +35,7 @@ ENTRY1		jsr CHKCOM
 		
 		clc
 		lda FAC+5
+		ora #$80	; Not Hi Bit Mantissa (change Sign only if is positive)
 		ror
 		sta FP1+1
 		
@@ -64,7 +65,7 @@ ENTRY1		jsr CHKCOM
 		
 ************************************
 * 	FP1 TO FAC TO BASIC        *
-*          CALL 798,Y      	   *
+*          CALL 800,Y      	   *
 *	   PRINT Y		   *
 ************************************
 
@@ -79,7 +80,7 @@ ENTRY2		lda FP1		; X1 1 Byte --> 9D FAC
 		lda FP1+1	; M1 Hi 2 Byte --> 9E FAC
 		rol
 		;asl
-		;eor #$80	; Not Hi Bit Mantissa (change Sign)
+		ora #$80	; Not Hi Bit Mantissa (change Sign)
 		sta MEM+1
 		
 		lda FP1+2	; M1 3 Byte --> 9F FAC

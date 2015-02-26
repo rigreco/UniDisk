@@ -45,7 +45,7 @@ Run  		equ 5
 SetDWLoad  	equ 6
 DWLoad  	equ 7
 *
-  		org $8000
+  		org $6000
 *****************************************************
 
 *
@@ -87,23 +87,23 @@ Message  	asc 'NO PC OR NO DEVICE'
 ** Set the Input Value first in Dynamic data **
 		** 4 Byte N1 to FP1 **
 EXEC  		lda N1	  	;X1
-		sta $822F 	; Absolute addressing
+		sta $622F 	; Absolute addressing
 		lda N1+1	;M1 (1)
-		sta $8230
+		sta $6230
 		lda N1+2	;M1 (2)
-		sta $8231
+		sta $6231
 		lda N1+3	;M1 (3)
-		sta $8232
+		sta $6232
 				
 		** 4 Byte N2 to FP2 **
 		lda N2		;X2
-		sta $8233
+		sta $6233
 		lda N2+1	;M2 (1)
-		sta $8234
+		sta $6234
 		lda N2+2	;M2 (2)
-		sta $8235
+		sta $6235
 		lda N2+3	;M2 (3)
-		sta $8236
+		sta $6236
 			
 *** Download ***
   		jsr Dispatch

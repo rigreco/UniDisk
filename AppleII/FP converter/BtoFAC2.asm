@@ -2,9 +2,9 @@
 ************************************
 * 	BASIC TO FAC TO FP1        *
 *          X=NUMBER		   *
-*          CALL 2048,X             *
+*          CALL 768,X             *
 ************************************
-		org $800
+		org $300
 		
 CHKCOM		equ $DEBE
 FRMNUM		equ $DD67
@@ -52,4 +52,5 @@ ENTRY		jsr CHKCOM
 ;		lda FAC+4
 ;		sta SIGN
 		
-		rts
+		;rts
+		brk
