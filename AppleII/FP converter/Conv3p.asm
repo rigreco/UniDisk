@@ -2,9 +2,9 @@
 ************************************
 * 	BASIC TO FAC TO FP1        *
 *          X=NUMBER		   *
-*          CALL 768,X              *
+*          CALL 32768,X 768,X      *
 ************************************
-		org $300
+		org $8000
 		
 CHKCOM		equ $DEBE
 FRMNUM		equ $DD67
@@ -81,7 +81,7 @@ CONT		lda FAC+2
 
 ************************************
 * 	FP1 TO FAC TO BASIC        *
-*          CALL 831,Y      	   *
+*          CALL 32831,Y 831,Y 	   *
 *	   PRINT Y		   *
 ************************************
 
