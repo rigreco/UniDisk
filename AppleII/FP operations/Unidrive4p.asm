@@ -28,7 +28,7 @@ ZPTempH  	equ $0007
 ** Zero page storage **
 N1		equ $FA ;25  4 Byte FP FA--FD (FP1)
 N2		equ $EC ;27  4 Byte FP EC--EF (FP2)
-; RSLT		equ $1D ;29
+RSLT		equ $7000 ;29
 *** Monitor routines ***
 COut  		equ $FDED ;Console output ASCII
 CROut  		equ $FD8E ;Carriage return
@@ -87,31 +87,32 @@ Message  	asc 'NO PC OR NO DEVICE'
 ** Set the Input Value first in Dynamic data **
 		** 4 Byte N1 to FP1 **
 EXEC  		lda N1	  	;X1
-		sta $622F 	; Absolute addressing
+		sta $6238 	; Absolute addressing
 		lda N1+1	;M1 (1)
-		sta $6230
+		sta $6239
 		lda N1+2	;M1 (2)
-		sta $6231
+		sta $623A
 		lda N1+3	;M1 (3)
-		sta $6232
+		sta $623B
 				
 		** 4 Byte N2 to FP2 **
 		lda N2		;X2
-		sta $6233
+		sta $623C
 		lda N2+1	;M2 (1)
-		sta $6234
+		sta $623D
 		lda N2+2	;M2 (2)
-		sta $6235
+		sta $623E
 		lda N2+3	;M2 (3)
-		sta $6236
+		sta $623F
 			
 *** Download ***
   		jsr Dispatch
   		dfb ControlCmd
   		dw DOWNLOAD
 ** Set Unidisk Registers **
-*		lda #01		;First time
-*		sta UNIAcc_reg
+*		;First time execution
+		lda #$00      ; Target the first time entry point
+		sta LowPC_reg ; First time set init value of PC, just for the next execution
 * The program begin to PC preset to $0500 *
 * 				
 ** Execute **			
@@ -128,11 +129,11 @@ READ  		jsr Dispatch
 
 *		First time execute *
    		lda UNIAcc_reg
-   		sta N1
+   		sta RSLT
    		lda UNIX_reg
-   		sta N1+1 ; Store the result
+   		sta RSLT+1 ; Store the result
   		lda UNIY_reg
-  		sta N1+2
+  		sta RSLT+2
   		
 ** Second time execute **		
 		lda #$3C      ; Target the secont time entry point
@@ -149,7 +150,7 @@ READ  		jsr Dispatch
   				 		
 * 		Second time execute only to read the latest Byte of FP1*
 		lda UNIAcc_reg
-		sta N1+3		 
+		sta RSLT+3		 
 *
   		rts
 

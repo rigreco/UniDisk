@@ -22,7 +22,7 @@ FP2		equ $EC
 ** Applesoft FP Accumulator 5 Byte + 1 Byte Sign **
 FAC		equ $9D
 
-** Variabile Memory location $0380 **
+RSLT		equ $7000
 
 		***************************
 
@@ -88,16 +88,16 @@ CONT		lda FAC+2
 *
 ** FP1 to FAC conversion **
 *
-ENTRY2		lda FP1		; X1 1 Byte --> 9D FAC
+ENTRY2		lda RSLT		; X1 1 Byte --> 9D FAC
 		inc A		; 2^(FP1+1) inc EXP
 		sta FAC
 		
-		lda FP1+1
+		lda RSLT+1
 		bmi NEG2	; chk the Hi bit of 1 byte Mantissa
 		
 		
 POS2		clc
-		lda FP1+1	; M1 Hi 2 Byte --> 9E FAC
+		lda RSLT+1	; M1 Hi 2 Byte --> 9E FAC
 		rol		; Multiply for 2^1
 		
 		ora #$80	; Set Hi Bit 1 byte Mantissa (change Sign only if is positive)
@@ -106,7 +106,7 @@ POS2		clc
 		;sta FAC+5	; To 1^ Byte Mantissa of FAC UnPacked
 		jmp CONT2
 
-NEG2		lda FP1+1
+NEG2		lda RSLT+1
 
 		sec			
 		sbc #01		; One's complement inv -1
@@ -118,11 +118,11 @@ NEG2		lda FP1+1
 		sta FAC+5	; To 6^ Byte of FAC Unpacked		
 		
 		
-CONT2		lda FP1+2	; M1 3 Byte --> 9F FAC
+CONT2		lda RSLT+2	; M1 3 Byte --> 9F FAC
 		rol
 		sta FAC+2
 		
-		lda FP1+3	; M1 Lo 4 Byte --> A0 FAC
+		lda RSLT+3	; M1 Lo 4 Byte --> A0 FAC
 		rol
 		sta FAC+3
 		
@@ -132,9 +132,6 @@ CONT2		lda FP1+2	; M1 3 Byte --> 9F FAC
 		
 		;brk
 		***************************
-* 
-		;ldy #$03 	;Hi Byte MEM
-		;lda #$80 	;Lo Byte MEM
 *
 		jsr CHKCOM
 		jsr PTRGET	; Return the Y and A pointing to the specific variabile
@@ -143,3 +140,4 @@ CONT2		lda FP1+2	; M1 3 Byte --> 9F FAC
 		
 		;brk
 		rts
+		chk

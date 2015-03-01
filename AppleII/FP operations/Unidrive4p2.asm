@@ -20,42 +20,61 @@
 *
 *
 * @com.wudsn.ide.asm.hardware=APPLE2
-*
-* Protocol Converter Call
 		XC
+** CHKSUM Pointer *
+PTR		equ $08
+** Protocol Converter Call
 ZPTempL  	equ $0006 ;Temporary zero page storage
 ZPTempH  	equ $0007
 ** Zero page storage **
 N1		equ $FA ;25  4 Byte FP FA--FD (FP1)
 N2		equ $EC ;27  4 Byte FP EC--EF (FP2)
-; RSLT		equ $1D ;29
+RSLT		equ $7000 ;29
 *** Monitor routines ***
 COut  		equ $FDED ;Console output ASCII
 CROut  		equ $FD8E ;Carriage return
 ** Command Code **
 StatusCmd  	equ 0
 ** Status Code **
-* StatusDIB  	equ 3
 StatusUNI  	equ 5
 *
 ControlCmd 	equ 4
 ** Control Codes **
-Eject  		equ 4
 Run  		equ 5
 SetDWLoad  	equ 6
 DWLoad  	equ 7
 *
   		org $6000
 *****************************************************
-
+************** CHKSUM MAIN Routine ******************
 *
+STARTCHK	lda	#<STARTCHK
+		sta	PTR
+		lda	#>STARTCHK
+		sta	PTR+1
+		ldy	#$00
+		lda	#$00
+		pha
+LOOP		pla
+		eor	(PTR),y
+		pha
+		inc	PTR
+		bne	CHK
+		inc	PTR+1
+CHK		lda	PTR+1
+		cmp	#>PROGEND
+		bcc	LOOP
+		lda	PTR
+		cmp	#<PROGEND
+		bcc	LOOP
+		beq	LOOP
+CHKCS		pla
+		cmp	CHKSUM
+		bne	ERRCHK
+***********************************************
 * Find a Protocol Converter in one of the slots.
 START  		jsr FindPC
   		bcs Error
-*** Eject ***
-; 		jsr Dispatch
-; 		dfb ControlCmd
-; 		dw E_JECT 		
 *** Set Address ***
   		jsr Dispatch
   		dfb ControlCmd
@@ -63,7 +82,14 @@ START  		jsr FindPC
 *  		
   		jsr EXEC ; Jump the Error routine
 		rts
-*********************************************
+**************** CHKSUM ERROR Routine ***************
+*
+ERRCHK		sta CHKCALC
+		lda #"E"
+		jsr COut
+		rts
+CHKCALC		dfb	$00
+**************** PROTOCOL CONVERTER ERROR Routine ***
 Error  		equ *
 *
 * There is either no PC around, or there was no give message
@@ -81,7 +107,7 @@ errout  	equ *
 *
 Message  	asc 'NO PC OR NO DEVICE'
   		dfb $8D,0
-*********************************************   		
+*******************************************************   		
 *
 
 ** Set the Input Value first in Dynamic data **
@@ -111,8 +137,9 @@ EXEC  		lda N1	  	;X1
   		dfb ControlCmd
   		dw DOWNLOAD
 ** Set Unidisk Registers **
-*		lda #01		;First time
-*		sta UNIAcc_reg
+		;First time execution
+		lda #$00      ; Target the first time entry point
+		sta LowPC_reg ; First time set init value of PC, just for the next execution
 * The program begin to PC preset to $0500 *
 * 				
 ** Execute **			
@@ -129,14 +156,14 @@ READ  		jsr Dispatch
 
 *		First time execute *
    		lda UNIAcc_reg
-   		sta N1
+   		sta RSLT
    		lda UNIX_reg
-   		sta N1+1 ; Store the result
+   		sta RSLT+1 ; Store the result
   		lda UNIY_reg
-  		sta N1+2
+  		sta RSLT+2
   		
 ** Second time execute **		
-		lda #$3C      ; Target the secont time entry point
+		lda #$3C      ; Target the second time entry point
 		sta LowPC_reg ; Second time set new value of PC
 ** Execute **			
 		jsr Dispatch
@@ -150,10 +177,10 @@ READ  		jsr Dispatch
   				 		
 * 		Second time execute only to read the latest Byte of FP1*
 		lda UNIAcc_reg
-		sta N1+3		 
+		sta RSLT+3		 
 *
-  		rts
-
+PROGEND		rts
+CHKSUM		chk
 ******************************************************
 FindPC  	equ *
 *
@@ -257,19 +284,9 @@ EXE  		equ *
  		dfb 1
   		dw CNTL_LIST2
   		dfb Run
-*** Eject ***
-;E_JECT  	equ *
-;  		dfb 3
-;  		dfb 1
-;  		dw CNTL_LIST1
-;  		dfb Eject
 *
 ******** CONTROL LISTS ********
 *
-*
-*** Eject ***
-CNTL_LIST1  	equ *
-  		dw $0000
 *
 *** Execute ***
 CNTL_LIST2  	equ *
@@ -306,4 +323,5 @@ FP1		dfb $00
 FP2		dfb $00
           	dfb $00
           	dfb $00
-          	dfb $00          	
+	       	dfb $00
+**************** End UNIDISK Program ****************        	          	
