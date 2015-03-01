@@ -27,7 +27,7 @@ E         EQU  $FE  ;  $FC
 
 OVLOC     EQU  $3F5
 
-          ORG  $300
+          ORG  $8000
           
 ADD	  CLC      	;CLEAR CARRY
 	  LDX  #$2      ;INDEX FOR 3-BYTE ADD.

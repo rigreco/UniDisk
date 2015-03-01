@@ -1,9 +1,9 @@
 *
-*    Unidisk 3.5 Calc3 <beta>
+*    Unidisk 3.5 Driver <alfa>
 *
 *    The target of this project is to use the Unidisk 3.5 drive to perform
-*    specific numerical routines: 2 Byte Add of the first N integer numbers calculation;
-*    in order to use it as a Apple II co-processor unit.
+*    specific numerical routines (integers and floating point numbers)
+*    calculation in order to use it as a Apple II co-processor unit.
 *
 *    Copyright (C) 2015  Riccardo Greco <rigreco.grc@gmail.com>.
 *
@@ -20,41 +20,61 @@
 *
 *
 * @com.wudsn.ide.asm.hardware=APPLE2
-* Protocol Converter Call
 		XC
+** CHKSUM Pointer *
+PTR		equ $08
+** Protocol Converter Call
 ZPTempL  	equ $0006 ;Temporary zero page storage
 ZPTempH  	equ $0007
 ** Zero page storage **
-N1		equ $19 ;25
-* N2		equ $1B ;27
-RSLT		equ $1D ;29
+N1		equ $FA ;25  4 Byte FP FA--FD (FP1)
+N2		equ $EC ;27  4 Byte FP EC--EF (FP2)
+RSLT		equ $7000 ;29
 *** Monitor routines ***
 COut  		equ $FDED ;Console output ASCII
 CROut  		equ $FD8E ;Carriage return
 ** Command Code **
 StatusCmd  	equ 0
 ** Status Code **
-* StatusDIB  	equ 3
 StatusUNI  	equ 5
 *
 ControlCmd 	equ 4
 ** Control Codes **
-Eject  		equ 4
 Run  		equ 5
 SetDWLoad  	equ 6
 DWLoad  	equ 7
 *
-  		org $8000
+  		org $6000
 *****************************************************
-
+************** CHKSUM MAIN Routine ******************
 *
+;STARTCHK	lda	#<STARTCHK
+;		sta	PTR
+;		lda	#>STARTCHK
+;		sta	PTR+1
+;		ldy	#$00
+;		lda	#$00
+;		pha
+;LOOP		pla
+;		eor	(PTR),y
+;		pha
+;		inc	PTR
+;		bne	CHK
+;		inc	PTR+1
+;CHK		lda	PTR+1
+;		cmp	#>PROGEND
+;		bcc	LOOP
+;		lda	PTR
+;		cmp	#<PROGEND
+;		bcc	LOOP
+;		beq	LOOP
+;CHKCS		pla
+;		cmp	CHKSUM
+;		bne	ERRCHK
+***********************************************
 * Find a Protocol Converter in one of the slots.
 START  		jsr FindPC
   		bcs Error
-*** Eject ***
- 		jsr Dispatch
- 		dfb ControlCmd
- 		dw E_JECT 		
 *** Set Address ***
   		jsr Dispatch
   		dfb ControlCmd
@@ -62,10 +82,17 @@ START  		jsr FindPC
 *  		
   		jsr EXEC ; Jump the Error routine
 		rts
-*********************************************
+**************** CHKSUM ERROR Routine ***************
+*
+;ERRCHK		sta CHKCALC
+;		lda #"E"
+;		jsr COut
+;		rts
+;CHKCALC	dfb	$00
+**************** PROTOCOL CONVERTER ERROR Routine ***
 Error  		equ *
 *
-* There's either no PC around, or there was no give message
+* There is either no PC around, or there was no give message
 *
   		ldx #0
 err1  		equ *
@@ -80,35 +107,79 @@ errout  	equ *
 *
 Message  	asc 'NO PC OR NO DEVICE'
   		dfb $8D,0
-*********************************************   		
+*******************************************************   		
 *
-** Set the Input Value first **
-EXEC  		lda N1
-		sta $8111 ; Absolute addressing
-		lda N1+1
-		sta $8112	
+
+** Set the Input Value first in Dynamic data **
+		** 4 Byte N1 to FP1 **
+EXEC  		lda N1	  	;X1
+		sta FP1 	; Absolute addressing
+		lda N1+1	;M1 (1)
+		sta FP1+1
+		lda N1+2	;M1 (2)
+		sta FP1+2
+		lda N1+3	;M1 (3)
+		sta FP1+3
+				
+		** 4 Byte N2 to FP2 **
+		lda N2		;X2
+		sta FP2
+		lda N2+1	;M2 (1)
+		sta FP2+1
+		lda N2+2	;M2 (2)
+		sta FP2+2
+		lda N2+3	;M2 (3)
+		sta FP2+3
+			
 *** Download ***
   		jsr Dispatch
   		dfb ControlCmd
-  		dw DOWNLOAD		
+  		dw DOWNLOAD
+** Set Unidisk Registers **
+		;First time execution
+		lda #$00      ; Target the first time entry point
+		sta LowPC_reg ; First time set init value of PC, just for the next execution
+* The program begin to PC preset to $0500 *
+* 				
 ** Execute **			
 		jsr Dispatch
   		dfb ControlCmd
   		dw EXE
+** Read **  		
 READ  		jsr Dispatch
   		dfb StatusCmd
   		dw DParms
   		bcs Error
 *
 **** Store Output results in //c ****
-*		
-   		lda UNIX_reg
-   		sta RSLT ; Store the result
-  		lda UNIY_reg
-  		sta RSLT+1 
-*
-  		rts
 
+*		First time execute *
+   		lda UNIAcc_reg
+   		sta RSLT
+   		lda UNIX_reg
+   		sta RSLT+1 ; Store the result
+  		lda UNIY_reg
+  		sta RSLT+2
+  		
+** Second time execute **		
+		lda #$3C      ; Target the second time entry point
+		sta LowPC_reg ; Second time set new value of PC
+** Execute **			
+		jsr Dispatch
+  		dfb ControlCmd
+  		dw EXE
+** Read **  		
+ 		jsr Dispatch
+  		dfb StatusCmd
+  		dw DParms
+*  		bcs Error
+  				 		
+* 		Second time execute only to read the latest Byte of FP1*
+		lda UNIAcc_reg
+		sta RSLT+3		 
+*
+PROGEND		rts
+CHKSUM		chk
 ******************************************************
 FindPC  	equ *
 *
@@ -212,110 +283,44 @@ EXE  		equ *
  		dfb 1
   		dw CNTL_LIST2
   		dfb Run
-*** Eject ***
-E_JECT  	equ *
-  		dfb 3
-  		dfb 1
-  		dw CNTL_LIST1
-  		dfb Eject
 *
 ******** CONTROL LISTS ********
 *
-*
-*** Eject ***
-CNTL_LIST1  	equ *
-  		dw $0000
 *
 *** Execute ***
 CNTL_LIST2  	equ *
 Clow_byte  	dfb $06
 Chigh_byte  	dfb $00
-AccValue  	dfb $00 ; Input Value
-X_reg  		dfb $00 ; Input Value (N1)
-Y_reg  		dfb $00 ; Input Value (N2)
-ProStatus  	dfb $00 ; Input Value
-LowPC_reg  	dfb $05 ; Like ORG
-HighPC_reg  	dfb $05
+AccValue  	dfb $00 ; Init Value Unidisk Accumulator Register
+X_reg  		dfb $00 ; Init Value Unidisk X Register
+Y_reg  		dfb $00 ; Init Value Unidisk Y Register
+ProStatus  	dfb $00 ; Init Value Unidisk Status Register
+LowPC_reg  	dfb $00 ; Init Value Unidisk Program Counter $0500 at eny dowload
+HighPC_reg  	dfb $05 ; $05 first execution, $3C second execution
 *
 *** Set Address ***
 CNTL_LIST3  	equ *
 CountL_byte  	dfb $02
 CountH_byte  	dfb $00
-LByte_Addr  	dfb $05 ; Like ORG
-HByte_Addr  	dfb $05
+LByte_Addr  	dfb $2D ; ORG of Unidisk program, set begin data address $062D
+HByte_Addr  	dfb $06
 *
 *** Download ***
 CNTL_LIST4  	equ *
-LenghtL_byte  	dfb $4A ;<----- Lenght of Unidisk program Lo Byte
+LenghtL_byte  	dfb $08 ;<----- Lenght of Unidisk program Lo  - Byte 312 byte
 LenghtH_byte  	dfb $00 ;<----- Lenght of Unidisk program Hi Byte
 *
-*** Start UNIDISK Program ***
-** Two byte adc **
-		org $0505
-RSLTU		equ $C0
-NDEC		equ $C2
-N		equ $C4
+**************** Start UNIDISK Program ****************
+*
 
-** Save the N number **
-		lda N1U
-		sta N
-		lda N1U+1
-		sta N+1
-** Set RSLTU=N **		
-		lda N
-		sta RSLTU ; N Lo
-		lda N+1
-		sta RSLTU+1 ; N Hi
-		
-LOOP		lda N
-		
-		beq HI ; If NLo =0 dec NHi
-
-** Set NDEC=N-1 Lo **		
-		dec A
-		sta NDEC ; N-1 Lo
-** Set NDEC=N Hi **				
-		lda N+1
-		sta NDEC+1 ; NHi = NDEC Hi
-		
-		jmp ENTRY
-		
-** Set NDEC=N-1 Hi **		
-HI		lda N+1
-
-		beq DONE ; If also NHi =0 done
-
-		dec A
-		sta NDEC+1 ; N-1 Hi		
-		
-		lda #$FF
-		sta NDEC ; N-1 Lo = FF Set NDEC to FF
-  		
-ENTRY  		clc
-  		
-  		lda RSLTU ; Lo Byte
-  		adc NDEC  ; N+(N-1)
-  		sta RSLTU
-  		
-  		lda RSLTU+1 ; Hi Byte
-  		adc NDEC+1  ; N+(N-1)
-  		sta RSLTU+1
-
-** Update N=NDEC **  		
-  		lda NDEC
-  		sta N
-  		lda NDEC+1
-  		sta N+1
-  		
-  		jmp LOOP
-  		
-** Output Data **					 		
-DONE		ldx RSLTU
-		ldy RSLTU+1
-		  		
-  		rts
-  		
-  		
 ** Input Dynamic Data append in the end of Unidisk routine **  		
-N1U		dfb $00
+FP1		dfb $00
 		dfb $00
+		dfb $00
+		dfb $00
+*		
+FP2		dfb $00
+          	dfb $00
+          	dfb $00
+	       	dfb $00
+**************** End UNIDISK Program ****************        	          	

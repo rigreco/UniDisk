@@ -2,9 +2,9 @@
 ************************************
 * 	BASIC TO FAC TO FP1        *
 *          X=NUMBER		   *
-*          CALL 2048,X             *
+*          CALL 768,X             *
 ************************************
-		org $800
+		org $300
 		
 CHKCOM		equ $DEBE
 FRMNUM		equ $DD67
@@ -22,27 +22,35 @@ FAC		equ $9D
 ENTRY		jsr CHKCOM
 		jsr FRMNUM	;VARIABLE X ->FAC
 
-** FP1 to FAC conversion (conversion not yet) **
+** FPC to FP1 conversion (conversion not yet) **
 
 		lda FAC
 		dec A
 		sta FP1
 		
+		clc
 		lda FAC+1
-		eor #$80
-		lsr
+		ror
+		;eor #$F0 ; Not Hi Byte
 		sta FP1+1
 		
 		lda FAC+2
+		ror
 		sta FP1+2
 		
 		lda FAC+3
+		ror
 		sta FP1+3
 		
-		lda FAC+3
-		sta E
+;		lda #0
+;		sta E
 		
 		lda FAC+4
-		sta SIGN
+		ror
+		sta E
 		
+;		lda FAC+4
+;		sta SIGN
+		
+		;rts
 		brk
