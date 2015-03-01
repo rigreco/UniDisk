@@ -48,29 +48,29 @@ DWLoad  	equ 7
 *****************************************************
 ************** CHKSUM MAIN Routine ******************
 *
-STARTCHK	lda	#<STARTCHK
-		sta	PTR
-		lda	#>STARTCHK
-		sta	PTR+1
-		ldy	#$00
-		lda	#$00
-		pha
-LOOP		pla
-		eor	(PTR),y
-		pha
-		inc	PTR
-		bne	CHK
-		inc	PTR+1
-CHK		lda	PTR+1
-		cmp	#>PROGEND
-		bcc	LOOP
-		lda	PTR
-		cmp	#<PROGEND
-		bcc	LOOP
-		beq	LOOP
-CHKCS		pla
-		cmp	CHKSUM
-		bne	ERRCHK
+;STARTCHK	lda	#<STARTCHK
+;		sta	PTR
+;		lda	#>STARTCHK
+;		sta	PTR+1
+;		ldy	#$00
+;		lda	#$00
+;		pha
+;LOOP		pla
+;		eor	(PTR),y
+;		pha
+;		inc	PTR
+;		bne	CHK
+;		inc	PTR+1
+;CHK		lda	PTR+1
+;		cmp	#>PROGEND
+;		bcc	LOOP
+;		lda	PTR
+;		cmp	#<PROGEND
+;		bcc	LOOP
+;		beq	LOOP
+;CHKCS		pla
+;		cmp	CHKSUM
+;		bne	ERRCHK
 ***********************************************
 * Find a Protocol Converter in one of the slots.
 START  		jsr FindPC
@@ -84,11 +84,11 @@ START  		jsr FindPC
 		rts
 **************** CHKSUM ERROR Routine ***************
 *
-ERRCHK		sta CHKCALC
-		lda #"E"
-		jsr COut
-		rts
-CHKCALC		dfb	$00
+;ERRCHK		sta CHKCALC
+;		lda #"E"
+;		jsr COut
+;		rts
+;CHKCALC	dfb	$00
 **************** PROTOCOL CONVERTER ERROR Routine ***
 Error  		equ *
 *
@@ -130,7 +130,6 @@ EXEC  		lda N1	  	;X1
 		sta FP2+2
 		lda N2+3	;M2 (3)
 		sta FP2+3
-		
 			
 *** Download ***
   		jsr Dispatch
