@@ -1,0 +1,351 @@
+------+----------------------+-------------+----+---------+------+-----------------------+-------------------------------------------------------------------
+ Line | # File          Line | Line Type   | MX |  Reloc  | Size | Address   Object Code |  Source Code                                                      
+------+----------------------+-------------+----+---------+------+-----------------------+-------------------------------------------------------------------
+    1 |  1 UniFP2.asm      1 | Comment     | 11 |         |    0 | 00/8000               | *
+    2 |  1 UniFP2.asm      2 | Comment     | 11 |         |    0 | 00/8000               | *    Unidisk 3.5 Driver <alfa>
+    3 |  1 UniFP2.asm      3 | Comment     | 11 |         |    0 | 00/8000               | *
+    4 |  1 UniFP2.asm      4 | Comment     | 11 |         |    0 | 00/8000               | *    The target of this project is to use the Unidisk 3.5 drive to perform
+    5 |  1 UniFP2.asm      5 | Comment     | 11 |         |    0 | 00/8000               | *    specific numerical routines (integers and floating point numbers)
+    6 |  1 UniFP2.asm      6 | Comment     | 11 |         |    0 | 00/8000               | *    calculation in order to use it as a Apple II co-processor unit.
+    7 |  1 UniFP2.asm      7 | Comment     | 11 |         |    0 | 00/8000               | *
+    8 |  1 UniFP2.asm      8 | Comment     | 11 |         |    0 | 00/8000               | *    Copyright (C) 2015  Riccardo Greco <rigreco.grc@gmail.com>.
+    9 |  1 UniFP2.asm      9 | Comment     | 11 |         |    0 | 00/8000               | *
+   10 |  1 UniFP2.asm     10 | Comment     | 11 |         |    0 | 00/8000               | *    This program is free software: you can redistribute it and/or modify
+   11 |  1 UniFP2.asm     11 | Comment     | 11 |         |    0 | 00/8000               | *    it under the terms of the GNU General Public License as published by
+   12 |  1 UniFP2.asm     12 | Comment     | 11 |         |    0 | 00/8000               | *    the Free Software Foundation, either version 3 of the License, or
+   13 |  1 UniFP2.asm     13 | Comment     | 11 |         |    0 | 00/8000               | *    (at your option) any later version.
+   14 |  1 UniFP2.asm     14 | Comment     | 11 |         |    0 | 00/8000               | *    This program is distributed in the hope that it will be useful,
+   15 |  1 UniFP2.asm     15 | Comment     | 11 |         |    0 | 00/8000               | *    but WITHOUT ANY WARRANTY; without even the implied warranty of
+   16 |  1 UniFP2.asm     16 | Comment     | 11 |         |    0 | 00/8000               | *    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+   17 |  1 UniFP2.asm     17 | Comment     | 11 |         |    0 | 00/8000               | *    GNU General Public License for more details.
+   18 |  1 UniFP2.asm     18 | Comment     | 11 |         |    0 | 00/8000               | *    You should have received a copy of the GNU General Public License
+   19 |  1 UniFP2.asm     19 | Comment     | 11 |         |    0 | 00/8000               | *    along with this program.  If not, see <http://www.gnu.org/licenses/>.
+   20 |  1 UniFP2.asm     20 | Comment     | 11 |         |    0 | 00/8000               | *
+   21 |  1 UniFP2.asm     21 | Comment     | 11 |         |    0 | 00/8000               | *
+   22 |  1 UniFP2.asm     22 | Comment     | 11 |         |    0 | 00/8000               | * @com.wudsn.ide.asm.hardware=APPLE2
+   23 |  1 UniFP2.asm     23 | Directive   | 11 |         |    0 | 00/8000               |               XC                   
+   24 |  1 UniFP2.asm     24 | Comment     | 11 |         |    0 | 00/8000               | ** CHKSUM Pointer *
+   25 |  1 UniFP2.asm     25 | Equivalence | 11 |         |    0 | 00/8000               | PTR           equ   $08            
+   26 |  1 UniFP2.asm     26 | Comment     | 11 |         |    0 | 00/8000               | ** Protocol Converter Call
+   27 |  1 UniFP2.asm     27 | Equivalence | 11 |         |    0 | 00/8000               | ZPTempL       equ   $0006          ;Temporary zero page storage
+   28 |  1 UniFP2.asm     28 | Equivalence | 11 |         |    0 | 00/8000               | ZPTempH       equ   $0007          
+   29 |  1 UniFP2.asm     29 | Comment     | 11 |         |    0 | 00/8000               | ** Zero page storage **
+   30 |  1 UniFP2.asm     30 | Equivalence | 11 |         |    0 | 00/8000               | N1            equ   $FA            ;25  4 Byte FP FA--FD (FP1)
+   31 |  1 UniFP2.asm     31 | Equivalence | 11 |         |    0 | 00/8000               | N2            equ   $EC            ;27  4 Byte FP EC--EF (FP2)
+   32 |  1 UniFP2.asm     32 | Equivalence | 11 |         |    0 | 00/8000               | RSLT          equ   $1D            ; $7000 ;29
+   33 |  1 UniFP2.asm     33 | Comment     | 11 |         |    0 | 00/8000               | *** Monitor routines ***
+   34 |  1 UniFP2.asm     34 | Equivalence | 11 |         |    0 | 00/8000               | COut          equ   $FDED          ;Console output ASCII
+   35 |  1 UniFP2.asm     35 | Equivalence | 11 |         |    0 | 00/8000               | CROut         equ   $FD8E          ;Carriage return
+   36 |  1 UniFP2.asm     36 | Comment     | 11 |         |    0 | 00/8000               | ** Command Code **
+   37 |  1 UniFP2.asm     37 | Equivalence | 11 |         |    0 | 00/8000               | StatusCmd     equ   0              
+   38 |  1 UniFP2.asm     38 | Comment     | 11 |         |    0 | 00/8000               | ** Status Code **
+   39 |  1 UniFP2.asm     39 | Equivalence | 11 |         |    0 | 00/8000               | StatusUNI     equ   5              
+   40 |  1 UniFP2.asm     40 | Comment     | 11 |         |    0 | 00/8000               | *
+   41 |  1 UniFP2.asm     41 | Equivalence | 11 |         |    0 | 00/8000               | ControlCmd    equ   4              
+   42 |  1 UniFP2.asm     42 | Comment     | 11 |         |    0 | 00/8000               | ** Control Codes **
+   43 |  1 UniFP2.asm     43 | Equivalence | 11 |         |    0 | 00/8000               | Run           equ   5              
+   44 |  1 UniFP2.asm     44 | Equivalence | 11 |         |    0 | 00/8000               | SetDWLoad     equ   6              
+   45 |  1 UniFP2.asm     45 | Equivalence | 11 |         |    0 | 00/8000               | DWLoad        equ   7              
+   46 |  1 UniFP2.asm     46 | Comment     | 11 |         |    0 | 00/8000               | *
+   47 |  1 UniFP2.asm     47 | Directive   | 11 |         |    0 | 00/8000               |               org   $6000          
+   48 |  1 UniFP2.asm     48 | Comment     | 11 |         |    0 | 00/6000               | *****************************************************
+   49 |  1 UniFP2.asm     49 | Comment     | 11 |         |    0 | 00/6000               | ************** CHKSUM MAIN Routine ******************
+   50 |  1 UniFP2.asm     50 | Comment     | 11 |         |    0 | 00/6000               | *
+   51 |  1 UniFP2.asm     51 | Comment     | 11 |         |    0 | 00/6000               | ;STARTCHK	lda	#<STARTCHK
+   52 |  1 UniFP2.asm     52 | Comment     | 11 |         |    0 | 00/6000               | ;		sta	PTR
+   53 |  1 UniFP2.asm     53 | Comment     | 11 |         |    0 | 00/6000               | ;		lda	#>STARTCHK
+   54 |  1 UniFP2.asm     54 | Comment     | 11 |         |    0 | 00/6000               | ;		sta	PTR+1
+   55 |  1 UniFP2.asm     55 | Comment     | 11 |         |    0 | 00/6000               | ;		ldy	#$00
+   56 |  1 UniFP2.asm     56 | Comment     | 11 |         |    0 | 00/6000               | ;		lda	#$00
+   57 |  1 UniFP2.asm     57 | Comment     | 11 |         |    0 | 00/6000               | ;		pha
+   58 |  1 UniFP2.asm     58 | Comment     | 11 |         |    0 | 00/6000               | ;LOOP		pla
+   59 |  1 UniFP2.asm     59 | Comment     | 11 |         |    0 | 00/6000               | ;		eor	(PTR),y
+   60 |  1 UniFP2.asm     60 | Comment     | 11 |         |    0 | 00/6000               | ;		pha
+   61 |  1 UniFP2.asm     61 | Comment     | 11 |         |    0 | 00/6000               | ;		inc	PTR
+   62 |  1 UniFP2.asm     62 | Comment     | 11 |         |    0 | 00/6000               | ;		bne	CHK
+   63 |  1 UniFP2.asm     63 | Comment     | 11 |         |    0 | 00/6000               | ;		inc	PTR+1
+   64 |  1 UniFP2.asm     64 | Comment     | 11 |         |    0 | 00/6000               | ;CHK		lda	PTR+1
+   65 |  1 UniFP2.asm     65 | Comment     | 11 |         |    0 | 00/6000               | ;		cmp	#>PROGEND
+   66 |  1 UniFP2.asm     66 | Comment     | 11 |         |    0 | 00/6000               | ;		bcc	LOOP
+   67 |  1 UniFP2.asm     67 | Comment     | 11 |         |    0 | 00/6000               | ;		lda	PTR
+   68 |  1 UniFP2.asm     68 | Comment     | 11 |         |    0 | 00/6000               | ;		cmp	#<PROGEND
+   69 |  1 UniFP2.asm     69 | Comment     | 11 |         |    0 | 00/6000               | ;		bcc	LOOP
+   70 |  1 UniFP2.asm     70 | Comment     | 11 |         |    0 | 00/6000               | ;		beq	LOOP
+   71 |  1 UniFP2.asm     71 | Comment     | 11 |         |    0 | 00/6000               | ;CHKCS		pla
+   72 |  1 UniFP2.asm     72 | Comment     | 11 |         |    0 | 00/6000               | ;		cmp	CHKSUM
+   73 |  1 UniFP2.asm     73 | Comment     | 11 |         |    0 | 00/6000               | ;		bne	ERRCHK
+   74 |  1 UniFP2.asm     74 | Comment     | 11 |         |    0 | 00/6000               | ***********************************************
+   75 |  1 UniFP2.asm     75 | Comment     | 11 |         |    0 | 00/6000               | * Find a Protocol Converter in one of the slots.
+   76 |  1 UniFP2.asm     76 | Code        | 11 |         |    3 | 00/6000 : 20 7E 60    | START         jsr   {ozunid_4}     
+   77 |  1 UniFP2.asm     77 | Code        | 11 |         |    2 | 00/6003 : B0 0A       |               bcs   {ozunid_1}     
+   78 |  1 UniFP2.asm     78 | Comment     | 11 |         |    0 | 00/6005               | *** Set Address ***
+   79 |  1 UniFP2.asm     79 | Code        | 11 |         |    3 | 00/6005 : 20 B3 60    |               jsr   {ozunid_9}     
+   80 |  1 UniFP2.asm     80 | Data        | 11 |         |    1 | 00/6008 : 04          |               dfb   {4}            
+   81 |  1 UniFP2.asm     81 | Data        | 11 |         |    2 | 00/6009 : C3 60       |               dw    {ozunid_12}    
+   82 |  1 UniFP2.asm     82 | Comment     | 11 |         |    0 | 00/600B               | *  		
+   83 |  1 UniFP2.asm     83 | Code        | 11 |         |    3 | 00/600B : 20 31 60    |               jsr   EXEC           ; Jump the Error routine
+   84 |  1 UniFP2.asm     84 | Code        | 11 |         |    1 | 00/600E : 60          |               rts                  
+   85 |  1 UniFP2.asm     85 | Comment     | 11 |         |    0 | 00/600F               | **************** CHKSUM ERROR Routine ***************
+   86 |  1 UniFP2.asm     86 | Comment     | 11 |         |    0 | 00/600F               | *
+   87 |  1 UniFP2.asm     87 | Comment     | 11 |         |    0 | 00/600F               | ;ERRCHK		sta CHKCALC
+   88 |  1 UniFP2.asm     88 | Comment     | 11 |         |    0 | 00/600F               | ;		lda #"E"
+   89 |  1 UniFP2.asm     89 | Comment     | 11 |         |    0 | 00/600F               | ;		jsr COut
+   90 |  1 UniFP2.asm     90 | Comment     | 11 |         |    0 | 00/600F               | ;		rts
+   91 |  1 UniFP2.asm     91 | Comment     | 11 |         |    0 | 00/600F               | ;CHKCALC	dfb	$00
+   92 |  1 UniFP2.asm     92 | Comment     | 11 |         |    0 | 00/600F               | **************** PROTOCOL CONVERTER ERROR Routine ***
+   93 |  1 UniFP2.asm     93 | Empty       | 11 |         |    0 | 00/600F               | ozunid_1                           
+   94 |  1 UniFP2.asm     93 | Equivalence | 11 |         |    0 | 00/600F               | Error         equ   ozunid_1       
+   95 |  1 UniFP2.asm     94 | Comment     | 11 |         |    0 | 00/600F               | *
+   96 |  1 UniFP2.asm     95 | Comment     | 11 |         |    0 | 00/600F               | * There is either no PC around, or there was no give message
+   97 |  1 UniFP2.asm     96 | Comment     | 11 |         |    0 | 00/600F               | *
+   98 |  1 UniFP2.asm     97 | Code        | 11 |         |    2 | 00/600F : A2 00       |               ldx   #0             
+   99 |  1 UniFP2.asm     98 | Empty       | 11 |         |    0 | 00/6011               | ozunid_2                           
+  100 |  1 UniFP2.asm     98 | Equivalence | 11 |         |    0 | 00/6011               | err1          equ   ozunid_2       
+  101 |  1 UniFP2.asm     99 | Code        | 11 |         |    3 | 00/6011 : BD 1D 60    |               lda   Message,x      
+  102 |  1 UniFP2.asm    100 | Code        | 11 |         |    2 | 00/6014 : F0 06       |               beq   {ozunid_3}     
+  103 |  1 UniFP2.asm    101 | Code        | 11 |         |    3 | 00/6016 : 20 ED FD    |               jsr   {$FDED}        
+  104 |  1 UniFP2.asm    102 | Code        | 11 |         |    1 | 00/6019 : E8          |               inx                  
+  105 |  1 UniFP2.asm    103 | Code        | 11 |         |    2 | 00/601A : D0 F5       |               bne   {ozunid_2}     
+  106 |  1 UniFP2.asm    104 | Comment     | 11 |         |    0 | 00/601C               | *
+  107 |  1 UniFP2.asm    105 | Empty       | 11 |         |    0 | 00/601C               | ozunid_3                           
+  108 |  1 UniFP2.asm    105 | Equivalence | 11 |         |    0 | 00/601C               | errout        equ   ozunid_3       
+  109 |  1 UniFP2.asm    106 | Code        | 11 |         |    1 | 00/601C : 60          |               rts                  
+  110 |  1 UniFP2.asm    107 | Comment     | 11 |         |    0 | 00/601D               | *
+  111 |  1 UniFP2.asm    108 | Data        | 11 |         |   18 | 00/601D : 4E 4F 20 50 | Message       asc   'NO PC OR NO DEVICE'
+      |                      |             |    |         |      |           43 20 4F 52 |
+      |                      |             |    |         |      |           20 4E 4F 20 |
+      |                      |             |    |         |      |           44 45 56 49 |
+      |                      |             |    |         |      |           43 45       |
+  112 |  1 UniFP2.asm    109 | Data        | 11 |         |    2 | 00/602F : 8D 00       |               dfb   $8D,0          
+  113 |  1 UniFP2.asm    110 | Comment     | 11 |         |    0 | 00/6031               | *******************************************************   		
+  114 |  1 UniFP2.asm    111 | Comment     | 11 |         |    0 | 00/6031               | *
+  115 |  1 UniFP2.asm    112 | Empty       | 11 |         |    0 | 00/6031               |                                    
+  116 |  1 UniFP2.asm    113 | Comment     | 11 |         |    0 | 00/6031               | ** Set the Input Value first in Dynamic data **
+  117 |  1 UniFP2.asm    114 | Comment     | 11 |         |    0 | 00/6031               | 		** 4 Byte N1 to FP1 **
+  118 |  1 UniFP2.asm    115 | Code        | 11 |         |    2 | 00/6031 : A5 FA       | EXEC          lda   {$FA}          ;X1
+  119 |  1 UniFP2.asm    116 | Code        | 11 |         |    3 | 00/6033 : 8D E0 60    |               sta   FP1            ; Absolute addressing
+  120 |  1 UniFP2.asm    117 | Code        | 11 |         |    2 | 00/6036 : A5 FB       |               lda   {$FA}+1        ;M1 (1)
+  121 |  1 UniFP2.asm    118 | Code        | 11 |         |    3 | 00/6038 : 8D E1 60    |               sta   FP1+1          
+  122 |  1 UniFP2.asm    119 | Code        | 11 |         |    2 | 00/603B : A5 FC       |               lda   {$FA}+2        ;M1 (2)
+  123 |  1 UniFP2.asm    120 | Code        | 11 |         |    3 | 00/603D : 8D E2 60    |               sta   FP1+2          
+  124 |  1 UniFP2.asm    121 | Code        | 11 |         |    2 | 00/6040 : A5 FD       |               lda   {$FA}+3        ;M1 (3)
+  125 |  1 UniFP2.asm    122 | Code        | 11 |         |    3 | 00/6042 : 8D E3 60    |               sta   FP1+3          
+  126 |  1 UniFP2.asm    123 | Empty       | 11 |         |    0 | 00/6045               |                                    
+  127 |  1 UniFP2.asm    124 | Comment     | 11 |         |    0 | 00/6045               | 		** 4 Byte N2 to FP2 **
+  128 |  1 UniFP2.asm    125 | Code        | 11 |         |    2 | 00/6045 : A5 EC       |               lda   {$EC}          ;X2
+  129 |  1 UniFP2.asm    126 | Code        | 11 |         |    3 | 00/6047 : 8D E4 60    |               sta   FP2            
+  130 |  1 UniFP2.asm    127 | Code        | 11 |         |    2 | 00/604A : A5 ED       |               lda   {$EC}+1        ;M2 (1)
+  131 |  1 UniFP2.asm    128 | Code        | 11 |         |    3 | 00/604C : 8D E5 60    |               sta   FP2+1          
+  132 |  1 UniFP2.asm    129 | Code        | 11 |         |    2 | 00/604F : A5 EE       |               lda   {$EC}+2        ;M2 (2)
+  133 |  1 UniFP2.asm    130 | Code        | 11 |         |    3 | 00/6051 : 8D E6 60    |               sta   FP2+2          
+  134 |  1 UniFP2.asm    131 | Code        | 11 |         |    2 | 00/6054 : A5 EF       |               lda   {$EC}+3        ;M2 (3)
+  135 |  1 UniFP2.asm    132 | Code        | 11 |         |    3 | 00/6056 : 8D E7 60    |               sta   FP2+3          
+  136 |  1 UniFP2.asm    133 | Empty       | 11 |         |    0 | 00/6059               |                                    
+  137 |  1 UniFP2.asm    134 | Comment     | 11 |         |    0 | 00/6059               | *** Download ***
+  138 |  1 UniFP2.asm    135 | Code        | 11 |         |    3 | 00/6059 : 20 B3 60    |               jsr   {ozunid_9}     
+  139 |  1 UniFP2.asm    136 | Data        | 11 |         |    1 | 00/605C : 04          |               dfb   {4}            
+  140 |  1 UniFP2.asm    137 | Data        | 11 |         |    2 | 00/605D : C8 60       |               dw    {ozunid_13}    
+  141 |  1 UniFP2.asm    138 | Comment     | 11 |         |    0 | 00/605F               | ** Set Unidisk Registers **
+  142 |  1 UniFP2.asm    139 | Comment     | 11 |         |    0 | 00/605F               | 		;First time execution
+  143 |  1 UniFP2.asm    140 | Code        | 11 |         |    2 | 00/605F : A9 00       |               lda   #$00           ; Target the first time entry point
+  144 |  1 UniFP2.asm    141 | Code        | 11 |         |    3 | 00/6061 : 8D D8 60    |               sta   LowPC_reg      ; First time set init value of PC, just for the next execution
+  145 |  1 UniFP2.asm    142 | Comment     | 11 |         |    0 | 00/6064               | * The program begin to PC preset to $0500 *
+  146 |  1 UniFP2.asm    143 | Comment     | 11 |         |    0 | 00/6064               | * 				
+  147 |  1 UniFP2.asm    144 | Comment     | 11 |         |    0 | 00/6064               | ** Execute **			
+  148 |  1 UniFP2.asm    145 | Code        | 11 |         |    3 | 00/6064 : 20 B3 60    |               jsr   {ozunid_9}     
+  149 |  1 UniFP2.asm    146 | Data        | 11 |         |    1 | 00/6067 : 04          |               dfb   {4}            
+  150 |  1 UniFP2.asm    147 | Data        | 11 |         |    2 | 00/6068 : CD 60       |               dw    {ozunid_14}    
+  151 |  1 UniFP2.asm    148 | Comment     | 11 |         |    0 | 00/606A               | ** Read **  		
+  152 |  1 UniFP2.asm    149 | Code        | 11 |         |    3 | 00/606A : 20 B3 60    | READ          jsr   {ozunid_9}     
+  153 |  1 UniFP2.asm    150 | Data        | 11 |         |    1 | 00/606D : 00          |               dfb   {0}            
+  154 |  1 UniFP2.asm    151 | Data        | 11 |         |    2 | 00/606E : B6 60       |               dw    {ozunid_10}    
+  155 |  1 UniFP2.asm    152 | Code        | 11 |         |    2 | 00/6070 : B0 9D       |               bcs   {ozunid_1}     
+  156 |  1 UniFP2.asm    153 | Comment     | 11 |         |    0 | 00/6072               | *
+  157 |  1 UniFP2.asm    154 | Comment     | 11 |         |    0 | 00/6072               | **** Store Output results in //c ****
+  158 |  1 UniFP2.asm    155 | Empty       | 11 |         |    0 | 00/6072               |                                    
+  159 |  1 UniFP2.asm    156 | Comment     | 11 |         |    0 | 00/6072               | *		First time execute *
+  160 |  1 UniFP2.asm    157 | Comment     | 11 |         |    0 | 00/6072               |    		* lda UNIAcc_reg
+  161 |  1 UniFP2.asm    158 | Comment     | 11 |         |    0 | 00/6072               |    		* sta RSLT
+  162 |  1 UniFP2.asm    159 | Code        | 11 |         |    3 | 00/6072 : AD BF 60    |               lda   UNIX_reg       
+  163 |  1 UniFP2.asm    160 | Code        | 11 |         |    2 | 00/6075 : 85 1D       |               sta   {$1D}          ; Store the result
+  164 |  1 UniFP2.asm    161 | Code        | 11 |         |    3 | 00/6077 : AD C0 60    |               lda   UNIY_reg       
+  165 |  1 UniFP2.asm    162 | Code        | 11 |         |    2 | 00/607A : 85 1E       |               sta   {$1D}+1        
+  166 |  1 UniFP2.asm    163 | Empty       | 11 |         |    0 | 00/607C               |                                    
+  167 |  1 UniFP2.asm    164 | Comment     | 11 |         |    0 | 00/607C               | ** Second time execute **		
+  168 |  1 UniFP2.asm    165 | Comment     | 11 |         |    0 | 00/607C               | *		lda #$3C      ; Target the secont time entry point
+  169 |  1 UniFP2.asm    166 | Comment     | 11 |         |    0 | 00/607C               | *		sta LowPC_reg ; Second time set new value of PC
+  170 |  1 UniFP2.asm    167 | Comment     | 11 |         |    0 | 00/607C               | ** Execute **			
+  171 |  1 UniFP2.asm    168 | Comment     | 11 |         |    0 | 00/607C               | *		jsr Dispatch
+  172 |  1 UniFP2.asm    169 | Comment     | 11 |         |    0 | 00/607C               | *  		dfb ControlCmd
+  173 |  1 UniFP2.asm    170 | Comment     | 11 |         |    0 | 00/607C               | *  		dw EXE
+  174 |  1 UniFP2.asm    171 | Comment     | 11 |         |    0 | 00/607C               | ** Read **  		
+  175 |  1 UniFP2.asm    172 | Comment     | 11 |         |    0 | 00/607C               | * 		jsr Dispatch
+  176 |  1 UniFP2.asm    173 | Comment     | 11 |         |    0 | 00/607C               | *  		dfb StatusCmd
+  177 |  1 UniFP2.asm    174 | Comment     | 11 |         |    0 | 00/607C               | *  		dw DParms
+  178 |  1 UniFP2.asm    175 | Comment     | 11 |         |    0 | 00/607C               | *  		bcs Error
+  179 |  1 UniFP2.asm    176 | Empty       | 11 |         |    0 | 00/607C               |                                    
+  180 |  1 UniFP2.asm    177 | Comment     | 11 |         |    0 | 00/607C               | * 		Second time execute only to read the latest Byte of FP1*
+  181 |  1 UniFP2.asm    178 | Comment     | 11 |         |    0 | 00/607C               | *		lda UNIAcc_reg
+  182 |  1 UniFP2.asm    179 | Comment     | 11 |         |    0 | 00/607C               | *		sta RSLT+3		 
+  183 |  1 UniFP2.asm    180 | Comment     | 11 |         |    0 | 00/607C               | *
+  184 |  1 UniFP2.asm    181 | Code        | 11 |         |    1 | 00/607C : 60          | PROGEND       rts                  
+  185 |  1 UniFP2.asm    182 | Data        | 11 |         |    1 | 00/607D : 00          | CHKSUM        chk                  
+  186 |  1 UniFP2.asm    183 | Comment     | 11 |         |    0 | 00/607E               | ******************************************************
+  187 |  1 UniFP2.asm    184 | Empty       | 11 |         |    0 | 00/607E               | ozunid_4                           
+  188 |  1 UniFP2.asm    184 | Equivalence | 11 |         |    0 | 00/607E               | FindPC        equ   ozunid_4       
+  189 |  1 UniFP2.asm    185 | Comment     | 11 |         |    0 | 00/607E               | *
+  190 |  1 UniFP2.asm    186 | Comment     | 11 |         |    0 | 00/607E               | * Search slot 7 to slot 1 looking for signature bytes
+  191 |  1 UniFP2.asm    187 | Comment     | 11 |         |    0 | 00/607E               | *
+  192 |  1 UniFP2.asm    188 | Code        | 11 |         |    2 | 00/607E : A2 07       |               ldx   #7             ;Do for seven slots
+  193 |  1 UniFP2.asm    189 | Code        | 11 |         |    2 | 00/6080 : A9 C7       |               lda   #$C7           
+  194 |  1 UniFP2.asm    190 | Code        | 11 |         |    2 | 00/6082 : 85 07       |               sta   {$0007}        
+  195 |  1 UniFP2.asm    191 | Code        | 11 |         |    2 | 00/6084 : A9 00       |               lda   #$00           
+  196 |  1 UniFP2.asm    192 | Code        | 11 |         |    2 | 00/6086 : 85 06       |               sta   {$0006}        
+  197 |  1 UniFP2.asm    193 | Comment     | 11 |         |    0 | 00/6088               | *
+  198 |  1 UniFP2.asm    194 | Empty       | 11 |         |    0 | 00/6088               | ozunid_5                           
+  199 |  1 UniFP2.asm    194 | Equivalence | 11 |         |    0 | 00/6088               | newslot       equ   ozunid_5       
+  200 |  1 UniFP2.asm    195 | Code        | 11 |         |    2 | 00/6088 : A0 07       |               ldy   #7             
+  201 |  1 UniFP2.asm    196 | Comment     | 11 |         |    0 | 00/608A               | *
+  202 |  1 UniFP2.asm    197 | Empty       | 11 |         |    0 | 00/608A               | ozunid_6                           
+  203 |  1 UniFP2.asm    197 | Equivalence | 11 |         |    0 | 00/608A               | again         equ   ozunid_6       
+  204 |  1 UniFP2.asm    198 | Code        | 11 |         |    2 | 00/608A : B1 06       |               lda   ({$0006}),y    
+  205 |  1 UniFP2.asm    199 | Code        | 11 |         |    3 | 00/608C : D9 AB 60    |               cmp   sigtab,y       ;One for byte signature
+  206 |  1 UniFP2.asm    200 | Code        | 11 |         |    2 | 00/608F : F0 07       |               beq   {ozunid_7}     ;Found one signature byte
+  207 |  1 UniFP2.asm    201 | Code        | 11 |         |    2 | 00/6091 : C6 07       |               dec   {$0007}        
+  208 |  1 UniFP2.asm    202 | Code        | 11 |         |    1 | 00/6093 : CA          |               dex                  
+  209 |  1 UniFP2.asm    203 | Code        | 11 |         |    2 | 00/6094 : D0 F2       |               bne   {ozunid_5}     
+  210 |  1 UniFP2.asm    204 | Comment     | 11 |         |    0 | 00/6096               | *
+  211 |  1 UniFP2.asm    205 | Comment     | 11 |         |    0 | 00/6096               | * if we get here, no PC find
+  212 |  1 UniFP2.asm    206 | Code        | 11 |         |    1 | 00/6096 : 38          |               sec                  
+  213 |  1 UniFP2.asm    207 | Code        | 11 |         |    1 | 00/6097 : 60          |               rts                  
+  214 |  1 UniFP2.asm    208 | Comment     | 11 |         |    0 | 00/6098               | *
+  215 |  1 UniFP2.asm    209 | Comment     | 11 |         |    0 | 00/6098               | * if we get here, no byte find on PC
+  216 |  1 UniFP2.asm    210 | Empty       | 11 |         |    0 | 00/6098               | ozunid_7                           
+  217 |  1 UniFP2.asm    210 | Equivalence | 11 |         |    0 | 00/6098               | maybe         equ   ozunid_7       
+  218 |  1 UniFP2.asm    211 | Code        | 11 |         |    1 | 00/6098 : 88          |               dey                  
+  219 |  1 UniFP2.asm    212 | Code        | 11 |         |    1 | 00/6099 : 88          |               dey                  ;if N=1 then all sig bytes OK
+  220 |  1 UniFP2.asm    213 | Code        | 11 |         |    2 | 00/609A : 10 EE       |               bpl   {ozunid_6}     
+  221 |  1 UniFP2.asm    214 | Comment     | 11 |         |    0 | 00/609C               | * Found PC interface. Set up call address.
+  222 |  1 UniFP2.asm    215 | Comment     | 11 |         |    0 | 00/609C               | * we already have high byte ($CN), we need low byte
+  223 |  1 UniFP2.asm    216 | Comment     | 11 |         |    0 | 00/609C               | *
+  224 |  1 UniFP2.asm    217 | Empty       | 11 |         |    0 | 00/609C               | ozunid_8                           
+  225 |  1 UniFP2.asm    217 | Equivalence | 11 |         |    0 | 00/609C               | foundPC       equ   ozunid_8       
+  226 |  1 UniFP2.asm    218 | Code        | 11 |         |    2 | 00/609C : A9 FF       |               lda   #$FF           
+  227 |  1 UniFP2.asm    219 | Code        | 11 |         |    2 | 00/609E : 85 06       |               sta   {$0006}        
+  228 |  1 UniFP2.asm    220 | Code        | 11 |         |    2 | 00/60A0 : A0 00       |               ldy   #0             ;For indirect load
+  229 |  1 UniFP2.asm    221 | Code        | 11 |         |    2 | 00/60A2 : B1 06       |               lda   ({$0006}),y    ;Get the byte
+  230 |  1 UniFP2.asm    222 | Comment     | 11 |         |    0 | 00/60A4               | *
+  231 |  1 UniFP2.asm    223 | Comment     | 11 |         |    0 | 00/60A4               | * Now the Acc has the low oreder ProDOS entry point.
+  232 |  1 UniFP2.asm    224 | Comment     | 11 |         |    0 | 00/60A4               | * The PC entry is three locations past this ...
+  233 |  1 UniFP2.asm    225 | Comment     | 11 |         |    0 | 00/60A4               | *
+  234 |  1 UniFP2.asm    226 | Code        | 11 |         |    1 | 00/60A4 : 18          |               clc                  
+  235 |  1 UniFP2.asm    227 | Code        | 11 |         |    2 | 00/60A5 : 69 03       |               adc   #3             
+  236 |  1 UniFP2.asm    228 | Code        | 11 |         |    2 | 00/60A7 : 85 06       |               sta   {$0006}        
+  237 |  1 UniFP2.asm    229 | Comment     | 11 |         |    0 | 00/60A9               | *
+  238 |  1 UniFP2.asm    230 | Comment     | 11 |         |    0 | 00/60A9               | * Now ZPTempL has PC entry point.
+  239 |  1 UniFP2.asm    231 | Comment     | 11 |         |    0 | 00/60A9               | * Return with carry clear.
+  240 |  1 UniFP2.asm    232 | Comment     | 11 |         |    0 | 00/60A9               | *
+  241 |  1 UniFP2.asm    233 | Code        | 11 |         |    1 | 00/60A9 : 18          |               clc                  
+  242 |  1 UniFP2.asm    234 | Code        | 11 |         |    1 | 00/60AA : 60          |               rts                  
+  243 |  1 UniFP2.asm    235 | Comment     | 11 |         |    0 | 00/60AB               | ***********************************************************
+  244 |  1 UniFP2.asm    236 | Comment     | 11 |         |    0 | 00/60AB               | *
+  245 |  1 UniFP2.asm    237 | Comment     | 11 |         |    0 | 00/60AB               | * There are the PC signature bytes in their relative order.
+  246 |  1 UniFP2.asm    238 | Comment     | 11 |         |    0 | 00/60AB               | * The $FF bytes are filler bytes and are not compared.
+  247 |  1 UniFP2.asm    239 | Comment     | 11 |         |    0 | 00/60AB               | *
+  248 |  1 UniFP2.asm    240 | Data        | 11 |         |    4 | 00/60AB : FF 20 FF 00 | sigtab        dfb   $FF,$20,$FF,$00
+  249 |  1 UniFP2.asm    241 | Data        | 11 |         |    4 | 00/60AF : FF 03 FF 00 |               dfb   $FF,$03,$FF,$00
+  250 |  1 UniFP2.asm    242 | Comment     | 11 |         |    0 | 00/60B3               | *
+  251 |  1 UniFP2.asm    243 | Empty       | 11 |         |    0 | 00/60B3               | ozunid_9                           
+  252 |  1 UniFP2.asm    243 | Equivalence | 11 |         |    0 | 00/60B3               | Dispatch      equ   ozunid_9       
+  253 |  1 UniFP2.asm    244 | Code        | 11 |         |    3 | 00/60B3 : 6C 06 00    |               jmp   ({$0006})      ;Simulate an indirect JSR to PC
+  254 |  1 UniFP2.asm    245 | Comment     | 11 |         |    0 | 00/60B6               | *
+  255 |  1 UniFP2.asm    246 | Comment     | 11 |         |    0 | 00/60B6               | *** Status Parameter Set for UNI ***
+  256 |  1 UniFP2.asm    247 | Empty       | 11 |         |    0 | 00/60B6               | ozunid_10                          
+  257 |  1 UniFP2.asm    247 | Equivalence | 11 |         |    0 | 00/60B6               | DParms        equ   ozunid_10      
+  258 |  1 UniFP2.asm    248 | Data        | 11 |         |    1 | 00/60B6 : 03          | DPParmsCt     dfb   3              ;Status calls have three parameters
+  259 |  1 UniFP2.asm    249 | Data        | 11 |         |    1 | 00/60B7 : 01          | DPUnit        dfb   1              
+  260 |  1 UniFP2.asm    250 | Data        | 11 |         |    2 | 00/60B8 : BB 60       | DPBuffer      dw    {ozunid_11}    
+  261 |  1 UniFP2.asm    251 | Data        | 11 |         |    1 | 00/60BA : 05          | DPStatCode    dfb   {5}            
+  262 |  1 UniFP2.asm    252 | Comment     | 11 |         |    0 | 00/60BB               | *
+  263 |  1 UniFP2.asm    253 | Comment     | 11 |         |    0 | 00/60BB               | *
+  264 |  1 UniFP2.asm    254 | Comment     | 11 |         |    0 | 00/60BB               | *
+  265 |  1 UniFP2.asm    255 | Comment     | 11 |         |    0 | 00/60BB               | *** Status List UNI ***
+  266 |  1 UniFP2.asm    256 | Empty       | 11 |         |    0 | 00/60BB               | ozunid_11                          
+  267 |  1 UniFP2.asm    256 | Equivalence | 11 |         |    0 | 00/60BB               | UNI           equ   ozunid_11      
+  268 |  1 UniFP2.asm    257 | Data        | 11 |         |    1 | 00/60BB : 00          |               dfb   0              
+  269 |  1 UniFP2.asm    258 | Data        | 11 |         |    1 | 00/60BC : 00          | UNIError      dfb   0              
+  270 |  1 UniFP2.asm    259 | Data        | 11 |         |    1 | 00/60BD : 00          | UNIRetries    dfb   0              
+  271 |  1 UniFP2.asm    260 | Data        | 11 |         |    1 | 00/60BE : 00          | UNIAcc_reg    dfb   0              
+  272 |  1 UniFP2.asm    261 | Data        | 11 |         |    1 | 00/60BF : 00          | UNIX_reg      dfb   0              
+  273 |  1 UniFP2.asm    262 | Data        | 11 |         |    1 | 00/60C0 : 00          | UNIY_reg      dfb   0              
+  274 |  1 UniFP2.asm    263 | Data        | 11 |         |    1 | 00/60C1 : 00          | UNIP_val      dfb   0              
+  275 |  1 UniFP2.asm    264 | Data        | 11 |         |    1 | 00/60C2 : 00          | HHH           dfb   0              
+  276 |  1 UniFP2.asm    265 | Comment     | 11 |         |    0 | 00/60C3               | *
+  277 |  1 UniFP2.asm    266 | Comment     | 11 |         |    0 | 00/60C3               | *** Set Address ***
+  278 |  1 UniFP2.asm    267 | Empty       | 11 |         |    0 | 00/60C3               | ozunid_12                          
+  279 |  1 UniFP2.asm    267 | Equivalence | 11 |         |    0 | 00/60C3               | SET_ADD       equ   ozunid_12      
+  280 |  1 UniFP2.asm    268 | Data        | 11 |         |    1 | 00/60C3 : 03          |               dfb   3              
+  281 |  1 UniFP2.asm    269 | Data        | 11 |         |    1 | 00/60C4 : 01          |               dfb   1              
+  282 |  1 UniFP2.asm    270 | Data        | 11 |         |    2 | 00/60C5 : DA 60       |               dw    {ozunid_16}    
+  283 |  1 UniFP2.asm    271 | Data        | 11 |         |    1 | 00/60C7 : 06          |               dfb   {6}            
+  284 |  1 UniFP2.asm    272 | Comment     | 11 |         |    0 | 00/60C8               | *
+  285 |  1 UniFP2.asm    273 | Comment     | 11 |         |    0 | 00/60C8               | *** Download ***
+  286 |  1 UniFP2.asm    274 | Empty       | 11 |         |    0 | 00/60C8               | ozunid_13                          
+  287 |  1 UniFP2.asm    274 | Equivalence | 11 |         |    0 | 00/60C8               | DOWNLOAD      equ   ozunid_13      
+  288 |  1 UniFP2.asm    275 | Data        | 11 |         |    1 | 00/60C8 : 03          |               dfb   3              
+  289 |  1 UniFP2.asm    276 | Data        | 11 |         |    1 | 00/60C9 : 01          |               dfb   1              
+  290 |  1 UniFP2.asm    277 | Data        | 11 |         |    2 | 00/60CA : DE 60       |               dw    {ozunid_17}    
+  291 |  1 UniFP2.asm    278 | Data        | 11 |         |    1 | 00/60CC : 07          |               dfb   {7}            
+  292 |  1 UniFP2.asm    279 | Comment     | 11 |         |    0 | 00/60CD               | *
+  293 |  1 UniFP2.asm    280 | Comment     | 11 |         |    0 | 00/60CD               | *** Execute ***
+  294 |  1 UniFP2.asm    281 | Empty       | 11 |         |    0 | 00/60CD               | ozunid_14                          
+  295 |  1 UniFP2.asm    281 | Equivalence | 11 |         |    0 | 00/60CD               | EXE           equ   ozunid_14      
+  296 |  1 UniFP2.asm    282 | Data        | 11 |         |    1 | 00/60CD : 03          |               dfb   3              
+  297 |  1 UniFP2.asm    283 | Data        | 11 |         |    1 | 00/60CE : 01          |               dfb   1              
+  298 |  1 UniFP2.asm    284 | Data        | 11 |         |    2 | 00/60CF : D2 60       |               dw    {ozunid_15}    
+  299 |  1 UniFP2.asm    285 | Data        | 11 |         |    1 | 00/60D1 : 05          |               dfb   {5}            
+  300 |  1 UniFP2.asm    286 | Comment     | 11 |         |    0 | 00/60D2               | *
+  301 |  1 UniFP2.asm    287 | Comment     | 11 |         |    0 | 00/60D2               | ******** CONTROL LISTS ********
+  302 |  1 UniFP2.asm    288 | Comment     | 11 |         |    0 | 00/60D2               | *
+  303 |  1 UniFP2.asm    289 | Comment     | 11 |         |    0 | 00/60D2               | *
+  304 |  1 UniFP2.asm    290 | Comment     | 11 |         |    0 | 00/60D2               | *** Execute ***
+  305 |  1 UniFP2.asm    291 | Empty       | 11 |         |    0 | 00/60D2               | ozunid_15                          
+  306 |  1 UniFP2.asm    291 | Equivalence | 11 |         |    0 | 00/60D2               | CNTL_LIST2    equ   ozunid_15      
+  307 |  1 UniFP2.asm    292 | Data        | 11 |         |    1 | 00/60D2 : 06          | Clow_byte     dfb   $06            
+  308 |  1 UniFP2.asm    293 | Data        | 11 |         |    1 | 00/60D3 : 00          | Chigh_byte    dfb   $00            
+  309 |  1 UniFP2.asm    294 | Data        | 11 |         |    1 | 00/60D4 : 00          | AccValue      dfb   $00            ; Init Value Unidisk Accumulator Register
+  310 |  1 UniFP2.asm    295 | Data        | 11 |         |    1 | 00/60D5 : 00          | X_reg         dfb   $00            ; Init Value Unidisk X Register
+  311 |  1 UniFP2.asm    296 | Data        | 11 |         |    1 | 00/60D6 : 00          | Y_reg         dfb   $00            ; Init Value Unidisk Y Register
+  312 |  1 UniFP2.asm    297 | Data        | 11 |         |    1 | 00/60D7 : 00          | ProStatus     dfb   $00            ; Init Value Unidisk Status Register
+  313 |  1 UniFP2.asm    298 | Data        | 11 |         |    1 | 00/60D8 : 00          | LowPC_reg     dfb   $00            ; Init Value Unidisk Program Counter $0500 at eny dowload
+  314 |  1 UniFP2.asm    299 | Data        | 11 |         |    1 | 00/60D9 : 05          | HighPC_reg    dfb   $05            ; $05 first execution, $3C second execution
+  315 |  1 UniFP2.asm    300 | Comment     | 11 |         |    0 | 00/60DA               | *
+  316 |  1 UniFP2.asm    301 | Comment     | 11 |         |    0 | 00/60DA               | *** Set Address ***
+  317 |  1 UniFP2.asm    302 | Empty       | 11 |         |    0 | 00/60DA               | ozunid_16                          
+  318 |  1 UniFP2.asm    302 | Equivalence | 11 |         |    0 | 00/60DA               | CNTL_LIST3    equ   ozunid_16      
+  319 |  1 UniFP2.asm    303 | Data        | 11 |         |    1 | 00/60DA : 02          | CountL_byte   dfb   $02            
+  320 |  1 UniFP2.asm    304 | Data        | 11 |         |    1 | 00/60DB : 00          | CountH_byte   dfb   $00            
+  321 |  1 UniFP2.asm    305 | Data        | 11 |         |    1 | 00/60DC : 2D          | LByte_Addr    dfb   $2D            ; ORG of Unidisk program, set begin data address $062E
+  322 |  1 UniFP2.asm    306 | Data        | 11 |         |    1 | 00/60DD : 06          | HByte_Addr    dfb   $06            
+  323 |  1 UniFP2.asm    307 | Comment     | 11 |         |    0 | 00/60DE               | *
+  324 |  1 UniFP2.asm    308 | Comment     | 11 |         |    0 | 00/60DE               | *** Download ***
+  325 |  1 UniFP2.asm    309 | Empty       | 11 |         |    0 | 00/60DE               | ozunid_17                          
+  326 |  1 UniFP2.asm    309 | Equivalence | 11 |         |    0 | 00/60DE               | CNTL_LIST4    equ   ozunid_17      
+  327 |  1 UniFP2.asm    310 | Data        | 11 |         |    1 | 00/60DE : 08          | LenghtL_byte  dfb   $08            ;<----- Lenght of Unidisk program Lo  - Byte 312 byte
+  328 |  1 UniFP2.asm    311 | Data        | 11 |         |    1 | 00/60DF : 00          | LenghtH_byte  dfb   $00            ;<----- Lenght of Unidisk program Hi Byte
+  329 |  1 UniFP2.asm    312 | Comment     | 11 |         |    0 | 00/60E0               | *
+  330 |  1 UniFP2.asm    313 | Comment     | 11 |         |    0 | 00/60E0               | **************** Start UNIDISK Program ****************
+  331 |  1 UniFP2.asm    314 | Comment     | 11 |         |    0 | 00/60E0               | *
+  332 |  1 UniFP2.asm    315 | Empty       | 11 |         |    0 | 00/60E0               |                                    
+  333 |  1 UniFP2.asm    316 | Comment     | 11 |         |    0 | 00/60E0               | ** Input Dynamic Data append in the end of Unidisk routine **  		
+  334 |  1 UniFP2.asm    317 | Data        | 11 |         |    1 | 00/60E0 : 00          | FP1           dfb   $00            
+  335 |  1 UniFP2.asm    318 | Data        | 11 |         |    1 | 00/60E1 : 00          |               dfb   $00            
+  336 |  1 UniFP2.asm    319 | Data        | 11 |         |    1 | 00/60E2 : 00          |               dfb   $00            
+  337 |  1 UniFP2.asm    320 | Data        | 11 |         |    1 | 00/60E3 : 00          |               dfb   $00            
+  338 |  1 UniFP2.asm    321 | Comment     | 11 |         |    0 | 00/60E4               | *		
+  339 |  1 UniFP2.asm    322 | Data        | 11 |         |    1 | 00/60E4 : 00          | FP2           dfb   $00            
+  340 |  1 UniFP2.asm    323 | Data        | 11 |         |    1 | 00/60E5 : 00          |               dfb   $00            
+  341 |  1 UniFP2.asm    324 | Data        | 11 |         |    1 | 00/60E6 : 00          |               dfb   $00            
+  342 |  1 UniFP2.asm    325 | Data        | 11 |         |    1 | 00/60E7 : 00          |               dfb   $00            
+  343 |  1 UniFP2.asm    326 | Comment     | 11 |         |    0 | 00/60E8               | **************** End UNIDISK Program ****************        	          	
+------+----------------------+-------------+----+---------+------+-----------------------+-------------------------------------------------------------------
