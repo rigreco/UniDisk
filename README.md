@@ -7,6 +7,7 @@ The project is based on the knowing of internal structure of Unidisk 3.5 drive, 
 4) Use the seme mechanism of step (3) to download a simply routine to making integer operation at one or two Byte and read the relative results; 
 5) Due to UniDisk, less the I/O Disk routine in its ROM, is a bare metal, i decide to implement the Floating Point routine by using WOZ original routine, but I was need to write the converter program from WOZ routine to Applesoft routine. This allow me to execute FP operations; 
 6) Use the UniDisk FP operations to execute Graphics calculations.
+
 This project required a great deal of effort due to use only the real Apple IIc machine to coding in 'Merlin' Assembler and 'Applesoft' Basic, because no Apple II simulator is able to emulate Unidik Drive, at now.
 
 This project allow this target:
