@@ -13,3 +13,5 @@ This project required a great deal of effort due to use only the real Apple IIc 
 This project allow this target:
 * Scan, identify, command and dump memory of UniDisk 3.5
 * Allow to use UniDisk 3.5 like an Apple II "co-processor"
+
+More information and demonstration videos on: [AppleII personal web page](https://grecoriccardo.it/apple2)
