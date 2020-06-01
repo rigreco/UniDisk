@@ -10,7 +10,7 @@ The project is based on the knowing of internal structure of UniDisk 3.5 drive, 
 
 This project required a great deal of effort due to use only the real Apple IIc machine to coding in 'Merlin' Assembler and 'Applesoft' Basic and then execute the code, because no Apple II simulator is able to emulate UniDisk 3.5 Drive, at now.
 
-The PC/MAC next to the Apple II machine, connected by serial port, allows you to use different special software to compile, manage disks image and then send to Apple II by serial port. A custom all-in-one modern IDE can be create to automete all this building process, but there is still no software that can simulate the UNIDISK 3.5 drive.
+The PC/MAC next to the Apple II machine, connected by serial port, allows you to use different special software to compile, manage disks image and then send to Apple II. A custom all-in-one modern IDE also can be create to automete all this process.
 
 
 This project allow this target:
