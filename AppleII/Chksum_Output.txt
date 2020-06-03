@@ -1,0 +1,40 @@
+------+--------------------+-------------+----+---------+------+-----------------------+-------------------------------------------------------------------
+ Line | # File        Line | Line Type   | MX |  Reloc  | Size | Address   Object Code |  Source Code                                                      
+------+--------------------+-------------+----+---------+------+-----------------------+-------------------------------------------------------------------
+    1 |  1 Chksum.s      1 | Equivalence | 11 |         |    0 | 00/8000               | COut        equ   $FDED          
+    2 |  1 Chksum.s      2 | Equivalence | 11 |         |    0 | 00/8000               | PTR         equ   $EB            
+    3 |  1 Chksum.s      3 | Code        | 11 |         |    2 | 00/8000 : A9 00       | STARTCHK    lda   #<STARTCHK     
+    4 |  1 Chksum.s      4 | Code        | 11 |         |    2 | 00/8002 : 85 EB       |             sta   {$EB}          
+    5 |  1 Chksum.s      5 | Code        | 11 |         |    2 | 00/8004 : A9 80       |             lda   #>STARTCHK     
+    6 |  1 Chksum.s      6 | Code        | 11 |         |    2 | 00/8006 : 85 EC       |             sta   {$EB}+1        
+    7 |  1 Chksum.s      7 | Code        | 11 |         |    2 | 00/8008 : A0 00       |             ldy   #$00           
+    8 |  1 Chksum.s      8 | Code        | 11 |         |    2 | 00/800A : A9 00       |             lda   #$00           
+    9 |  1 Chksum.s      9 | Code        | 11 |         |    1 | 00/800C : 48          |             pha                  
+   10 |  1 Chksum.s     10 | Empty       | 11 |         |    0 | 00/800D               |                                  
+   11 |  1 Chksum.s     11 | Code        | 11 |         |    1 | 00/800D : 68          | LOOP        pla                  
+   12 |  1 Chksum.s     12 | Code        | 11 |         |    2 | 00/800E : 51 EB       |             eor   ({$EB}),y      
+   13 |  1 Chksum.s     13 | Code        | 11 |         |    1 | 00/8010 : 48          |             pha                  
+   14 |  1 Chksum.s     14 | Code        | 11 |         |    2 | 00/8011 : E6 EB       |             inc   {$EB}          
+   15 |  1 Chksum.s     15 | Code        | 11 |         |    2 | 00/8013 : D0 02       |             bne   CHK            
+   16 |  1 Chksum.s     16 | Code        | 11 |         |    2 | 00/8015 : E6 EC       |             inc   {$EB}+1        
+   17 |  1 Chksum.s     17 | Code        | 11 |         |    2 | 00/8017 : A5 EC       | CHK         lda   {$EB}+1        
+   18 |  1 Chksum.s     18 | Code        | 11 |         |    2 | 00/8019 : C9 80       |             cmp   #>PROGEND      
+   19 |  1 Chksum.s     19 | Code        | 11 |         |    2 | 00/801B : 90 F0       |             bcc   LOOP           
+   20 |  1 Chksum.s     20 | Code        | 11 |         |    2 | 00/801D : A5 EB       |             lda   {$EB}          
+   21 |  1 Chksum.s     21 | Code        | 11 |         |    2 | 00/801F : C9 30       |             cmp   #<PROGEND      
+   22 |  1 Chksum.s     22 | Code        | 11 |         |    2 | 00/8021 : 90 EA       |             bcc   LOOP           
+   23 |  1 Chksum.s     23 | Code        | 11 |         |    2 | 00/8023 : F0 E8       |             beq   LOOP           
+   24 |  1 Chksum.s     24 | Code        | 11 |         |    1 | 00/8025 : 68          | CHKCS       pla                  
+   25 |  1 Chksum.s     25 | Code        | 11 |         |    3 | 00/8026 : CD 31 80    |             cmp   CHKSUM         
+   26 |  1 Chksum.s     26 | Code        | 11 |         |    2 | 00/8029 : D0 07       |             bne   ERROR          
+   27 |  1 Chksum.s     27 | Code        | 11 |         |    2 | 00/802B : A9 00       | REALSTART   lda   #0             
+   28 |  1 Chksum.s     28 | Code        | 11 |         |    1 | 00/802D : 1A          |             inc   A              
+   29 |  1 Chksum.s     29 | Code        | 11 |         |    2 | 00/802E : 85 FA       |             sta   $FA            
+   30 |  1 Chksum.s     30 | Code        | 11 |         |    1 | 00/8030 : 60          | PROGEND     rts                  
+   31 |  1 Chksum.s     31 | Data        | 11 |         |    1 | 00/8031 : 00          | CHKSUM      chk                  
+   32 |  1 Chksum.s     32 | Code        | 11 |         |    3 | 00/8032 : 8D 3B 80    | ERROR       sta   CHKCALC        
+   33 |  1 Chksum.s     33 | Code        | 11 |         |    2 | 00/8035 : A9 C5       |             lda   #"E"           
+   34 |  1 Chksum.s     34 | Code        | 11 |         |    3 | 00/8037 : 20 ED FD    |             jsr   {$FDED}        
+   35 |  1 Chksum.s     35 | Code        | 11 |         |    1 | 00/803A : 60          |             rts                  
+   36 |  1 Chksum.s     36 | Data        | 11 |         |    1 | 00/803B : 00          | CHKCALC     dfb   $00            
+------+--------------------+-------------+----+---------+------+-----------------------+-------------------------------------------------------------------
