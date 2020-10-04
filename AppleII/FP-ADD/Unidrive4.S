@@ -1,6 +1,8 @@
-*
 *    Unidisk 3.5 Driver <alfa>
 *
+*	 File Name: Unidrive4.s
+*	 Description: Floating Point ADD operation
+*    
 *    The target of this project is to use the Unidisk 3.5 drive to perform
 *    specific numerical routines (integers and floating point numbers)
 *    calculation in order to use it as a Apple II co-processor unit.
@@ -19,10 +21,12 @@
 *    along with this program.  If not, see <http://www.gnu.org/licenses/>.
 *
 *
-* @com.wudsn.ide.asm.hardware=APPLE2
 *
 * Protocol Converter Call
-		XC
+			XC 		 ; Enable 65C02 INSTRUCTION
+  			TYP $06	; Binary File Type ignored in Merlin32 (Merlin 16+ RETRO compatibility)
+         	*AUX $8000 ; Auxiliary Type
+
 ZPTempL  	equ $0006 ;Temporary zero page storage
 ZPTempH  	equ $0007
 ** Zero page storage **
