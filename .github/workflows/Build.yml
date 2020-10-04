@@ -1,0 +1,74 @@
+# This is a basic workflow for Merlin32 cross-dev Tools with GitHub Actions for UNIDISK project
+# https://brutaldeluxe.fr/products/crossdevtools/
+
+# The Actions are based on digarok repository:
+# https://github.com/digarok/install-merlin32-action
+# https://github.com/digarok/install-cadius-action
+
+name: CI
+
+# Controls when the action will run. Triggers the workflow on push or pull request
+# events but only for the master branch
+on:
+  push:
+    branches: [ master ]
+    paths:
+      - 'src/TESTBAS'
+      - 'src/TESTBIN.s'
+  pull_request:
+    branches: [ master ]
+    paths: 
+      - 'src/TESTBAS'
+      - 'src/TESTBIN.s'
+
+# A workflow run is made up of one or more jobs that can run sequentially or in parallel
+jobs:
+  # This workflow contains a single job called "build"
+  build:
+  
+    # The type of runner that the job will run on
+    runs-on: ubuntu-latest
+
+    # Steps represent a sequence of tasks that will be executed as part of the job
+    steps:
+
+    - uses: actions/checkout@v1
+
+    # This will install Merlin32 on your Github Runner machine
+    - name: install-merlin32-action
+      uses: digarok/install-merlin32-action@v0.1.1
+         
+    # Now you can use it to assemble your source code
+    - name: Assembly Step
+      run: merlin32 -V src/TESTBIN.s
+   
+    # CHK Errors (if the previous step failure, there's errors in the source code, then it will upload the errors text file in artifact)
+    - name: CHK errors
+      if: ${{ failure() }}
+      uses: actions/upload-artifact@v1
+      with:
+        name: Error
+        path: ./src/error_output.txt
+
+    # This will install Cadius on your Github Runner machine
+    - name: Install Cadius
+      uses: digarok/install-cadius-action@v0.1.1
+    
+    # This will make bootalble ProDOS DISK image
+    - name: Make bootable ProDOS image
+      run: |
+        cadius createvolume ./src/virtual.po unidisk 140KB
+        cadius addfile ./src/virtual.po /unidisk/ ./PRODOS.2.4.2/PRODOS
+        cadius addfile ./src/virtual.po /unidisk/ ./PRODOS.2.4.2/BASIC.SYSTEM
+        echo "TESTBAS=Type(04),AuxType(0000),VersionCreate(24),MinVersion(00),Access(E3)" > ./src/_FileInformation.txt
+        cadius addfile ./src/virtual.po /unidisk/ ./src/TESTBAS
+        echo "TESTBIN=Type(06),AuxType(8000),VersionCreate(24),MinVersion(00),Access(E3)" >> ./src/_FileInformation.txt
+        cadius addfile ./src/virtual.po /unidisk/ ./src/TESTBIN
+        cadius catalog ./src/virtual.po
+        ls -al src
+     
+    # This will upload entire work directory in artifact
+    - uses: actions/upload-artifact@v1
+      with:
+        name: Output
+        path: ./src/
