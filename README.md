@@ -2,7 +2,7 @@
 
 The project is based on the knowing of internal structure of UniDisk 3.5 drive, it uses same HW of Apple II machines. It is a smart device built by controlled drive board powered by
 
->65c02 mp @2.0 Hz with 2KB RAM and 8KB ROM plus 527 byte of I/O peripheral registers, all addressing by memory mapped method.
+>65c02 mp @2.0 MHz (model GTEu G65SC02P-2 CMOS 8bit 2MHz PDIP40) with 2KB StaticRAM (model HITACHI HM6116LP-2 CMOS 8bit 120ns PDIP24) and 8KB PROM IWM Floppy disk controller (model VLI VF4060-001 344-0041-B IWM PDIP28) plus 527 byte of I/O peripheral registers, all addressing by memory mapped method.
 
 The UniDisk 3.5 drives can use directly by Apple //c with 3.5 ROM (ROM version 0) or by Apple IIe or an II Plus using special interface controller card aka "LIRON card".
 
