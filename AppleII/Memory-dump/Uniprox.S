@@ -23,8 +23,8 @@
 ZPTempL  	equ $0006 ;Temporary zero page storage
 ZPTempH  	equ $0007
 *** Pointers ***
-LowMain  	equ $000A
-HiMain  	equ $000B
+LowMain  	equ $000A ; Pointer to low byte of main memory address
+HiMain  	equ $000B ; Pointer to high byte of main memory address
 *** Monitor routines ***
 COut  		equ $FDED ;Console output ASCII
 COUT1		equ $FDF0 ;Output to screen
@@ -40,14 +40,14 @@ StatusUNI  	equ 5
 *
 ControlCmd 	equ 4
 ** Control Codes **
-Eject  		equ 4
-Run  		equ 5
-SetDWLoad  	equ 6
-DWLoad  	equ 7
+Eject  		equ 4 ;Control code for ejecting disk
+Run  		equ 5 ;Control code for running program on Unidisk
+SetDWLoad  	equ 6 ;Control code for setting download address on Unidisk
+DWLoad  	equ 7 ;Control code for downloading data to Unidisk
 *
   		org $8000
 *****************************************************
-* Presentation message **************
+* Presentation message loop to display message on screen using COut routine **************
 *
   		ldx #0
 LOOP  		equ *
