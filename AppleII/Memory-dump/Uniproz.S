@@ -19,7 +19,10 @@
 *
 * @com.wudsn.ide.asm.hardware=APPLE2
 * Protocol Converter Call
-		XC
+			XC 			; Enable 65C02 INSTRUCTION
+          	TYP $06		; Binary File Type ignored in Merlin32 (Merlin 16+ RETRO compatibility)
+          	*AUX $8000  ; Auxiliary Type
+			  
 ZPTempL  	equ $0006 ;Temporary zero page storage
 ZPTempH  	equ $0007
 *** Pointers ***
@@ -35,13 +38,13 @@ StatusCmd  	equ 0
 StatusDIB  	equ 3
 StatusUNI  	equ 5
 *
-ControlCmd  	equ 4
+ControlCmd  equ 4
 ** Control Codes **
 Run  		equ 5
 SetDWLoad  	equ 6
 DWLoad  	equ 7
 *
-  		org $8000
+  			org $8000
 *
 * Find a Protocol Converter in one of the slots.
 *
