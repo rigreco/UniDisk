@@ -54,5 +54,3 @@ This project allows this target:
 
 
 ![UniDisk](/Images/UniDisk.png)
-
-More information and demonstration videos on: [AppleII personal web page](https://grecoriccardo.it/apple2)
