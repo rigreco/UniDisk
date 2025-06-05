@@ -54,6 +54,10 @@ jobs:
     - name: Install Cadius
       uses: digarok/install-cadius-action@master
     
+    # Check Cadius version for debugging
+    - name: Check Cadius version
+      run: cadius --version || cadius || echo "Cadius installed"
+    
     # This will make bootalble ProDOS DISK image
     - name: Make bootable ProDOS image
       run: |
