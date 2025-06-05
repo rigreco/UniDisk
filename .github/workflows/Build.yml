@@ -11,7 +11,7 @@ name: CI
 # events but only for the master branch
 on:
   push:
-    branches: [ master ]
+    branches: [ master, update-github-actions ]
     paths:
       - 'src/TESTBAS'
       - 'src/TESTBIN.s'
