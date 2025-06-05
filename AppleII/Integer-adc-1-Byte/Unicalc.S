@@ -1,6 +1,9 @@
 *
 *    Unidisk 3.5 Calc <beta>
 *
+*	 File Name: Unicalc.s
+*	 Descriprion: 1 Byte Add integer numbers calculation
+*
 *    The target of this project is to use the Unidisk 3.5 drive to perform
 *    specific numerical routines: 1 Byte Add integer numbers calculation;
 *    in order to use it as a Apple II co-processor unit.
@@ -19,9 +22,11 @@
 *    along with this program.  If not, see <http://www.gnu.org/licenses/>.
 *
 *
-* @com.wudsn.ide.asm.hardware=APPLE2
 * Protocol Converter Call
-		XC
+			XC 		; Enable 65C02 INSTRUCTION
+          	TYP $06	; Binary File Type ignored in Merlin32 (Merlin 16+ RETRO compatibility)
+          	*AUX $8000  ; Auxiliary Type
+
 ZPTempL  	equ $0006 ;Temporary zero page storage
 ZPTempH  	equ $0007
 *** Pointers ***
@@ -47,7 +52,7 @@ Run  		equ 5
 SetDWLoad  	equ 6
 DWLoad  	equ 7
 *
-  		org $8000
+  			org $8000
 *****************************************************
 * Presentation message **************
 *
@@ -80,7 +85,7 @@ DATA2	  	asc 'A    X  Y    P'
 *
 * Find a Protocol Converter in one of the slots.
 START  		jsr FindPC
-  		bcs Error
+  			bcs Error
 *
 * Now make the DIB call to the first guy
 *

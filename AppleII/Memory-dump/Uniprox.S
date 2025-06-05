@@ -19,7 +19,10 @@
 *
 * @com.wudsn.ide.asm.hardware=APPLE2
 * Protocol Converter Call
-		XC
+			XC 			; Enable 65C02 INSTRUCTION
+          	TYP $06		; Binary File Type ignored in Merlin32 (Merlin 16+ RETRO compatibility)
+          	*AUX $8000  ; Auxiliary Type			  
+
 ZPTempL  	equ $0006 ;Temporary zero page storage
 ZPTempH  	equ $0007
 *** Pointers ***
@@ -45,7 +48,7 @@ Run  		equ 5 ;Control code for running program on Unidisk
 SetDWLoad  	equ 6 ;Control code for setting download address on Unidisk
 DWLoad  	equ 7 ;Control code for downloading data to Unidisk
 *
-  		org $8000
+  			org $8000
 *****************************************************
 * Presentation message loop to display message on screen using COut routine **************
 *
@@ -57,12 +60,12 @@ LOOP  		equ *
   		inx
   		bne LOOP
 *
-DATA	  	asc 'UNIDISK 3.5 UTILITY BY R. GRECO'
+DATA	asc 'UNIDISK 3.5 UTILITY BY R. GRECO'
 		dfb $8D,0 ; Inverse mode on
 *****************************************************
 *
 * Find a Protocol Converter in one of the slots.
-START  		jsr FindPC
+START  	jsr FindPC
   		bcs Error
   		
 		jsr CROut
@@ -77,7 +80,7 @@ START  		jsr FindPC
 *
 * Got the DIB; now print the name string
 *
-            	ldx #0
+        		ldx #0
 morechars  	equ *
  		lda DIBName,x
 		ora #$80 ;COut wants high Bit set
