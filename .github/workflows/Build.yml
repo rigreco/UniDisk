@@ -32,11 +32,11 @@ jobs:
     # Steps represent a sequence of tasks that will be executed as part of the job
     steps:
 
-    - uses: actions/checkout@v1
+    - uses: actions/checkout@v4
 
     # This will install Merlin32 on your Github Runner machine
     - name: install-merlin32-action
-      uses: digarok/install-merlin32-action@v0.1.1
+      uses: digarok/install-merlin32-action@master
          
     # Now you can use it to assemble your source code
     - name: Assembly Step
@@ -45,14 +45,14 @@ jobs:
     # CHK Errors (if the previous step failure, there's errors in the source code, then it will upload the errors text file in artifact)
     - name: CHK errors
       if: ${{ failure() }}
-      uses: actions/upload-artifact@v1
+      uses: actions/upload-artifact@v4
       with:
         name: Error
         path: ./src/error_output.txt
 
     # This will install Cadius on your Github Runner machine
     - name: Install Cadius
-      uses: digarok/install-cadius-action@v0.1.1
+      uses: digarok/install-cadius-action@master
     
     # This will make bootalble ProDOS DISK image
     - name: Make bootable ProDOS image
@@ -68,7 +68,7 @@ jobs:
         ls -al src
      
     # This will upload entire work directory in artifact
-    - uses: actions/upload-artifact@v1
+    - uses: actions/upload-artifact@v4
       with:
         name: Output
         path: ./src/
