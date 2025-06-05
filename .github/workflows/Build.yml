@@ -36,7 +36,7 @@ jobs:
 
     # This will install Merlin32 on your Github Runner machine
     - name: install-merlin32-action
-      uses: digarok/install-merlin32-action@master
+      uses: digarok/install-merlin32-action@v0.1.2
          
     # Now you can use it to assemble your source code
     - name: Assembly Step
@@ -52,7 +52,7 @@ jobs:
 
     # This will install Cadius on your Github Runner machine
     - name: Install Cadius
-      uses: digarok/install-cadius-action@master
+      uses: digarok/install-cadius-action@v0.1.2
     
     # Check Cadius version for debugging
     - name: Check Cadius version
