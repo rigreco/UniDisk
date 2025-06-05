@@ -57,10 +57,11 @@ jobs:
     # This will make bootalble ProDOS DISK image
     - name: Make bootable ProDOS image
       run: |
-        # Set build timestamp variables
+        # Set build timestamp variables (ProDOS format)
         BUILD_DATE=$(date '+%d-%b-%y' | tr '[:lower:]' '[:upper:]')
         BUILD_TIME=$(date '+%H:%M')
-        echo "Build date: $BUILD_DATE $BUILD_TIME"
+        TIMESTAMP="$BUILD_DATE $BUILD_TIME"
+        echo "Build timestamp: $TIMESTAMP"
         
         # Create ProDOS volume
         cadius createvolume ./src/virtual.po unidisk 140KB
@@ -68,11 +69,11 @@ jobs:
         cadius addfile ./src/virtual.po /unidisk/ ./PRODOS.2.4.2/BASIC.SYSTEM
         
         # Add TESTBAS with timestamp info
-        echo "TESTBAS=Type(04),AuxType(0000),VersionCreate(24),MinVersion(00),Access(E3),Created($BUILD_DATE $BUILD_TIME),Modified($BUILD_DATE $BUILD_TIME)" > ./src/_FileInformation.txt
+        echo "TESTBAS=Type(04),AuxType(0000),VersionCreate(00),MinVersion(00),Access(E3),Created($TIMESTAMP),Modified($TIMESTAMP)" > ./src/_FileInformation.txt
         cadius addfile ./src/virtual.po /unidisk/ ./src/TESTBAS
         
         # Add TESTBIN with timestamp info  
-        echo "TESTBIN=Type(06),AuxType(8000),VersionCreate(24),MinVersion(00),Access(E3),Created($BUILD_DATE $BUILD_TIME),Modified($BUILD_DATE $BUILD_TIME)" > ./src/_FileInformation.txt
+        echo "TESTBIN=Type(06),AuxType(2000),VersionCreate(00),MinVersion(00),Access(E3),Created($TIMESTAMP),Modified($TIMESTAMP)" > ./src/_FileInformation.txt
         cadius addfile ./src/virtual.po /unidisk/ ./src/TESTBIN
         
         # Show results
