@@ -57,14 +57,28 @@ jobs:
     # This will make bootalble ProDOS DISK image
     - name: Make bootable ProDOS image
       run: |
+        # Set build timestamp variables
+        BUILD_DATE=$(date '+%d-%b-%y' | tr '[:lower:]' '[:upper:]')
+        BUILD_TIME=$(date '+%H:%M')
+        echo "Build date: $BUILD_DATE $BUILD_TIME"
+        
+        # Create ProDOS volume
         cadius createvolume ./src/virtual.po unidisk 140KB
         cadius addfile ./src/virtual.po /unidisk/ ./PRODOS.2.4.2/PRODOS
         cadius addfile ./src/virtual.po /unidisk/ ./PRODOS.2.4.2/BASIC.SYSTEM
-        echo "TESTBAS=Type(04),AuxType(0000),VersionCreate(24),MinVersion(00),Access(E3)" > ./src/_FileInformation.txt
+        
+        # Add TESTBAS with timestamp info
+        echo "TESTBAS=Type(04),AuxType(0000),VersionCreate(24),MinVersion(00),Access(E3),Created($BUILD_DATE $BUILD_TIME),Modified($BUILD_DATE $BUILD_TIME)" > ./src/_FileInformation.txt
         cadius addfile ./src/virtual.po /unidisk/ ./src/TESTBAS
-        echo "TESTBIN=Type(06),AuxType(8000),VersionCreate(24),MinVersion(00),Access(E3)" >> ./src/_FileInformation.txt
+        
+        # Add TESTBIN with timestamp info  
+        echo "TESTBIN=Type(06),AuxType(8000),VersionCreate(24),MinVersion(00),Access(E3),Created($BUILD_DATE $BUILD_TIME),Modified($BUILD_DATE $BUILD_TIME)" > ./src/_FileInformation.txt
         cadius addfile ./src/virtual.po /unidisk/ ./src/TESTBIN
+        
+        # Show results
         cadius catalog ./src/virtual.po
+        echo "File info created:"
+        cat ./src/_FileInformation.txt
         ls -al src
      
     # This will upload entire work directory in artifact
