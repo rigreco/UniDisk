@@ -1,0 +1,209 @@
+# Project-based workflow for Apple II projects
+# Automatically detects and builds projects from AppleII/ directories
+# Each project directory contains .s (assembly) and .bas (BASIC) files
+# Metadata is read from _FileInformation.txt for BIN file addresses
+
+name: CI - Project Build
+
+# Triggers on changes to any .s or .bas file in AppleII subdirectories
+on:
+  push:
+    branches:
+      - master
+      - 'claude/*'
+    paths:
+      - 'AppleII/**/*.s'
+      - 'AppleII/**/*.S'
+      - 'AppleII/**/*.bas'
+      - 'AppleII/**/_FileInformation.txt'
+  pull_request:
+    branches: [ master ]
+    paths:
+      - 'AppleII/**/*.s'
+      - 'AppleII/**/*.S'
+      - 'AppleII/**/*.bas'
+      - 'AppleII/**/_FileInformation.txt'
+
+jobs:
+  build-project:
+    runs-on: ubuntu-24.04
+
+    steps:
+    - uses: actions/checkout@v5
+      with:
+        fetch-depth: 2  # Need 2 commits to detect changes
+
+    # Detect which project directory was modified
+    - name: Detect changed project
+      id: detect
+      run: |
+        # Get changed files and extract project directory name
+        CHANGED_FILES=$(git diff --name-only HEAD~1 HEAD | grep "^AppleII/" || true)
+
+        if [ -z "$CHANGED_FILES" ]; then
+          echo "No changes detected in AppleII/"
+          echo "project=" >> $GITHUB_OUTPUT
+          exit 0
+        fi
+
+        # Extract unique project directory (2nd level path)
+        PROJECT=$(echo "$CHANGED_FILES" | cut -d'/' -f2 | sort -u | head -1)
+
+        if [ -z "$PROJECT" ]; then
+          echo "Could not determine project directory"
+          echo "project=" >> $GITHUB_OUTPUT
+          exit 0
+        fi
+
+        echo "Detected project: $PROJECT"
+        echo "project=$PROJECT" >> $GITHUB_OUTPUT
+        echo "work_dir=AppleII/$PROJECT" >> $GITHUB_OUTPUT
+
+    # Skip remaining steps if no project detected
+    - name: Check if build needed
+      id: check
+      run: |
+        if [ -z "${{ steps.detect.outputs.project }}" ]; then
+          echo "skip=true" >> $GITHUB_OUTPUT
+        else
+          echo "skip=false" >> $GITHUB_OUTPUT
+        fi
+
+    # Install Merlin32 assembler
+    - name: Install Merlin32
+      if: steps.check.outputs.skip != 'true'
+      uses: digarok/install-merlin32-action@v0.1.3
+
+    # Compile all .s and .S files in the project directory
+    - name: Compile assembly files
+      if: steps.check.outputs.skip != 'true'
+      run: |
+        WORK_DIR="${{ steps.detect.outputs.work_dir }}"
+        echo "Compiling assembly files in $WORK_DIR"
+
+        # Find and compile all .s and .S files
+        shopt -s nullglob
+        for src in $WORK_DIR/*.s $WORK_DIR/*.S; do
+          [ -f "$src" ] || continue
+          echo "Compiling $(basename $src)..."
+          merlin32 -V "$src" || {
+            echo "ERROR: Failed to compile $(basename $src)"
+            exit 1
+          }
+        done
+
+        echo "Assembly compilation completed"
+
+    # Check for compilation errors
+    - name: Upload compilation errors
+      if: failure()
+      uses: actions/upload-artifact@v5
+      with:
+        name: ${{ steps.detect.outputs.project }}-errors
+        path: |
+          ${{ steps.detect.outputs.work_dir }}/*_Output.txt
+          ${{ steps.detect.outputs.work_dir }}/error_output.txt
+        if-no-files-found: ignore
+
+    # Install Cadius for disk image creation
+    - name: Install Cadius
+      if: steps.check.outputs.skip != 'true'
+      uses: digarok/install-cadius-action@v0.1.3
+
+    # Check Cadius version for debugging
+    - name: Check Cadius version
+      if: steps.check.outputs.skip != 'true'
+      run: cadius --version || cadius || echo "Cadius installed"
+
+    # Create ProDOS disk image and add all files
+    - name: Create ProDOS disk image
+      if: steps.check.outputs.skip != 'true'
+      run: |
+        PROJECT="${{ steps.detect.outputs.project }}"
+        WORK_DIR="${{ steps.detect.outputs.work_dir }}"
+        DISK_IMAGE="./$PROJECT.po"
+
+        # Set build timestamp variables (ProDOS format)
+        BUILD_DATE=$(date '+%d-%b-%y' | tr '[:lower:]' '[:upper:]')
+        BUILD_TIME=$(date '+%H:%M')
+        TIMESTAMP="$BUILD_DATE $BUILD_TIME"
+        echo "Build timestamp: $TIMESTAMP"
+
+        echo "Creating disk image: $DISK_IMAGE"
+        echo "Project directory: $WORK_DIR"
+
+        # Create ProDOS disk image
+        cadius createvolume "$DISK_IMAGE" "$PROJECT" 140KB
+
+        # Add PRODOS and BASIC.SYSTEM (provided by install-cadius-action)
+        echo "Adding system files..."
+        cadius addfile "$DISK_IMAGE" "/$PROJECT/" ./PRODOS.2.4.2/PRODOS
+        cadius addfile "$DISK_IMAGE" "/$PROJECT/" ./PRODOS.2.4.2/BASIC.SYSTEM
+
+        # Add binary files using _FileInformation.txt
+        if [ -f "$WORK_DIR/_FileInformation.txt" ]; then
+          echo "Processing _FileInformation.txt..."
+          while IFS='=' read -r name metadata; do
+            # Skip empty lines and comments
+            [ -z "$name" ] && continue
+            [[ "$name" =~ ^[[:space:]]*# ]] && continue
+
+            # Trim whitespace
+            name=$(echo "$name" | xargs)
+
+            # Check if binary file exists
+            if [ ! -f "$WORK_DIR/$name" ]; then
+              echo "WARNING: Binary file $name not found, skipping"
+              continue
+            fi
+
+            # Create file info for this binary with timestamp
+            echo "$name=Type(06),AuxType(2000),VersionCreate(00),MinVersion(00),Access(E3),Created($TIMESTAMP),Modified($TIMESTAMP)" > "$WORK_DIR/_FileInformation_temp.txt"
+
+            echo "Adding $name (BIN with timestamp)"
+            cadius addfile "$DISK_IMAGE" "/$PROJECT/" "$WORK_DIR/$name"
+          done < "$WORK_DIR/_FileInformation.txt"
+        else
+          echo "No _FileInformation.txt found, adding binary files without metadata"
+          # Add any binary files found
+          shopt -s nullglob
+          for bin in $WORK_DIR/*.bin $WORK_DIR/*[!.s][!.S][!.bas]; do
+            [ -f "$bin" ] && [ ! "$bin" == *"_Output"* ] || continue
+            name=$(basename "$bin")
+            echo "Adding $name (BIN @ default address)"
+            echo "$name=Type(06),AuxType(2000),VersionCreate(00),MinVersion(00),Access(E3),Created($TIMESTAMP),Modified($TIMESTAMP)" > "$WORK_DIR/_FileInformation.txt"
+            cadius addfile "$DISK_IMAGE" "/$PROJECT/" "$bin"
+          done
+        fi
+
+        # Add BASIC files
+        echo "Adding BASIC files..."
+        shopt -s nullglob
+        for bas in $WORK_DIR/*.bas; do
+          [ -f "$bas" ] || continue
+          name=$(basename "$bas")
+
+          # Create file info for this BASIC file with timestamp
+          echo "$name=Type(04),AuxType(0000),VersionCreate(00),MinVersion(00),Access(E3),Created($TIMESTAMP),Modified($TIMESTAMP)" > "$WORK_DIR/_FileInformation.txt"
+
+          echo "Adding $name (BAS with timestamp)"
+          cadius addfile "$DISK_IMAGE" "/$PROJECT/" "$bas"
+        done
+
+        # Display disk catalog
+        echo ""
+        echo "=== Disk Image Catalog ==="
+        cadius catalog "$DISK_IMAGE"
+
+        # List created files
+        echo ""
+        echo "=== Created Files ==="
+        ls -lh "$DISK_IMAGE"
+
+    # Upload the completed disk image
+    - uses: actions/upload-artifact@v5
+      if: steps.check.outputs.skip != 'true'
+      with:
+        name: ${{ steps.detect.outputs.project }}
+        path: ./${{ steps.detect.outputs.project }}.po
+        if-no-files-found: error
