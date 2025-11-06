@@ -72,7 +72,7 @@ jobs:
     # Install Merlin32 assembler
     - name: Install Merlin32
       if: steps.check.outputs.skip != 'true'
-      uses: digarok/install-merlin32-action@v0.1.2
+      uses: digarok/install-merlin32-action@v0.1.3
 
     # Compile all .s and .S files in the project directory
     - name: Compile assembly files
@@ -108,7 +108,7 @@ jobs:
     # Install Cadius for disk image creation
     - name: Install Cadius
       if: steps.check.outputs.skip != 'true'
-      uses: digarok/install-cadius-action@v0.1.2
+      uses: digarok/install-cadius-action@v0.1.3
 
     # Check Cadius version for debugging
     - name: Check Cadius version
