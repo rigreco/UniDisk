@@ -135,14 +135,10 @@ jobs:
         # Create ProDOS disk image
         cadius createvolume "$DISK_IMAGE" "$PROJECT" 140KB
 
-        # Add PRODOS and BASIC.SYSTEM if available
-        if [ -f "./PRODOS.2.4.2/PRODOS" ] && [ -f "./PRODOS.2.4.2/BASIC.SYSTEM" ]; then
-          echo "Adding system files..."
-          cadius addfile "$DISK_IMAGE" "/$PROJECT/" ./PRODOS.2.4.2/PRODOS
-          cadius addfile "$DISK_IMAGE" "/$PROJECT/" ./PRODOS.2.4.2/BASIC.SYSTEM
-        else
-          echo "WARNING: PRODOS system files not found, creating data-only disk"
-        fi
+        # Add PRODOS and BASIC.SYSTEM (provided by install-cadius-action)
+        echo "Adding system files..."
+        cadius addfile "$DISK_IMAGE" "/$PROJECT/" ./PRODOS.2.4.2/PRODOS
+        cadius addfile "$DISK_IMAGE" "/$PROJECT/" ./PRODOS.2.4.2/BASIC.SYSTEM
 
         # Add binary files using _FileInformation.txt
         if [ -f "$WORK_DIR/_FileInformation.txt" ]; then
