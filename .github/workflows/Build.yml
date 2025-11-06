@@ -25,14 +25,14 @@ on:
 jobs:
   # This workflow contains a single job called "build"
   build:
-  
+
     # The type of runner that the job will run on
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-24.04
 
     # Steps represent a sequence of tasks that will be executed as part of the job
     steps:
 
-    - uses: actions/checkout@v4
+    - uses: actions/checkout@v5
 
     # This will install Merlin32 on your Github Runner machine
     - name: install-merlin32-action
@@ -45,7 +45,7 @@ jobs:
     # CHK Errors (if the previous step failure, there's errors in the source code, then it will upload the errors text file in artifact)
     - name: CHK errors
       if: ${{ failure() }}
-      uses: actions/upload-artifact@v4
+      uses: actions/upload-artifact@v5
       with:
         name: Error
         path: ./src/error_output.txt
@@ -87,7 +87,7 @@ jobs:
         ls -al src
      
     # This will upload entire work directory in artifact
-    - uses: actions/upload-artifact@v4
+    - uses: actions/upload-artifact@v5
       with:
         name: Output
         path: ./src/

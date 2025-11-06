@@ -26,10 +26,10 @@ on:
 
 jobs:
   build-project:
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-24.04
 
     steps:
-    - uses: actions/checkout@v4
+    - uses: actions/checkout@v5
       with:
         fetch-depth: 2  # Need 2 commits to detect changes
 
@@ -97,7 +97,7 @@ jobs:
     # Check for compilation errors
     - name: Upload compilation errors
       if: failure()
-      uses: actions/upload-artifact@v4
+      uses: actions/upload-artifact@v5
       with:
         name: ${{ steps.detect.outputs.project }}-errors
         path: |
@@ -201,7 +201,7 @@ jobs:
         ls -lh "$DISK_IMAGE"
 
     # Upload the completed disk image
-    - uses: actions/upload-artifact@v4
+    - uses: actions/upload-artifact@v5
       if: steps.check.outputs.skip != 'true'
       with:
         name: ${{ steps.detect.outputs.project }}
