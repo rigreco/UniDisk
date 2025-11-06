@@ -133,7 +133,7 @@ jobs:
         echo "Project directory: $WORK_DIR"
 
         # Sanitize project name for ProDOS (remove -, _, spaces, max 15 chars)
-        PRODOS_NAME=$(echo "$PROJECT" | tr -d '-_' | tr -d ' ' | cut -c1-15)
+        PRODOS_NAME=$(echo "$PROJECT" | tr -d '_' | tr -d '-' | tr -d ' ' | cut -c1-15)
         echo "ProDOS volume name: $PRODOS_NAME"
 
         # Create ProDOS disk image
