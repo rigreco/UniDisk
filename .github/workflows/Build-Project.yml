@@ -132,13 +132,17 @@ jobs:
         echo "Creating disk image: $DISK_IMAGE"
         echo "Project directory: $WORK_DIR"
 
+        # Sanitize project name for ProDOS (remove -, _, spaces, max 15 chars)
+        PRODOS_NAME=$(echo "$PROJECT" | tr -d '-_' | tr -d ' ' | cut -c1-15)
+        echo "ProDOS volume name: $PRODOS_NAME"
+
         # Create ProDOS disk image
-        cadius createvolume "$DISK_IMAGE" "$PROJECT" 140KB
+        cadius createvolume "$DISK_IMAGE" "$PRODOS_NAME" 140KB
 
         # Add PRODOS and BASIC.SYSTEM (provided by install-cadius-action)
         echo "Adding system files..."
-        cadius addfile "$DISK_IMAGE" "/$PROJECT/" ./PRODOS.2.4.2/PRODOS
-        cadius addfile "$DISK_IMAGE" "/$PROJECT/" ./PRODOS.2.4.2/BASIC.SYSTEM
+        cadius addfile "$DISK_IMAGE" "/$PRODOS_NAME/" ./PRODOS.2.4.2/PRODOS
+        cadius addfile "$DISK_IMAGE" "/$PRODOS_NAME/" ./PRODOS.2.4.2/BASIC.SYSTEM
 
         # Add binary files using _FileInformation.txt
         if [ -f "$WORK_DIR/_FileInformation.txt" ]; then
@@ -161,7 +165,7 @@ jobs:
             echo "$name=Type(06),AuxType(2000),VersionCreate(00),MinVersion(00),Access(E3),Created($TIMESTAMP),Modified($TIMESTAMP)" > "$WORK_DIR/_FileInformation_temp.txt"
 
             echo "Adding $name (BIN with timestamp)"
-            cadius addfile "$DISK_IMAGE" "/$PROJECT/" "$WORK_DIR/$name"
+            cadius addfile "$DISK_IMAGE" "/$PRODOS_NAME/" "$WORK_DIR/$name"
           done < "$WORK_DIR/_FileInformation.txt"
         else
           echo "No _FileInformation.txt found, adding binary files without metadata"
@@ -172,7 +176,7 @@ jobs:
             name=$(basename "$bin")
             echo "Adding $name (BIN @ default address)"
             echo "$name=Type(06),AuxType(2000),VersionCreate(00),MinVersion(00),Access(E3),Created($TIMESTAMP),Modified($TIMESTAMP)" > "$WORK_DIR/_FileInformation.txt"
-            cadius addfile "$DISK_IMAGE" "/$PROJECT/" "$bin"
+            cadius addfile "$DISK_IMAGE" "/$PRODOS_NAME/" "$bin"
           done
         fi
 
@@ -187,7 +191,7 @@ jobs:
           echo "$name=Type(04),AuxType(0000),VersionCreate(00),MinVersion(00),Access(E3),Created($TIMESTAMP),Modified($TIMESTAMP)" > "$WORK_DIR/_FileInformation.txt"
 
           echo "Adding $name (BAS with timestamp)"
-          cadius addfile "$DISK_IMAGE" "/$PROJECT/" "$bas"
+          cadius addfile "$DISK_IMAGE" "/$PRODOS_NAME/" "$bas"
         done
 
         # Display disk catalog
